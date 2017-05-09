@@ -1,4 +1,4 @@
-package com.example.txtledbluetooth.music;
+package com.example.txtledbluetooth.music.playing;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
@@ -25,6 +25,9 @@ import com.example.txtledbluetooth.R;
 import com.example.txtledbluetooth.application.MyApplication;
 import com.example.txtledbluetooth.base.BaseActivity;
 import com.example.txtledbluetooth.bean.MusicInfo;
+import com.example.txtledbluetooth.music.playing.presenter.PlayingPresenter;
+import com.example.txtledbluetooth.music.playing.presenter.PlayingPresenterImpl;
+import com.example.txtledbluetooth.music.playing.view.PlayingView;
 import com.example.txtledbluetooth.music.service.MusicInterface;
 import com.example.txtledbluetooth.music.service.MusicService;
 import com.example.txtledbluetooth.utils.GaussianBlurUtil;
@@ -39,7 +42,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class PlayingActivity extends BaseActivity implements Observer {
+public class PlayingActivity extends BaseActivity implements Observer, PlayingView {
     public static final String TAG = PlayingActivity.class.getSimpleName();
     public static final String ROTATION = "rotation";
     @BindView(R.id.layout_activity_play)
@@ -74,6 +77,7 @@ public class PlayingActivity extends BaseActivity implements Observer {
     private Intent mIntent;
     private MyServiceConn mServiceConn;
     private int mCurrentPosition;
+    private PlayingPresenter mPlayingPresenter;
 
     @Override
     public void init() {
@@ -92,6 +96,8 @@ public class PlayingActivity extends BaseActivity implements Observer {
         mIntentPosition = getIntent().getIntExtra(Utils.POSITION, 0);
         mCurrentPosition = mIntentPosition;
         mMusicInfoList = MusicInfo.listAll(MusicInfo.class);
+
+        mPlayingPresenter = new PlayingPresenterImpl(this);
         initPlayUi(mIntentPosition);
     }
 
@@ -101,12 +107,7 @@ public class PlayingActivity extends BaseActivity implements Observer {
         if (mCurrentPosition != mIntentPosition) {
             initPlayUi(mCurrentPosition);
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
+        initAnim();
     }
 
     private void initPlayUi(int position) {
@@ -116,8 +117,7 @@ public class PlayingActivity extends BaseActivity implements Observer {
         mAlbumUri = musicInfo.getAlbumUri();
         MyApplication.getImageLoader(PlayingActivity.this).displayImage(mAlbumUri,
                 ivAlbumCover, Utils.getImageOptions(R.mipmap.placeholder_disk_play_program, 360));
-        new AlbumCoverAsyncTask().execute();
-
+        mPlayingPresenter.loadGSAlbumCover(mAlbumUri, this);
     }
 
     private void initService() {
@@ -127,21 +127,46 @@ public class PlayingActivity extends BaseActivity implements Observer {
         bindService(mIntent, mServiceConn, BIND_AUTO_CREATE);
     }
 
-    private class AlbumCoverAsyncTask extends AsyncTask<Void, Void, Drawable> {
-
-        @Override
-        protected Drawable doInBackground(Void... voids) {
-            Drawable drawable = GaussianBlurUtil.BoxBlurFilter(MusicUtils.createThumbFromUir(
-                    PlayingActivity.this, Uri.parse(mAlbumUri)));
-            return drawable;
+    @Override
+    public void startAnim() {
+        if (mRotateAnim == null) {
+            mRotateAnim = ObjectAnimator.ofFloat(layoutAlbumCover, ROTATION, 0f, 360f);
+            mRotateAnim.setDuration(10000);
+            mRotateAnim.setRepeatCount(-1);//设置动画重复次数，这里-1代表无限
+            mRotateAnim.setRepeatMode(Animation.ABSOLUTE);//设置动画循环模式。
+            mRotateAnim.setInterpolator(new LinearInterpolator());
         }
 
-        @Override
-        protected void onPostExecute(Drawable drawable) {
-            layoutActivityPlay.setBackground(drawable);
-
+        if (mNeedleAnim == null) {
+            mNeedleAnim = ObjectAnimator.ofFloat(ivNeedle, ROTATION, -25, 0);
+            mNeedleAnim.setDuration(200);
+            mNeedleAnim.setRepeatMode(0);
+            mNeedleAnim.setInterpolator(new LinearInterpolator());
         }
+
+        if (mAnimatorSet == null) {
+            mAnimatorSet = new AnimatorSet();
+        }
+        if (!mAnimatorSet.isRunning()) {
+            mAnimatorSet.play(mNeedleAnim).before(mRotateAnim);
+            mAnimatorSet.start();
+        }
+        ivPlay.setBackgroundResource(R.mipmap.play_rdi_btn_play);
     }
+
+    @Override
+    public void stopAnim() {
+        if (mAnimatorSet != null && mAnimatorSet.isRunning()) {
+            mAnimatorSet.end();
+        }
+        ivPlay.setBackgroundResource(R.mipmap.play_rdi_btn_pause);
+    }
+
+    @Override
+    public void showGSAlbumCover(Drawable drawable) {
+        layoutActivityPlay.setBackground(drawable);
+    }
+
 
     @OnClick({R.id.layout_activity_play, R.id.iv_play})
     public void onViewClicked(View view) {
@@ -155,47 +180,32 @@ public class PlayingActivity extends BaseActivity implements Observer {
                 break;
 
             case R.id.iv_play:
-                if (mMusicInterface.isPlaying()) {
-                    startPlayAnim();
-                }
                 break;
         }
     }
 
-    private void startPlayAnim() {
-        if (mRotateAnim == null) {
-            mRotateAnim = ObjectAnimator.ofFloat(layoutAlbumCover, ROTATION, 0f, 360f);
-        }
-        mRotateAnim.setDuration(10000);
-        mRotateAnim.setRepeatCount(-1);//设置动画重复次数，这里-1代表无限
-        mRotateAnim.setRepeatMode(Animation.ABSOLUTE);//设置动画循环模式。
-        mRotateAnim.setInterpolator(new LinearInterpolator());
 
-        if (mNeedleAnim == null) {
-            mNeedleAnim = ObjectAnimator.ofFloat(ivNeedle, ROTATION, -25, 0);
-        }
-        mNeedleAnim.setDuration(200);
-        mNeedleAnim.setRepeatMode(0);
-        mNeedleAnim.setInterpolator(new LinearInterpolator());
-
-        if (mAnimatorSet == null) {
-            mAnimatorSet = new AnimatorSet();
-        }
-        mAnimatorSet.play(mNeedleAnim).before(mRotateAnim);
-        mAnimatorSet.start();
-    }
-
-
-    class MyServiceConn implements ServiceConnection {
+    private class MyServiceConn implements ServiceConnection {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             mMusicInterface = (MusicInterface) iBinder;
             mMusicInterface.addObserver(PlayingActivity.this);
+            initAnim();
         }
 
         @Override
         public void onServiceDisconnected(ComponentName componentName) {
 
+        }
+    }
+
+    private void initAnim() {
+        if (mMusicInterface != null) {
+            if (mMusicInterface.isPlaying()) {
+                startAnim();
+            } else {
+                stopAnim();
+            }
         }
     }
 
@@ -256,4 +266,5 @@ public class PlayingActivity extends BaseActivity implements Observer {
         }
         return super.onKeyDown(keyCode, event);
     }
+
 }
