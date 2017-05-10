@@ -5,8 +5,7 @@ import android.animation.ObjectAnimator;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -30,9 +29,8 @@ import com.example.txtledbluetooth.music.playing.presenter.PlayingPresenterImpl;
 import com.example.txtledbluetooth.music.playing.view.PlayingView;
 import com.example.txtledbluetooth.music.service.MusicInterface;
 import com.example.txtledbluetooth.music.service.MusicService;
-import com.example.txtledbluetooth.utils.GaussianBlurUtil;
-import com.example.txtledbluetooth.utils.MusicUtils;
 import com.example.txtledbluetooth.utils.Utils;
+import com.qiushui.blurredview.BlurredView;
 
 import java.util.List;
 import java.util.Observable;
@@ -69,6 +67,8 @@ public class PlayingActivity extends BaseActivity implements Observer, PlayingVi
     SeekBar seekBarPlay;
     @BindView(R.id.tv_time_right)
     TextView tvTimeRight;
+    @BindView(R.id.blurred_view)
+    BlurredView blurredView;
     private ObjectAnimator mNeedleAnim;
     private ObjectAnimator mRotateAnim;
     private AnimatorSet mAnimatorSet;
@@ -102,6 +102,7 @@ public class PlayingActivity extends BaseActivity implements Observer, PlayingVi
 
         mPlayingPresenter = new PlayingPresenterImpl(this);
         initPlayUi(mIntentPosition);
+
     }
 
     @Override
@@ -120,7 +121,9 @@ public class PlayingActivity extends BaseActivity implements Observer, PlayingVi
         mAlbumUri = musicInfo.getAlbumUri();
         MyApplication.getImageLoader(PlayingActivity.this).displayImage(mAlbumUri,
                 ivAlbumCover, Utils.getImageOptions(R.mipmap.placeholder_disk_play_program, 360));
+
         mPlayingPresenter.loadGSAlbumCover(mAlbumUri, this);
+
     }
 
     private void initService() {
@@ -170,8 +173,9 @@ public class PlayingActivity extends BaseActivity implements Observer, PlayingVi
     }
 
     @Override
-    public void showGSAlbumCover(Drawable drawable) {
-        layoutActivityPlay.setBackground(drawable);
+    public void showGSAlbumCover(Bitmap bitmap) {
+        blurredView.setBlurredImg(bitmap);
+        blurredView.setBlurredLevel(100);
     }
 
 

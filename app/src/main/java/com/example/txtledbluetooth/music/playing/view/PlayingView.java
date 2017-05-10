@@ -1,6 +1,6 @@
 package com.example.txtledbluetooth.music.playing.view;
 
-import android.graphics.drawable.Drawable;
+import android.graphics.Bitmap;
 
 /**
  * Created by KomoriWu
@@ -13,5 +13,5 @@ public interface PlayingView {
 
     void stopAnim();
 
-    void showGSAlbumCover(Drawable drawable);
+    void showGSAlbumCover(Bitmap bitmap);
 }

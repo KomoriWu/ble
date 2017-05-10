@@ -1,6 +1,7 @@
 package com.example.txtledbluetooth.music.playing.presenter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 
@@ -43,8 +44,8 @@ public class PlayingPresenterImpl implements PlayingPresenter {
     public void loadGSAlbumCover(String albumUri, Context context) {
         mPlayingModel.loadGSAlbumCover(albumUri, context, new PlayingModelImpl.OnLoadListener() {
             @Override
-            public void success(Drawable drawable) {
-                mPlayingView.showGSAlbumCover(drawable);
+            public void success(Bitmap bitmap) {
+                mPlayingView.showGSAlbumCover(bitmap);
             }
         });
     }
