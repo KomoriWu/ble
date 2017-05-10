@@ -315,7 +315,18 @@ public class MusicFragment extends BaseFragment implements MusicAdapter.OnIvRigh
             }
         }.execute();
 
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mMusicInterface != null) {
+            if (mMusicInterface.isPlaying()){
+                ivMusicControl.setImageResource(R.mipmap.icon_play);
+            }else {
+                ivMusicControl.setImageResource(R.mipmap.icon_pause);
+            }
+        }
     }
 
     private int getNextSongPosition() {

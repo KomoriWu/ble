@@ -153,7 +153,7 @@ public class PlayingActivity extends BaseActivity implements Observer, PlayingVi
             mAnimatorSet.play(mNeedleAnim).before(mRotateAnim);
             mAnimatorSet.start();
         }
-        if (mAnimatorSet.isPaused() && mAnimatorSet.isStarted() && !mAnimatorSet.isRunning()) {
+        if (mAnimatorSet.isPaused()) {
             mAnimatorSet.resume();
         }
         ivPlay.setImageResource(R.mipmap.play_rdi_btn_play);
