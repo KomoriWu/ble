@@ -80,6 +80,7 @@ public class PlayingActivity extends BaseActivity implements Observer, PlayingVi
     private MyServiceConn mServiceConn;
     private int mCurrentPosition;
     private PlayingPresenter mPlayingPresenter;
+    private boolean mIsExistPlayData;
 
     @Override
     public void init() {
@@ -187,13 +188,21 @@ public class PlayingActivity extends BaseActivity implements Observer, PlayingVi
 
             case R.id.iv_play:
                 if (mMusicInterface != null) {
-                    if (mMusicInterface.isPlaying()) {
-                        mMusicInterface.pausePlay();
-                        stopAnim();
+                    if (mIsExistPlayData) {
+                        if (mMusicInterface.isPlaying()) {
+                            mMusicInterface.pausePlay();
+                            stopAnim();
+                        } else {
+                            mMusicInterface.continuePlay();
+                            startAnim();
+                        }
                     } else {
-                        mMusicInterface.continuePlay();
+                        mPlayingPresenter.playMusic(mMusicInterface, mMusicInfoList.get(
+                                mCurrentPosition).getUrl());
                         startAnim();
+                        mIsExistPlayData = true;
                     }
+
                 }
                 break;
         }
@@ -235,6 +244,7 @@ public class PlayingActivity extends BaseActivity implements Observer, PlayingVi
             @Override
             protected void onPostExecute(Bundle bundle) {
                 super.onPostExecute(bundle);
+                mIsExistPlayData = true;
                 int duration = bundle.getInt(Utils.DURATION);
                 int currentProgress = bundle.getInt(Utils.CURRENT_PROGRESS);
                 String currentUrl = bundle.getString(Utils.CURRENT_PLAY_URL);
