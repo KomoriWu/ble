@@ -11,7 +11,9 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -173,9 +175,27 @@ public class PlayingActivity extends BaseActivity implements Observer, PlayingVi
     }
 
     @Override
-    public void showGSAlbumCover(Bitmap bitmap) {
-        blurredView.setBlurredImg(bitmap);
-        blurredView.setBlurredLevel(100);
+    public void showGSAlbumCover(final Bitmap bitmap) {
+        Animation alpha = AnimationUtils.loadAnimation(this, R.anim.blurred_view_alpha);
+        alpha.setAnimationListener(new Animation.AnimationListener() {
+
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                blurredView.setBlurredImg(bitmap);
+                blurredView.setBlurredLevel(100);
+            }
+        });
+        blurredView.startAnimation(alpha);
     }
 
 
