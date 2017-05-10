@@ -44,6 +44,8 @@ import butterknife.OnClick;
 
 public class PlayingActivity extends BaseActivity implements Observer, PlayingView {
     public static final String TAG = PlayingActivity.class.getSimpleName();
+    public static final int NEEDLE_ANIM_VALUES = -25;
+    public static final int NEEDLE_ANIM_DURATION = 200;
     public static final String ROTATION = "rotation";
     @BindView(R.id.layout_activity_play)
     RelativeLayout layoutActivityPlay;
@@ -138,8 +140,8 @@ public class PlayingActivity extends BaseActivity implements Observer, PlayingVi
         }
 
         if (mNeedleAnim == null) {
-            mNeedleAnim = ObjectAnimator.ofFloat(ivNeedle, ROTATION, -25, 0);
-            mNeedleAnim.setDuration(200);
+            mNeedleAnim = ObjectAnimator.ofFloat(ivNeedle, ROTATION, NEEDLE_ANIM_VALUES, 0);
+            mNeedleAnim.setDuration(NEEDLE_ANIM_DURATION);
             mNeedleAnim.setRepeatMode(0);
             mNeedleAnim.setInterpolator(new LinearInterpolator());
         }
@@ -147,19 +149,23 @@ public class PlayingActivity extends BaseActivity implements Observer, PlayingVi
         if (mAnimatorSet == null) {
             mAnimatorSet = new AnimatorSet();
         }
-        if (!mAnimatorSet.isRunning()) {
+        if (!mAnimatorSet.isStarted()) {
             mAnimatorSet.play(mNeedleAnim).before(mRotateAnim);
             mAnimatorSet.start();
         }
-        ivPlay.setBackgroundResource(R.mipmap.play_rdi_btn_play);
+        if (mAnimatorSet.isPaused() && mAnimatorSet.isStarted() && !mAnimatorSet.isRunning()) {
+            mAnimatorSet.resume();
+        }
+        ivPlay.setImageResource(R.mipmap.play_rdi_btn_play);
     }
 
     @Override
     public void stopAnim() {
         if (mAnimatorSet != null && mAnimatorSet.isRunning()) {
-            mAnimatorSet.end();
+            mNeedleAnim.start();
+            mAnimatorSet.pause();
         }
-        ivPlay.setBackgroundResource(R.mipmap.play_rdi_btn_pause);
+        ivPlay.setImageResource(R.mipmap.play_rdi_btn_pause);
     }
 
     @Override
@@ -180,6 +186,15 @@ public class PlayingActivity extends BaseActivity implements Observer, PlayingVi
                 break;
 
             case R.id.iv_play:
+                if (mMusicInterface != null) {
+                    if (mMusicInterface.isPlaying()) {
+                        mMusicInterface.pausePlay();
+                        stopAnim();
+                    } else {
+                        mMusicInterface.continuePlay();
+                        startAnim();
+                    }
+                }
                 break;
         }
     }

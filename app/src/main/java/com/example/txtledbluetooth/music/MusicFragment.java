@@ -70,6 +70,8 @@ public class MusicFragment extends BaseFragment implements MusicAdapter.OnIvRigh
     TextView tvSinger;
     @BindView(R.id.layout_music_control)
     RelativeLayout layoutMusicControl;
+    @BindView(R.id.layout_play)
+    RelativeLayout layoutPlay;
     Unbinder unbinder;
     private MusicAdapter mMusicAdapter;
     private MusicPresenter mMusicPresenter;
@@ -238,10 +240,10 @@ public class MusicFragment extends BaseFragment implements MusicAdapter.OnIvRigh
         unbinder.unbind();
     }
 
-    @OnClick({R.id.iv_music_control, R.id.layout_music_control})
+    @OnClick({R.id.layout_play, R.id.layout_music_control})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.iv_music_control:
+            case R.id.layout_play:
                 if (mIsExistPlayData) {
                     if (mMusicInterface.isPlaying()) {
                         ivMusicControl.setImageResource(R.mipmap.icon_pause);
