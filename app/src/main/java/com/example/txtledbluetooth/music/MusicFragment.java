@@ -322,6 +322,7 @@ public class MusicFragment extends BaseFragment implements MusicAdapter.OnIvRigh
         super.onResume();
         if (mMusicInterface != null) {
             if (mMusicInterface.isPlaying()){
+                mIsExistPlayData = true;
                 ivMusicControl.setImageResource(R.mipmap.icon_play);
             }else {
                 ivMusicControl.setImageResource(R.mipmap.icon_pause);

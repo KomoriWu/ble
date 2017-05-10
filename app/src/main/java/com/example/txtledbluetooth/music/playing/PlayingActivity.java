@@ -162,7 +162,7 @@ public class PlayingActivity extends BaseActivity implements Observer, PlayingVi
 
     @Override
     public void stopAnim() {
-        if (mAnimatorSet != null && mAnimatorSet.isRunning()) {
+        if (mAnimatorSet != null && !mAnimatorSet.isPaused()) {
             mNeedleAnim.start();
             mAnimatorSet.pause();
         }
