@@ -22,6 +22,7 @@ import com.example.txtledbluetooth.bean.MusicInfo;
 import com.example.txtledbluetooth.light.presenter.LightPresenter;
 import com.example.txtledbluetooth.light.presenter.LightPresenterImpl;
 import com.example.txtledbluetooth.light.view.LightView;
+import com.example.txtledbluetooth.utils.AlertUtils;
 import com.example.txtledbluetooth.utils.MusicUtils;
 import com.example.txtledbluetooth.utils.SharedPreferenceUtils;
 import com.example.txtledbluetooth.utils.Utils;
@@ -47,6 +48,7 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
     RecyclerView recyclerView;
     private LightAdapter mLightAdapter;
     private LightPresenter mLightPresenter;
+    private boolean mIsChecked;
 
     @Override
     public View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,47 +59,30 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
         aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                mIsChecked = isChecked;
                 tvSwitch.setText(isChecked ? getString(R.string.on_capital) :
                         getString(R.string.off_capital));
                 mLightPresenter.operateSwitchBluetooth(isChecked);
             }
         });
+        aSwitch.setChecked(true);
+
+        initLightData();
         return view;
     }
 
-    @Override
-    public void showLightData() {
+    private void initLightData() {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mLightAdapter = new LightAdapter(getActivity(), this, this);
         recyclerView.setAdapter(mLightAdapter);
-        new initDataAsyncTask().execute();
+        mLightPresenter.showLightData();
     }
 
-    private class initDataAsyncTask extends AsyncTask<Void, Void, ArrayList<Lighting>> {
-        ArrayList<Lighting> lightingList;
-        List<Boolean> list;
-
-        @Override
-        protected ArrayList<Lighting> doInBackground(Void... voids) {
-            lightingList = Utils.getLightList(getActivity());
-            list = new ArrayList<>();
-            for (int i = 0; i < lightingList.size(); i++) {
-                if (SharedPreferenceUtils.getClickPosition(getActivity()) == i) {
-                    list.add(true);
-                } else {
-                    list.add(false);
-                }
-            }
-            return lightingList;
-        }
-
-        @Override
-        protected void onPostExecute(ArrayList<Lighting> lightingArrayList) {
-            mLightAdapter.setLightingList(lightingArrayList, list);
-        }
+    @Override
+    public void showLightData(ArrayList<Lighting> lightingList, List<Boolean> list) {
+        mLightAdapter.setLightingList(lightingList, list);
     }
-
 
     @Override
     public void editLight(int id) {
@@ -109,12 +94,19 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
     }
 
     @Override
+    public void showHintDialog() {
+        AlertUtils.showAlertDialog(getActivity(),R.string.open_switch_hint);
+    }
+
+    @Override
     public void onItemClick(View view, int position) {
-        mLightPresenter.operateItemBluetooth(position);
+        mLightPresenter.operateItemBluetooth(mIsChecked, position);
     }
 
     @Override
     public void onIvRightClick(View view, int position) {
         mLightPresenter.operateTvRightBluetooth(position);
     }
+
+
 }

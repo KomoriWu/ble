@@ -14,4 +14,5 @@ import java.util.UUID;
 public interface LightModel {
     void WriteCommand(BluetoothClient client, String macAddress, UUID serviceUUID,
                       UUID characterUUID, String command);
+
 }

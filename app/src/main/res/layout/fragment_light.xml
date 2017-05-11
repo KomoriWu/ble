@@ -15,8 +15,7 @@
             style="@style/main_tv"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/item_height"
-            android:layout_toRightOf="@+id/iv_item_left"
-            android:text="@string/on_capital" />
+            android:layout_toRightOf="@+id/iv_item_left" />
 
         <Switch
             android:id="@+id/switch_view"

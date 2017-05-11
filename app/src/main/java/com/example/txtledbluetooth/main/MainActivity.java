@@ -88,9 +88,9 @@ public class MainActivity extends BaseActivity implements MainView {
         setupDrawerContent(navigationView);
 
         mCurrentFragment = new DashboardFragment();
-//        switchDashboard();
-//        initPermission();
-        switchMusic();
+        switchDashboard();
+        initPermission();
+//        switchMusic();
 
     }
 

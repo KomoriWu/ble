@@ -1,11 +1,19 @@
 package com.example.txtledbluetooth.light.view;
 
+import com.example.txtledbluetooth.bean.Lighting;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by KomoriWu
  * on 2017-04-22.
  */
 
 public interface LightView {
-    void showLightData();
+    void showLightData(ArrayList<Lighting> lightingList, List<Boolean> list);
+
     void editLight(int id);
+
+    void showHintDialog();
 }

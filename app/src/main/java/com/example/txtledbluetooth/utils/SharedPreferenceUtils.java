@@ -28,7 +28,18 @@ public class SharedPreferenceUtils {
     public static final String CLICK_ITEM_POSITION_KEY = "click_item_position_key";
     public static final String LAST_PLAY_POSITION_NAME = "last_play_position_name";
     public static final String LAST_PLAY_POSITION_KEY = "last_play_position_key";
+    public static final String LAST_SWITCH_STATE_NAME = "last_switch_state_name";
+    public static final String LAST_SWITCH_STATE_KEY = "last_switch_state_key";
 
+    public static void saveLastSwitchState(Context context, boolean isChecked) {
+        SharedPreferenceUtils.saveSharedPreference(context, LAST_SWITCH_STATE_NAME,
+                LAST_SWITCH_STATE_KEY, isChecked);
+    }
+
+    public static boolean getLastSwitchState(Context context) {
+        return SharedPreferenceUtils.getSharedPreferenceBoolean(context, LAST_SWITCH_STATE_NAME,
+                LAST_SWITCH_STATE_KEY,false);
+    }
 
     public static void saveLastPlayPosition(Context context, int position) {
         SharedPreferenceUtils.saveSharedPreference(context, LAST_PLAY_POSITION_NAME,

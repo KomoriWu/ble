@@ -83,4 +83,5 @@
     <string name="search_stop">The search timeout !</string>
     <string name="search_cancelled">The search was cancelled !</string>
     <string name="scan">Scan</string>
+    <string name="open_switch_hint">Please turn on the light !</string>
 </resources>
