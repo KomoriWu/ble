@@ -81,7 +81,7 @@ public class Utils {
         ArrayList<Lighting> lightingList = new ArrayList<>();
         boolean isEdit;
         for (int i = 0; i < lightIcons.length; i++) {
-            if (i == 8 || i > 10) {
+            if (i == 9) {
                 isEdit = false;
             } else {
                 isEdit = true;
@@ -113,24 +113,30 @@ public class Utils {
                 items = context.getResources().getStringArray(R.array.hot_wheels_color_type);
                 break;
             case 3:
+            case 7:
+            case 8:
+            case 13:
                 items = context.getResources().getStringArray(R.array.spectrum_color_type);
                 break;
             case 4:
-                items = context.getResources().getStringArray(R.array.pulsate_color_type);
+                items = context.getResources().getStringArray(R.array.full_spectrum_color_type);
                 break;
             case 5:
-                items = context.getResources().getStringArray(R.array.morph_color_type);
+                items = context.getResources().getStringArray(R.array.pulsate_color_type);
                 break;
             case 6:
-            case 7:
-                items = context.getResources().getStringArray(R.array.beat_meter_color_type);
+                items = context.getResources().getStringArray(R.array.morph_color_type);
                 break;
-            case 8:
+            case 10:
                 items = context.getResources().getStringArray(R.array.wave_color_type);
                 break;
-            case 9:
+            case 11:
                 items = context.getResources().getStringArray(R.array.solo_color_type);
                 break;
+            case 12:
+                items = context.getResources().getStringArray(R.array.mood_color_type);
+                break;
+
             default:
                 items = context.getResources().getStringArray(R.array.solo_color_type);
                 break;

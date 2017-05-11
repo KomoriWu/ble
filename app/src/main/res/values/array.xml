@@ -28,6 +28,8 @@
     </string-array>
     <string-array name="spectrum_color_type">
         <item>@string/default_</item>
+    </string-array>
+    <string-array name="full_spectrum_color_type">
         <item>@string/full</item>
     </string-array>
     <string-array name="pulsate_color_type">
@@ -49,7 +51,9 @@
         <item>@string/rainbow</item>
     </string-array>
     <string-array name="solo_color_type">
-        <item>@string/orange</item>
+        <item>@string/default_</item>
+    </string-array>
+    <string-array name="mood_color_type">
         <item>@string/mood</item>
     </string-array>
 </resources>
