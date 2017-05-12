@@ -61,4 +61,12 @@
         <item name="android:paddingLeft">@dimen/min_margin</item>
         <item name="android:paddingRight">@dimen/item_padding_left</item>
     </style>
+
+    <style name="layout_mini_touch">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">@dimen/divide_padding_right</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+    </style>
 </resources>

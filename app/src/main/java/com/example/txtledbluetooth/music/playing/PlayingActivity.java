@@ -50,6 +50,7 @@ public class PlayingActivity extends BaseActivity implements Observer, PlayingVi
     public static final String TAG = PlayingActivity.class.getSimpleName();
     public static final int NEEDLE_ANIM_VALUES = -25;
     public static final int NEEDLE_ANIM_DURATION = 200;
+    public static final int BLURRED_LEVEL =100;
     public static final String ROTATION = "rotation";
     @BindView(R.id.layout_activity_play)
     RelativeLayout layoutActivityPlay;
@@ -59,6 +60,10 @@ public class PlayingActivity extends BaseActivity implements Observer, PlayingVi
     LinearLayout layoutVolume;
     @BindView(R.id.layout_play)
     RelativeLayout layoutPlay;
+    @BindView(R.id.layout_previous)
+    RelativeLayout layoutPrevious;
+    @BindView(R.id.layout_next)
+    RelativeLayout layoutNext;
     @BindView(R.id.iv_needle)
     ImageView ivNeedle;
     @BindView(R.id.iv_play)
@@ -210,14 +215,14 @@ public class PlayingActivity extends BaseActivity implements Observer, PlayingVi
             @Override
             public void onAnimationEnd(Animation animation) {
                 blurredView.setBlurredImg(bitmap);
-                blurredView.setBlurredLevel(100);
+                blurredView.setBlurredLevel(BLURRED_LEVEL);
             }
         });
         blurredView.startAnimation(alpha);
     }
 
 
-    @OnClick({R.id.layout_activity_play, R.id.iv_play, R.id.iv_previous, R.id.iv_next,
+    @OnClick({R.id.layout_activity_play, R.id.iv_play, R.id.layout_previous, R.id.layout_next,
             R.id.layout_play})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -249,7 +254,7 @@ public class PlayingActivity extends BaseActivity implements Observer, PlayingVi
 
                 }
                 break;
-            case R.id.iv_previous:
+            case R.id.layout_previous:
                 new AsyncTask<Void, Void, Void>() {
                     @Override
                     protected void onPreExecute() {
@@ -276,7 +281,7 @@ public class PlayingActivity extends BaseActivity implements Observer, PlayingVi
                 }.execute();
 
                 break;
-            case R.id.iv_next:
+            case R.id.layout_next:
                 new AsyncTask<Void, Void, Void>() {
                     @Override
                     protected void onPreExecute() {

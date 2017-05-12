@@ -54,10 +54,17 @@ public class MusicService extends Service {
                 if (mMediaPlayer == null) {
                     mMediaPlayer = new MediaPlayer();
                 }
-                mMediaPlayer.reset();
-                mMediaPlayer.setDataSource(songUrl);
-                mMediaPlayer.prepare();
-                mMediaPlayer.start();
+
+                try {
+                    mMediaPlayer.reset();
+                    mMediaPlayer.setDataSource(songUrl);
+                    mMediaPlayer.prepare();
+                    mMediaPlayer.start();
+                }
+                catch (IllegalStateException e) {
+                    mMediaPlayer = null;
+                    mMediaPlayer = new MediaPlayer();
+                }
                 List<MusicInfo> musicInfoList = null;
                 if (musicInfoList == null) {
                     musicInfoList = MusicInfo.listAll(MusicInfo.class);
