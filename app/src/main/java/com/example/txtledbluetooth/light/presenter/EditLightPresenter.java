@@ -2,6 +2,8 @@ package com.example.txtledbluetooth.light.presenter;
 
 import android.view.View;
 
+import com.example.txtledbluetooth.bean.LightType;
+
 /**
  * Created by KomoriWu
  * on 2017-04-25.
@@ -9,9 +11,16 @@ import android.view.View;
 
 public interface EditLightPresenter {
     void viewOnclick(View clickView, View bgView);
+
     void setIsSetOnColorSelectListener(boolean isSetOnColorSelectListener);
-    void setLightSpeed(String lightNo,int speed);
-    void setLightBrightness(String lightNo,int brightness);
+
+    void setLightSpeed(String lightNo, int speed);
+
+    void setLightBrightness(String lightNo, int brightness);
+
     void initBleLightColor(String lightNo, int position);
-    void updateLightColor(String lightNo,int position,String color);
+
+    void updateLightColor(String lightNo, int position, String color);
+
+    void saveLightDate(LightType lightType);
 }

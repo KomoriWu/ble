@@ -22,12 +22,21 @@ import android.widget.Toast;
 
 import com.example.txtledbluetooth.R;
 import com.example.txtledbluetooth.base.BaseActivity;
+import com.example.txtledbluetooth.bean.LightRgb1;
+import com.example.txtledbluetooth.bean.LightRgb2;
+import com.example.txtledbluetooth.bean.LightRgb3;
+import com.example.txtledbluetooth.bean.LightRgb7;
+import com.example.txtledbluetooth.bean.LightType;
+import com.example.txtledbluetooth.bean.ModelType;
+import com.example.txtledbluetooth.bean.RgbColor;
 import com.example.txtledbluetooth.light.presenter.EditLightPresenter;
 import com.example.txtledbluetooth.light.presenter.EditLightPresenterImpl;
 import com.example.txtledbluetooth.light.view.EditLightView;
 import com.example.txtledbluetooth.utils.BleCommandUtils;
 import com.example.txtledbluetooth.utils.Utils;
 import com.example.txtledbluetooth.widget.ColorPicker;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -97,6 +106,8 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     private EditLightPresenter mEditLightPresenter;
     private int mPosition;
     private long mFirstDrag;
+    private String mLightName;
+    private String mModelTypeFlags;
     private Handler mHandler = new Handler() {
         @Override
         public void dispatchMessage(Message msg) {
@@ -105,6 +116,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
                 if ((System.currentTimeMillis() - mFirstDrag) >= SORT_DELAY_MILLISECONDS) {
                     mEditLightPresenter.updateLightColor(BleCommandUtils.getLightNo(mPosition),
                             (int) radioGroup.getTag(), msg.obj.toString());
+                    saveColor(msg.getData());
                 }
             }
 
@@ -116,7 +128,8 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         setContentView(R.layout.activity_edit_light);
         ButterKnife.bind(this);
         initToolbar();
-        tvTitle.setText(getIntent().getStringExtra(Utils.LIGHT_MODEL_NAME));
+        mLightName = getIntent().getStringExtra(Utils.LIGHT_MODEL_NAME);
+        tvTitle.setText(mLightName);
         tvRevert.setVisibility(View.VISIBLE);
         tvRevert.setText(getString(R.string.revert));
         mPosition = getIntent().getIntExtra(Utils.LIGHT_MODEL_ID, 0);
@@ -129,7 +142,9 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         seekBarSpeed.setOnSeekBarChangeListener(this);
         seekBarBright.setOnSeekBarChangeListener(this);
         setViewBoardDefaultColor();
+        mColorPicker.setPaintPixel(30,50);
     }
+
 
     @OnClick({R.id.tv_toolbar_right, R.id.tv_chose_color_type})
     @Override
@@ -177,6 +192,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     public void initPopupWindow() {
         mPopupItems = Utils.getPopWindowItems(this, mPosition);
         tvChoseType.setText(mPopupItems[0]);
+        mModelTypeFlags = mPopupItems[0];
         View popWindowView = getLayoutInflater().inflate(R.layout.popup_window, null);
         RecyclerView popupRecyclerView = (RecyclerView) popWindowView.findViewById(R.id.recycler_view);
         popupRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -194,7 +210,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     }
 
     @Override
-    public void setTvColor(int color) {
+    public void setTvColor(int color, float x, float y) {
         int r = Color.red(color);
         int g = Color.green(color);
         int b = Color.blue(color);
@@ -210,8 +226,16 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         mFirstDrag = System.currentTimeMillis();
         Message message = mHandler.obtainMessage();
         message.what = START_SORT;
-//        message.obj = "(" + r + "," + g + "," + b + ")";
         message.obj = colorStr;
+        Bundle bundle = new Bundle();
+        bundle.putInt(Utils.COLOR_R, r);
+        bundle.putInt(Utils.COLOR_G, g);
+        bundle.putInt(Utils.COLOR_B, b);
+        bundle.putInt(Utils.COLOR_INT, color);
+        bundle.putFloat(Utils.PIXEL_X, x);
+        bundle.putFloat(Utils.PIXEL_Y, y);
+        bundle.putString(Utils.COLOR_STR, colorStr);
+        message.setData(bundle);
         mHandler.sendMessageDelayed(message, SORT_DELAY_MILLISECONDS);
 
     }
@@ -226,13 +250,28 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void setViewBoardDefaultColor() {
-        viewBoard1.setBackgroundColor(getResources().getColor(R.color.red));
-        viewBoard2.setBackgroundColor(getResources().getColor(R.color.orange));
-        viewBoard3.setBackgroundColor(getResources().getColor(R.color.yellow));
-        viewBoard4.setBackgroundColor(getResources().getColor(R.color.green));
-        viewBoard5.setBackgroundColor(getResources().getColor(R.color.blue));
-        viewBoard6.setBackgroundColor(getResources().getColor(R.color.indigo));
-        viewBoard7.setBackgroundColor(getResources().getColor(R.color.purple));
+        List<RgbColor> rgbColorList = RgbColor.getRgbColorList(mLightName + mModelTypeFlags +
+                radioGroup.getTag());
+        if (rgbColorList != null && rgbColorList.size() > 0) {
+            RgbColor rgbColor = rgbColorList.get(0);
+            viewBoard1.setBackgroundColor(rgbColor.getColorInt());
+            mColorPicker.setPaintPixel(rgbColor.getX(),rgbColor.getY());
+            viewBoard2.setBackgroundColor(getResources().getColor(R.color.orange));
+            viewBoard3.setBackgroundColor(getResources().getColor(R.color.yellow));
+            viewBoard4.setBackgroundColor(getResources().getColor(R.color.green));
+            viewBoard5.setBackgroundColor(getResources().getColor(R.color.blue));
+            viewBoard6.setBackgroundColor(getResources().getColor(R.color.indigo));
+            viewBoard7.setBackgroundColor(getResources().getColor(R.color.purple));
+        } else {
+            viewBoard1.setBackgroundColor(getResources().getColor(R.color.red));
+            viewBoard2.setBackgroundColor(getResources().getColor(R.color.orange));
+            viewBoard3.setBackgroundColor(getResources().getColor(R.color.yellow));
+            viewBoard4.setBackgroundColor(getResources().getColor(R.color.green));
+            viewBoard5.setBackgroundColor(getResources().getColor(R.color.blue));
+            viewBoard6.setBackgroundColor(getResources().getColor(R.color.indigo));
+            viewBoard7.setBackgroundColor(getResources().getColor(R.color.purple));
+        }
+
     }
 
     @Override
@@ -241,6 +280,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         radioGroup.check(R.id.rb_board1);
         initEditLightUi(type);
         initBleLightColor(position);
+        setViewBoardDefaultColor();
         mPopWindow.dismiss();
     }
 
@@ -249,6 +289,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void initEditLightUi(String type) {
+        mModelTypeFlags = type;
         if (type.equals(getString(R.string.random)) || type.contains(getString(R.string.white)) || type.contains(getString(R.string.default_)) ||
                 type.contains(getString(R.string.moon_light)) || type.contains(getString(R.string.full))) {
             mEditLightPresenter.setIsSetOnColorSelectListener(false);
@@ -372,13 +413,6 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
         if (!mColorPicker.isRecycled()) {
@@ -440,5 +474,25 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
             mEditLightPresenter.setLightBrightness(BleCommandUtils.getLightNo(mPosition),
                     seekBar.getProgress());
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    private void saveColor(Bundle data) {
+        String name = mLightName + mModelTypeFlags + radioGroup.getTag();
+
+        int r = data.getInt(Utils.COLOR_R);
+        int g = data.getInt(Utils.COLOR_G);
+        int b = data.getInt(Utils.COLOR_B);
+        float x = data.getFloat(Utils.PIXEL_X);
+        float y = data.getFloat(Utils.PIXEL_Y);
+        int colorInt = data.getInt(Utils.COLOR_INT);
+        String colorStr = data.getString(Utils.COLOR_STR);
+        RgbColor rgbColor = new RgbColor(name, r, g, b, x, y, colorInt, colorStr);
+        rgbColor.deleteRgbColorByName();
+        rgbColor.save();
     }
 }

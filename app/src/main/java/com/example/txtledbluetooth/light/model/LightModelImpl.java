@@ -3,6 +3,7 @@ package com.example.txtledbluetooth.light.model;
 import android.content.Context;
 
 import com.example.txtledbluetooth.application.MyApplication;
+import com.example.txtledbluetooth.bean.LightType;
 import com.example.txtledbluetooth.utils.SharedPreferenceUtils;
 import com.inuker.bluetooth.library.BluetoothClient;
 import com.inuker.bluetooth.library.connect.response.BleWriteResponse;
@@ -26,5 +27,10 @@ public class LightModelImpl implements LightModel {
 
                     }
                 });
+    }
+
+    @Override
+    public void saveLightDate(LightType lightType) {
+        lightType.save();
     }
 }

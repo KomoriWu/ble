@@ -79,7 +79,7 @@ public class ColorPicker extends ImageView implements View.OnTouchListener {
         y = yy;
         invalidate();
         if (mOnColorSelectListener != null) {
-            mOnColorSelectListener.onColorSelect(getColor(xx, yy));
+            mOnColorSelectListener.onColorSelect(getColor(xx, yy),x,y);
         }
         return true;
     }
@@ -133,7 +133,7 @@ public class ColorPicker extends ImageView implements View.OnTouchListener {
     }
 
     public interface OnColorSelectListener {
-        void onColorSelect(int color);
+        void onColorSelect(int color, float x, float y);
     }
 
     public OnColorSelectListener getOnColorSelectListener() {

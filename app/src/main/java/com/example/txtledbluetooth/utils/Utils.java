@@ -40,6 +40,13 @@ public class Utils {
     public static final String SONG_URL = "song_url";
     public static final String ALBUM_URI = "album_uri";
     public static final String POSITION = "position";
+    public static final String COLOR_R = "color_r";
+    public static final String COLOR_G = "color_g";
+    public static final String COLOR_B = "color_b";
+    public static final String COLOR_STR = "color_str";
+    public static final String COLOR_INT = "color_int";
+    public static final String PIXEL_X = "pixel_x";
+    public static final String PIXEL_Y = "pixel_y";
     public static final int STREAM_TYPE = AudioManager.STREAM_MUSIC;
 
     public static DisplayImageOptions getImageOptions(int defaultIconId) {

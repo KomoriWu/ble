@@ -181,7 +181,7 @@ public class MusicFragment extends BaseFragment implements MusicAdapter.OnIvRigh
         mMusicAdapter.setMusicList(musicInfoList);
         //获取上次播放的position
         mCurrentPosition = SharedPreferenceUtils.getLastPlayPosition(getActivity());
-        if (mCurrentPosition < mMusicInfoList.size() && mCurrentPosition > -1) {
+        if (mCurrentPosition < mMusicInfoList.size() && mCurrentPosition >=0) {
             updateTextView(mMusicInfoList.get(mCurrentPosition).getUrl());
             if (mMusicInterface.isPlaying()) {
                 ivMusicControl.setImageResource(R.mipmap.icon_play);
@@ -325,11 +325,12 @@ public class MusicFragment extends BaseFragment implements MusicAdapter.OnIvRigh
             } else {
                 ivMusicControl.setImageResource(R.mipmap.icon_pause);
             }
-
-            MusicInfo musicInfo = mMusicInfoList.get(mCurrentPosition);
-            ivMusicHead.setImageBitmap(musicInfo.getAlbumImg());
-            tvMusicName.setText(musicInfo.getTitle());
-            tvSinger.setText(musicInfo.getArtist());
+            if (mCurrentPosition >= 0 && mCurrentPosition < mMusicInfoList.size()) {
+                MusicInfo musicInfo = mMusicInfoList.get(mCurrentPosition);
+                ivMusicHead.setImageBitmap(musicInfo.getAlbumImg());
+                tvMusicName.setText(musicInfo.getTitle());
+                tvSinger.setText(musicInfo.getArtist());
+            }
         }
     }
 
