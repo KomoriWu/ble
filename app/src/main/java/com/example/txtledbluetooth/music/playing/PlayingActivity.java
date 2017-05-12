@@ -250,14 +250,57 @@ public class PlayingActivity extends BaseActivity implements Observer, PlayingVi
                 }
                 break;
             case R.id.iv_previous:
-                mPlayingPresenter.playMusic(mMusicInterface, mMusicInfoList.
-                        get(getPreviousSongPosition()).getUrl());
-                initPlayUi(mCurrentPosition);
+                new AsyncTask<Void, Void, Void>() {
+                    @Override
+                    protected void onPreExecute() {
+                        stopAnim();
+                    }
+
+                    @Override
+                    protected Void doInBackground(Void... voids) {
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        return null;
+                    }
+
+                    @Override
+                    protected void onPostExecute(Void aVoid) {
+                        startAnim();
+                        mPlayingPresenter.playMusic(mMusicInterface, mMusicInfoList.
+                                get(getPreviousSongPosition()).getUrl());
+                        initPlayUi(mCurrentPosition);
+                    }
+                }.execute();
+
                 break;
             case R.id.iv_next:
-                mPlayingPresenter.playMusic(mMusicInterface, mMusicInfoList.
-                        get(getNextSongPosition()).getUrl());
-                initPlayUi(mCurrentPosition);
+                new AsyncTask<Void, Void, Void>() {
+                    @Override
+                    protected void onPreExecute() {
+                        stopAnim();
+                    }
+
+                    @Override
+                    protected Void doInBackground(Void... voids) {
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        return null;
+                    }
+
+                    @Override
+                    protected void onPostExecute(Void aVoid) {
+                        startAnim();
+                        mPlayingPresenter.playMusic(mMusicInterface, mMusicInfoList.
+                                get(getNextSongPosition()).getUrl());
+                        initPlayUi(mCurrentPosition);
+                    }
+                }.execute();
                 break;
         }
     }
