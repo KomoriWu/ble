@@ -72,16 +72,16 @@ public class MusicFragment extends BaseFragment implements MusicAdapter.OnIvRigh
     RelativeLayout layoutMusicControl;
     @BindView(R.id.layout_play)
     RelativeLayout layoutPlay;
-    Unbinder unbinder;
     private MusicAdapter mMusicAdapter;
     private MusicPresenter mMusicPresenter;
-    private ArrayList<MusicInfo> mMusicInfoArrayList;
+    private ArrayList<MusicInfo> mMusicInfoList;
     private MusicInterface mMusicInterface;
     private Intent mIntent;
     private MyServiceConn mServiceConn;
     private int mCurrentPosition = -1;
     private boolean mIsCurrentPlay;
     private boolean mIsExistPlayData;
+    private boolean mIsFirstPlay = true;
 
     @Override
     public View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -108,7 +108,7 @@ public class MusicFragment extends BaseFragment implements MusicAdapter.OnIvRigh
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mMusicAdapter = new MusicAdapter(getActivity(), this, this);
         recyclerView.setAdapter(mMusicAdapter);
-        mMusicInfoArrayList = new ArrayList<>();
+        mMusicInfoList = new ArrayList<>();
         new loadSqlAsyncTask().execute();
     }
 
@@ -120,9 +120,9 @@ public class MusicFragment extends BaseFragment implements MusicAdapter.OnIvRigh
             for (MusicInfo musicInfo : musicInfoList) {
                 musicInfo.setAlbumImg(MusicUtils.createThumbFromUir(getActivity(),
                         Uri.parse(musicInfo.getAlbumUri())));
-                mMusicInfoArrayList.add(musicInfo);
+                mMusicInfoList.add(musicInfo);
             }
-            return mMusicInfoArrayList;
+            return mMusicInfoList;
         }
 
         @Override
@@ -151,13 +151,19 @@ public class MusicFragment extends BaseFragment implements MusicAdapter.OnIvRigh
         } else {
             mIsCurrentPlay = true;
         }
-        MusicInfo musicInfo = mMusicInfoArrayList.get(position);
+        MusicInfo musicInfo = mMusicInfoList.get(position);
         if (mIsCurrentPlay) {
             if (mMusicInterface.isPlaying()) {
                 mMusicInterface.pausePlay();
                 ivMusicControl.setImageResource(R.mipmap.icon_pause);
             } else {
-                mMusicInterface.continuePlay();
+                if (mIsFirstPlay) {
+                    mMusicPresenter.playMusic(mMusicInterface, musicInfo.getUrl());
+                    mIsFirstPlay = false;
+                } else {
+                    mMusicInterface.continuePlay();
+                }
+
                 ivMusicControl.setImageResource(R.mipmap.icon_play);
             }
         } else {
@@ -171,12 +177,12 @@ public class MusicFragment extends BaseFragment implements MusicAdapter.OnIvRigh
 
     @Override
     public void showMusics(ArrayList<MusicInfo> musicInfoList) {
-        mMusicInfoArrayList = musicInfoList;
+        mMusicInfoList = musicInfoList;
         mMusicAdapter.setMusicList(musicInfoList);
         //获取上次播放的position
         mCurrentPosition = SharedPreferenceUtils.getLastPlayPosition(getActivity());
-        if (mCurrentPosition < mMusicInfoArrayList.size() && mCurrentPosition > -1) {
-            updateTextView(mMusicInfoArrayList.get(mCurrentPosition).getUrl());
+        if (mCurrentPosition < mMusicInfoList.size() && mCurrentPosition > -1) {
+            updateTextView(mMusicInfoList.get(mCurrentPosition).getUrl());
             if (mMusicInterface.isPlaying()) {
                 ivMusicControl.setImageResource(R.mipmap.icon_play);
             } else {
@@ -188,7 +194,7 @@ public class MusicFragment extends BaseFragment implements MusicAdapter.OnIvRigh
     @Override
     public void updateTextView(String songUrl) {
         //定位到正在播放的MusicInfo
-        for (MusicInfo musicInfo : mMusicInfoArrayList) {
+        for (MusicInfo musicInfo : mMusicInfoList) {
             if (musicInfo.getUrl().equals(songUrl)) {
                 ivMusicHead.setImageBitmap(musicInfo.getAlbumImg());
                 tvMusicName.setText(musicInfo.getTitle());
@@ -226,19 +232,6 @@ public class MusicFragment extends BaseFragment implements MusicAdapter.OnIvRigh
         }
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // TODO: inflate a fragment view
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
-        unbinder = ButterKnife.bind(this, rootView);
-        return rootView;
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
-    }
 
     @OnClick({R.id.layout_play, R.id.layout_music_control})
     public void onViewClicked(View view) {
@@ -253,13 +246,13 @@ public class MusicFragment extends BaseFragment implements MusicAdapter.OnIvRigh
                         mMusicInterface.continuePlay();
                     }
                 } else {
-                    if (mMusicInfoArrayList.size() > 0) {
-                        if (!(mCurrentPosition < mMusicInfoArrayList.size() &&
+                    if (mMusicInfoList.size() > 0) {
+                        if (!(mCurrentPosition < mMusicInfoList.size() &&
                                 mCurrentPosition > -1)) {
                             mCurrentPosition = 0;
                         }
                         mMusicPresenter.playMusic(mMusicInterface,
-                                mMusicInfoArrayList.get(mCurrentPosition).getUrl());
+                                mMusicInfoList.get(mCurrentPosition).getUrl());
                         ivMusicControl.setImageResource(R.mipmap.icon_play);
                         mIsExistPlayData = true;
                     }
@@ -267,7 +260,7 @@ public class MusicFragment extends BaseFragment implements MusicAdapter.OnIvRigh
                 break;
             case R.id.layout_music_control:
                 Intent intent = new Intent(getActivity(), PlayingActivity.class);
-                if (!(mCurrentPosition < mMusicInfoArrayList.size() &&
+                if (!(mCurrentPosition < mMusicInfoList.size() &&
                         mCurrentPosition > -1)) {
                     mCurrentPosition = 0;
                 }
@@ -305,10 +298,14 @@ public class MusicFragment extends BaseFragment implements MusicAdapter.OnIvRigh
                 super.onPostExecute(bundle);
                 int duration = bundle.getInt(Utils.DURATION);
                 int currentProgress = bundle.getInt(Utils.CURRENT_PROGRESS);
+                int currentPlayPosition = bundle.getInt(Utils.CURRENT_PLAY_POSITION);
+                mCurrentPosition = currentPlayPosition;
                 progressBar.setMax(duration);
                 progressBar.setProgress(currentProgress);
-                if (progressBar.getProgress() == duration) {
-                    mMusicPresenter.playMusic(mMusicInterface, mMusicInfoArrayList.
+
+
+                if (currentProgress == duration) {
+                    mMusicPresenter.playMusic(mMusicInterface, mMusicInfoList.
                             get(getNextSongPosition()).getUrl());
                     ivMusicControl.setImageResource(R.mipmap.icon_play);
                 }
@@ -317,23 +314,29 @@ public class MusicFragment extends BaseFragment implements MusicAdapter.OnIvRigh
 
     }
 
+
     @Override
     public void onResume() {
         super.onResume();
         if (mMusicInterface != null) {
-            if (mMusicInterface.isPlaying()){
+            if (mMusicInterface.isPlaying()) {
                 mIsExistPlayData = true;
                 ivMusicControl.setImageResource(R.mipmap.icon_play);
-            }else {
+            } else {
                 ivMusicControl.setImageResource(R.mipmap.icon_pause);
             }
+
+            MusicInfo musicInfo = mMusicInfoList.get(mCurrentPosition);
+            ivMusicHead.setImageBitmap(musicInfo.getAlbumImg());
+            tvMusicName.setText(musicInfo.getTitle());
+            tvSinger.setText(musicInfo.getArtist());
         }
     }
 
     private int getNextSongPosition() {
         mCurrentPosition += 1;
         int nexSongPosition = mCurrentPosition;
-        if (nexSongPosition >= mMusicInfoArrayList.size()) {
+        if (nexSongPosition >= mMusicInfoList.size()) {
             nexSongPosition = 0;
             mCurrentPosition = 0;
         }

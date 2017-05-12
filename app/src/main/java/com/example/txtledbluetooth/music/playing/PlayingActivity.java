@@ -57,10 +57,16 @@ public class PlayingActivity extends BaseActivity implements Observer, PlayingVi
     FrameLayout layoutAlbumCover;
     @BindView(R.id.layout_volume)
     LinearLayout layoutVolume;
+    @BindView(R.id.layout_play)
+    RelativeLayout layoutPlay;
     @BindView(R.id.iv_needle)
     ImageView ivNeedle;
     @BindView(R.id.iv_play)
     ImageView ivPlay;
+    @BindView(R.id.iv_previous)
+    ImageView ivPrevious;
+    @BindView(R.id.iv_next)
+    ImageView ivNext;
     @BindView(R.id.iv_album_cover)
     ImageView ivAlbumCover;
     @BindView(R.id.tv_music_name)
@@ -128,15 +134,16 @@ public class PlayingActivity extends BaseActivity implements Observer, PlayingVi
     }
 
     private void initPlayUi(int position) {
-        MusicInfo musicInfo = mMusicInfoList.get(position);
-        tvMusicName.setText(musicInfo.getTitle());
-        tvSinger.setText(musicInfo.getArtist());
-        mAlbumUri = musicInfo.getAlbumUri();
-        MyApplication.getImageLoader(PlayingActivity.this).displayImage(mAlbumUri,
-                ivAlbumCover, Utils.getImageOptions(R.mipmap.placeholder_disk_play_program, 360));
+        if (position >= 0 && position < mMusicInfoList.size()) {
+            MusicInfo musicInfo = mMusicInfoList.get(position);
+            tvMusicName.setText(musicInfo.getTitle());
+            tvSinger.setText(musicInfo.getArtist());
+            mAlbumUri = musicInfo.getAlbumUri();
+            MyApplication.getImageLoader(PlayingActivity.this).displayImage(mAlbumUri,
+                    ivAlbumCover, Utils.getImageOptions(R.mipmap.placeholder_disk_play_program, 360));
 
-        mPlayingPresenter.loadGSAlbumCover(mAlbumUri, this);
-
+            mPlayingPresenter.loadGSAlbumCover(mAlbumUri, this);
+        }
     }
 
     private void initService() {
@@ -210,10 +217,11 @@ public class PlayingActivity extends BaseActivity implements Observer, PlayingVi
     }
 
 
-    @OnClick({R.id.layout_activity_play, R.id.iv_play})
+    @OnClick({R.id.layout_activity_play, R.id.iv_play, R.id.iv_previous, R.id.iv_next,
+            R.id.layout_play})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.layout_activity_play:
+            case R.id.layout_play:
                 if (layoutVolume.getVisibility() == View.GONE) {
                     layoutVolume.setVisibility(View.VISIBLE);
                     seekBarVolume.setProgress(mAudioManager.getStreamVolume(Utils.STREAM_TYPE));
@@ -240,6 +248,16 @@ public class PlayingActivity extends BaseActivity implements Observer, PlayingVi
                     }
 
                 }
+                break;
+            case R.id.iv_previous:
+                mPlayingPresenter.playMusic(mMusicInterface, mMusicInfoList.
+                        get(getPreviousSongPosition()).getUrl());
+                initPlayUi(mCurrentPosition);
+                break;
+            case R.id.iv_next:
+                mPlayingPresenter.playMusic(mMusicInterface, mMusicInfoList.
+                        get(getNextSongPosition()).getUrl());
+                initPlayUi(mCurrentPosition);
                 break;
         }
     }
@@ -302,17 +320,14 @@ public class PlayingActivity extends BaseActivity implements Observer, PlayingVi
                 mIsExistPlayData = true;
                 int duration = bundle.getInt(Utils.DURATION);
                 int currentProgress = bundle.getInt(Utils.CURRENT_PROGRESS);
-                String currentUrl = bundle.getString(Utils.CURRENT_PLAY_URL);
-                for (int i = 0; i < mMusicInfoList.size(); i++) {
-                    if (currentUrl.equals(mMusicInfoList.get(i).getUrl())) {
-                        mCurrentPosition = i;
-                    }
-                }
-                tvTimeRight.setText(Utils.getPlayTime(duration));
-                tvTimeLeft.setText(Utils.getPlayTime(currentProgress));
+                int currentPlayPosition = bundle.getInt(Utils.CURRENT_PLAY_POSITION);
+                mCurrentPosition = currentPlayPosition;
+
                 seekBarPlay.setMax(duration);
                 seekBarPlay.setProgress(currentProgress);
-                if (seekBarPlay.getProgress() == duration) {
+                tvTimeRight.setText(Utils.getPlayTime(duration));
+                tvTimeLeft.setText(Utils.getPlayTime(currentProgress));
+                if (currentProgress == duration) {
                     initPlayUi(getNextSongPosition());
                 }
 
@@ -331,6 +346,17 @@ public class PlayingActivity extends BaseActivity implements Observer, PlayingVi
         }
         return nexSongPosition;
     }
+
+    private int getPreviousSongPosition() {
+        mCurrentPosition -= 1;
+        int previousSongPosition = mCurrentPosition;
+        if (previousSongPosition < 0) {
+            previousSongPosition = mMusicInfoList.size() - 1;
+            mCurrentPosition = mMusicInfoList.size() - 1;
+        }
+        return previousSongPosition;
+    }
+
     @Override
     public void onPause() {
         super.onPause();

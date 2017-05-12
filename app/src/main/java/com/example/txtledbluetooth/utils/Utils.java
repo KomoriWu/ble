@@ -36,7 +36,7 @@ public class Utils {
     public static final String LIGHT_MODEL_ID = "light_model_id";
     public static final String DURATION = "duration";
     public static final String CURRENT_PROGRESS = "current_progress";
-    public static final String CURRENT_PLAY_URL = "current_play_url";
+    public static final String CURRENT_PLAY_POSITION = "current_play_position";
     public static final String SONG_URL = "song_url";
     public static final String ALBUM_URI = "album_uri";
     public static final String POSITION = "position";

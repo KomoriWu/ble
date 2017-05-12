@@ -10,9 +10,11 @@ import android.os.IBinder;
 import android.os.Message;
 import android.support.annotation.Nullable;
 
+import com.example.txtledbluetooth.bean.MusicInfo;
 import com.example.txtledbluetooth.utils.Utils;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Timer;
@@ -29,7 +31,7 @@ public class MusicService extends Service {
     private MediaPlayer mMediaPlayer;
     private Timer mTimer;
     private MusicObservable mMusicObservable;
-    private String mCurrentPlayUrl;
+    private int mCurrentPlayPosition;
 
     @Override
     public void onCreate() {
@@ -56,7 +58,15 @@ public class MusicService extends Service {
                 mMediaPlayer.setDataSource(songUrl);
                 mMediaPlayer.prepare();
                 mMediaPlayer.start();
-                mCurrentPlayUrl=songUrl;
+                List<MusicInfo> musicInfoList = null;
+                if (musicInfoList == null) {
+                    musicInfoList = MusicInfo.listAll(MusicInfo.class);
+                }
+                for (int i = 0; i < musicInfoList.size(); i++) {
+                    if (songUrl.equals(musicInfoList.get(i).getUrl())) {
+                        mCurrentPlayPosition = i;
+                    }
+                }
                 addTimer();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -105,13 +115,16 @@ public class MusicService extends Service {
                                 @Override
                                 public void run() {
                                     int duration = mMediaPlayer.getDuration();
+                                    duration -= 3000;
                                     int currentProgress = mMediaPlayer.getCurrentPosition();
+                                    if (currentProgress > duration) {
+                                        currentProgress = duration;
+                                    }
                                     Bundle bundle = new Bundle();
                                     bundle.putInt(Utils.DURATION, duration);
                                     bundle.putInt(Utils.CURRENT_PROGRESS, currentProgress);
-                                    bundle.putString(Utils.CURRENT_PLAY_URL, mCurrentPlayUrl);
+                                    bundle.putInt(Utils.CURRENT_PLAY_POSITION, mCurrentPlayPosition);
                                     mMusicObservable.notifyChanged(bundle);
-
                                 }
                             },
                     UPDATE_DELAY, UPDATE_PERIOD);
