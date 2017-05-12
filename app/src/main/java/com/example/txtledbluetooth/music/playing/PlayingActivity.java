@@ -33,6 +33,7 @@ import com.example.txtledbluetooth.music.playing.presenter.PlayingPresenterImpl;
 import com.example.txtledbluetooth.music.playing.view.PlayingView;
 import com.example.txtledbluetooth.music.service.MusicInterface;
 import com.example.txtledbluetooth.music.service.MusicService;
+import com.example.txtledbluetooth.utils.SharedPreferenceUtils;
 import com.example.txtledbluetooth.utils.Utils;
 import com.qiushui.blurredview.BlurredView;
 
@@ -329,6 +330,11 @@ public class PlayingActivity extends BaseActivity implements Observer, PlayingVi
             mCurrentPosition = 0;
         }
         return nexSongPosition;
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        SharedPreferenceUtils.saveLastPlayPosition(this, mCurrentPosition);
     }
 
     @Override
