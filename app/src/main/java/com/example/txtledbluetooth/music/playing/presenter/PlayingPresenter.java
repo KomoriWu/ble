@@ -13,4 +13,6 @@ import com.example.txtledbluetooth.music.service.MusicInterface;
 public interface PlayingPresenter {
     void playMusic(MusicInterface musicInterface, String songUrl);
     void loadGSAlbumCover(String albumUri,Context context);
+    void seekToPlayProgress(MusicInterface musicInterface,int progress);
+    void seekToVolumeProgress(Context context,int progress);
 }

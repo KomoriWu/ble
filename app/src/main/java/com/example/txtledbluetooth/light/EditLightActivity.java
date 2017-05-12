@@ -96,8 +96,6 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     private View mBgView;
     private EditLightPresenter mEditLightPresenter;
     private int mPosition;
-    private int mSpeed;
-    private int mBrightness;
     private long mFirstDrag;
     private Handler mHandler = new Handler() {
         @Override
@@ -425,11 +423,6 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-        if (seekBar.getId() == R.id.sb_speed) {
-            mSpeed = i;
-        } else if (seekBar.getId() == R.id.sb_brightness) {
-            mBrightness = i;
-        }
 
     }
 
@@ -441,10 +434,11 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
         if (seekBar.getId() == R.id.sb_speed) {
-            mEditLightPresenter.setLightSpeed(BleCommandUtils.getLightNo(mPosition), mSpeed);
+            mEditLightPresenter.setLightSpeed(BleCommandUtils.getLightNo(mPosition), seekBar.
+                    getProgress());
         } else if (seekBar.getId() == R.id.sb_brightness) {
             mEditLightPresenter.setLightBrightness(BleCommandUtils.getLightNo(mPosition),
-                    mBrightness);
+                    seekBar.getProgress());
         }
     }
 }

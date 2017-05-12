@@ -3,12 +3,14 @@ package com.example.txtledbluetooth.music.playing.presenter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.media.AudioManager;
 import android.os.AsyncTask;
 
 import com.example.txtledbluetooth.music.playing.model.PlayingModel;
 import com.example.txtledbluetooth.music.playing.model.PlayingModelImpl;
 import com.example.txtledbluetooth.music.playing.view.PlayingView;
 import com.example.txtledbluetooth.music.service.MusicInterface;
+import com.example.txtledbluetooth.utils.Utils;
 
 /**
  * Created by KomoriWu
@@ -48,6 +50,17 @@ public class PlayingPresenterImpl implements PlayingPresenter {
                 mPlayingView.showGSAlbumCover(bitmap);
             }
         });
+    }
+
+    @Override
+    public void seekToPlayProgress(MusicInterface musicInterface, int progress) {
+        musicInterface.seekTo(progress);
+    }
+
+    @Override
+    public void seekToVolumeProgress(Context context, int progress) {
+        AudioManager am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        am.setStreamVolume(Utils.STREAM_TYPE, progress, AudioManager.FLAG_PLAY_SOUND);
     }
 
 }

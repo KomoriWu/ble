@@ -3,9 +3,11 @@ package com.example.txtledbluetooth.music.playing;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Bitmap;
+import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -42,7 +44,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class PlayingActivity extends BaseActivity implements Observer, PlayingView {
+public class PlayingActivity extends BaseActivity implements Observer, PlayingView, SeekBar.
+        OnSeekBarChangeListener {
     public static final String TAG = PlayingActivity.class.getSimpleName();
     public static final int NEEDLE_ANIM_VALUES = -25;
     public static final int NEEDLE_ANIM_DURATION = 200;
@@ -67,6 +70,8 @@ public class PlayingActivity extends BaseActivity implements Observer, PlayingVi
     TextView tvTimeLeft;
     @BindView(R.id.seek_bar_play)
     SeekBar seekBarPlay;
+    @BindView(R.id.seek_bar_volume)
+    SeekBar seekBarVolume;
     @BindView(R.id.tv_time_right)
     TextView tvTimeRight;
     @BindView(R.id.blurred_view)
@@ -83,6 +88,7 @@ public class PlayingActivity extends BaseActivity implements Observer, PlayingVi
     private int mCurrentPosition;
     private PlayingPresenter mPlayingPresenter;
     private boolean mIsExistPlayData;
+    private AudioManager mAudioManager;
 
     @Override
     public void init() {
@@ -105,6 +111,10 @@ public class PlayingActivity extends BaseActivity implements Observer, PlayingVi
         mPlayingPresenter = new PlayingPresenterImpl(this);
         initPlayUi(mIntentPosition);
 
+        mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        seekBarPlay.setOnSeekBarChangeListener(this);
+        seekBarVolume.setOnSeekBarChangeListener(this);
+        seekBarVolume.setMax(mAudioManager.getStreamMaxVolume(Utils.STREAM_TYPE));
     }
 
     @Override
@@ -205,6 +215,7 @@ public class PlayingActivity extends BaseActivity implements Observer, PlayingVi
             case R.id.layout_activity_play:
                 if (layoutVolume.getVisibility() == View.GONE) {
                     layoutVolume.setVisibility(View.VISIBLE);
+                    seekBarVolume.setProgress(mAudioManager.getStreamVolume(Utils.STREAM_TYPE));
                 } else if (layoutVolume.getVisibility() == View.VISIBLE) {
                     layoutVolume.setVisibility(View.GONE);
                 }
@@ -229,6 +240,25 @@ public class PlayingActivity extends BaseActivity implements Observer, PlayingVi
 
                 }
                 break;
+        }
+    }
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+        if (seekBar.getId() == R.id.seek_bar_play) {
+            mPlayingPresenter.seekToPlayProgress(mMusicInterface, seekBar.getProgress());
+        } else if (seekBar.getId() == R.id.seek_bar_volume) {
+            mPlayingPresenter.seekToVolumeProgress(this, seekBar.getProgress());
         }
     }
 

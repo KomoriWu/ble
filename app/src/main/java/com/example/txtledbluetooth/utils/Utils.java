@@ -7,6 +7,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.media.AudioManager;
 import android.view.inputmethod.InputMethodManager;
 
 import com.example.txtledbluetooth.R;
@@ -39,6 +40,7 @@ public class Utils {
     public static final String SONG_URL = "song_url";
     public static final String ALBUM_URI = "album_uri";
     public static final String POSITION = "position";
+    public static final int STREAM_TYPE = AudioManager.STREAM_MUSIC;
 
     public static DisplayImageOptions getImageOptions(int defaultIconId) {
         return getImageOptions(defaultIconId, 0);
@@ -170,4 +172,5 @@ public class Utils {
         String second = musicTime % 60 < 10 ? "0" + musicTime % 60 : musicTime % 60 + "";
         return minute + ":" + second;
     }
+
 }
