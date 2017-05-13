@@ -6,32 +6,35 @@ package com.example.txtledbluetooth.utils;
  */
 
 public class BleCommandUtils {
-    //总体格式：GP$<指令数>$<指令1>;<指令2>;…;<指令n>$
-    public static final String HEAD = "GP$1$";
+    public static final String HEAD = "GP$";
     public static final String END = "$";
-    //指令代号
-    public static final String MOON_LIGHT = "mol";
-    public static final String FIREWORK = "fwk";
-    public static final String BLUE_SKIES = "hwl";
-    public static final String RAINBOW = "rbw";
-    public static final String PULSATE = "msa";
-    public static final String GLOW = "clg";
-    public static final String MONOCHROME = "cbn";
-    //灯光部分
-    public static final String LIGHT_MODEL0 = ",a,0:*";
-    public static final String LIGHT_MODEL1 = ",a,1:*";
-    public static final String LIGHT_MODEL2 = ",a,2:*";
-    public static final String LIGHT_MODEL3 = ",a,3:*";
-    public static final String LIGHT_UPDATE_COLOR0 = ",s,0:";
-    public static final String LIGHT_UPDATE_COLOR1 = ",s,1:";
-    public static final String LIGHT_UPDATE_COLOR2 = ",s,2:";
-    public static final String MOON_LIGHT_COMMAND = HEAD + "l" + MOON_LIGHT + LIGHT_MODEL0 + END;
-    public static final String FIREWORK_COMMAND = HEAD + "l" + FIREWORK + LIGHT_MODEL0 + END;
-    public static final String BLUE_SKIES_COMMAND = HEAD + "l" + BLUE_SKIES + LIGHT_MODEL0 + END;
-    public static final String RAINBOW_COMMAND = HEAD + "l" + RAINBOW + LIGHT_MODEL0 + END;
-    public static final String PULSATE_COMMAND = HEAD + "l" + PULSATE + LIGHT_MODEL0 + END;
-    public static final String GLOW_COMMAND = HEAD + "l" + GLOW + LIGHT_MODEL0 + END;
-    public static final String MONOCHROME_COMMAND = HEAD + "l" + MONOCHROME + LIGHT_MODEL0 + END;
+
+    //模式指令
+    public static final String MOON_LIGHT1 = "lmol";
+    public static final String MOON_LIGHT2 = "lmpl";
+    public static final String FIREWORKS = "lfwk";
+    public static final String HOT_WHEELS = "lhwl";
+    public static final String SPECTRUM = "lrbw";
+    public static final String FULL_SPECTRUM = "lfrb";
+    public static final String PULSATE = "lclg";
+    public static final String MORPH = "lmop";
+    public static final String BEAT_METER = "lhst";
+    public static final String CYCLE_ALL = "lcbn";
+    public static final String CYCLE = "lclr";
+    public static final String WAVE1 = "lwav";
+    public static final String WAVE2 = "lwbv";
+    public static final String SOLO = "lsol";
+    public static final String MOOD = "lmod";
+    public static final String AURORA = "laur";
+
+    public static final String CLOSE_LIGHT = "etof";
+
+    //指令类型
+    public static final String COLOR_DATA = "YSD$";
+    public static final String MODIFY_COLOR = "DYS$";
+    public static final String MODIFY_BRIGHTNESS = "LDD$";
+    public static final String MODIFY_SPEED = "SDD$";
+    public static final String CONTROL_DATA = "KZD$";
 
     //其他设置
     public static final String LIGHT_SPEED = "espd,";
@@ -44,74 +47,88 @@ public class BleCommandUtils {
 
     //灯光速度
     public static String getLightSpeedCommand(String lightNo, String speedHex) {
-        return HEAD + LIGHT_SPEED + lightNo + ":" + speedHex + END;
+        return HEAD + lightNo + "$" + MODIFY_SPEED + "00" + speedHex + END;
     }
 
     //灯光亮度
     public static String getLightBrightCommand(String lightNo, String brightHex) {
-        return HEAD + LIGHT_BRIGHT + lightNo + ":" + brightHex + END;
+        return HEAD + lightNo + "$" + MODIFY_BRIGHTNESS + "00" + brightHex + END;
     }
 
-    public static String getLightNo(int position) {
+    public static String getLightNo(int position, boolean isFirstItem) {
         String lightNo = "";
         switch (position) {
             case 0:
-                lightNo = MOON_LIGHT;
+                if (isFirstItem) {
+                    lightNo = MOON_LIGHT1;
+                } else {
+                    lightNo = MOON_LIGHT2;
+                }
+
                 break;
             case 1:
-                lightNo = FIREWORK;
+                lightNo = FIREWORKS;
                 break;
             case 2:
-                lightNo = BLUE_SKIES;
+                lightNo = HOT_WHEELS;
                 break;
             case 3:
-                lightNo = RAINBOW;
+                lightNo = SPECTRUM;
                 break;
             case 4:
-                lightNo = PULSATE;
+                lightNo = FULL_SPECTRUM;
                 break;
             case 5:
-                lightNo = GLOW;
+                lightNo = PULSATE;
                 break;
             case 6:
-                lightNo = MONOCHROME;
+                lightNo = MORPH;
+                break;
+            case 7:
+                lightNo = BEAT_METER;
+                break;
+            case 8:
+                lightNo = CYCLE_ALL;
+                break;
+            case 9:
+                lightNo = CYCLE;
+                break;
+            case 10:
+                if (isFirstItem) {
+                    lightNo = WAVE1;
+                } else {
+                    lightNo = WAVE2;
+                }
+                break;
+            case 11:
+                lightNo = SOLO;
+                break;
+            case 12:
+                lightNo = MOOD;
+                break;
+            case 13:
+                lightNo = AURORA;
                 break;
         }
         return lightNo;
     }
 
-    public static String getInitCommandByType(String lightNo, int position) {
-        String command = LIGHT_MODEL0;
+    public static String getItemCommandByType(int position, int popupPosition,
+                                              boolean isFirstItem) {
+        StringBuffer command = new StringBuffer("FF0");
+
         switch (position) {
             case 0:
-                command = LIGHT_MODEL0;
-                break;
-            case 1:
-                command = LIGHT_MODEL1;
-                break;
-            case 2:
-                command = LIGHT_MODEL2;
-                break;
-            case 3:
-                command = LIGHT_MODEL3;
+                isFirstItem = popupPosition == 0 ? true : false;
+                if (!isFirstItem) {
+                    command.append("1$FF0000");
+                }
                 break;
         }
-        return HEAD + "l" + lightNo + command + END;
+        return HEAD + getLightNo(position, isFirstItem) + "$" + COLOR_DATA + command.toString() + END;
     }
 
-    public static String updateLightColor(String lightNo,int position, String color) {
-        String command = LIGHT_UPDATE_COLOR0;
-        switch (position) {
-            case 0:
-                command = LIGHT_UPDATE_COLOR0;
-                break;
-            case 1:
-                command = LIGHT_UPDATE_COLOR1;
-                break;
-            case 2:
-                command = LIGHT_UPDATE_COLOR2;
-                break;
-        }
-        return HEAD + "l" + lightNo + command + "#" + color + END;
+    public static String updateLightColor(String lightNo, int position, String color) {
+        return HEAD + "l" + lightNo + "#" + color + END;
     }
 }

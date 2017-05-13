@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.example.txtledbluetooth.R;
 import com.example.txtledbluetooth.base.BaseFragment;
+import com.example.txtledbluetooth.bean.LightType;
 import com.example.txtledbluetooth.bean.Lighting;
 import com.example.txtledbluetooth.bean.MusicInfo;
 import com.example.txtledbluetooth.light.presenter.LightPresenter;
@@ -49,6 +50,7 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
     private LightAdapter mLightAdapter;
     private LightPresenter mLightPresenter;
     private boolean mIsChecked;
+    private String mLightName;
 
     @Override
     public View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -87,20 +89,21 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
     @Override
     public void editLight(int id) {
         String[] lightNames = getActivity().getResources().getStringArray(R.array.lighting_name);
+        mLightName = lightNames[id];
         Intent intent = new Intent(getActivity(), EditLightActivity.class);
         intent.putExtra(Utils.LIGHT_MODEL_ID, id);
-        intent.putExtra(Utils.LIGHT_MODEL_NAME, lightNames[id]);
+        intent.putExtra(Utils.LIGHT_MODEL_NAME, mLightName);
         startActivity(intent);
     }
 
     @Override
     public void showHintDialog() {
-        AlertUtils.showAlertDialog(getActivity(),R.string.open_switch_hint);
+        AlertUtils.showAlertDialog(getActivity(), R.string.open_switch_hint);
     }
 
     @Override
     public void onItemClick(View view, int position) {
-        mLightPresenter.operateItemBluetooth(mIsChecked, position);
+        mLightPresenter.operateItemBluetooth(mIsChecked, mLightName,position);
     }
 
     @Override

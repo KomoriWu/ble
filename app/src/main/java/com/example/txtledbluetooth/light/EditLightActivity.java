@@ -111,7 +111,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
             super.dispatchMessage(msg);
             if (msg.what == START_SORT) {
                 if ((System.currentTimeMillis() - mFirstDrag) >= SORT_DELAY_MILLISECONDS) {
-                    mEditLightPresenter.updateLightColor(BleCommandUtils.getLightNo(mPosition),
+                    mEditLightPresenter.updateLightColor(BleCommandUtils.getLightNo(mPosition,false),
                             (int) radioGroup.getTag(), msg.obj.toString());
                     saveColor(msg.getData());
                 }
@@ -268,7 +268,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     public void revertColor() {
         radioGroup.check(R.id.rb_board1);
         setEtDefaultData();
-        mEditLightPresenter.updateLightColor(BleCommandUtils.getLightNo(mPosition),
+        mEditLightPresenter.updateLightColor(BleCommandUtils.getLightNo(mPosition,false),
                 (int) radioGroup.getTag(), getString(R.string.red_color));
         RgbColor.deleteAll(RgbColor.class);
         setViewBoardDefaultColor();
@@ -326,7 +326,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void initBleLightColor(int position) {
-        mEditLightPresenter.initBleLightColor(BleCommandUtils.getLightNo(mPosition), position);
+        mEditLightPresenter.initBleLightColor(position);
     }
 
     private void initEditLightUi(String type) {
@@ -510,10 +510,10 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
         if (seekBar.getId() == R.id.sb_speed) {
-            mEditLightPresenter.setLightSpeed(BleCommandUtils.getLightNo(mPosition), seekBar.
-                    getProgress());
+            mEditLightPresenter.setLightSpeed(BleCommandUtils.getLightNo(mPosition,false),
+                    seekBar.getProgress());
         } else if (seekBar.getId() == R.id.sb_brightness) {
-            mEditLightPresenter.setLightBrightness(BleCommandUtils.getLightNo(mPosition),
+            mEditLightPresenter.setLightBrightness(BleCommandUtils.getLightNo(mPosition,false),
                     seekBar.getProgress());
         }
     }

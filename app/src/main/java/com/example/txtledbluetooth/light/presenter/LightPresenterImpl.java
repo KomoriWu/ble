@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.text.TextUtils;
 
 import com.example.txtledbluetooth.application.MyApplication;
+import com.example.txtledbluetooth.bean.LightType;
 import com.example.txtledbluetooth.bean.Lighting;
 import com.example.txtledbluetooth.light.model.LightModel;
 import com.example.txtledbluetooth.light.model.LightModelImpl;
@@ -47,37 +48,20 @@ public class LightPresenterImpl implements LightPresenter {
 
 
     @Override
-    public void operateItemBluetooth(boolean mIsChecked, int id) {
+    public void operateItemBluetooth(boolean mIsChecked, String lightName,int id) {
         if (mIsChecked) {
-            String command = "";
-            switch (id) {
-                case 0:
-                    command = BleCommandUtils.MOON_LIGHT_COMMAND;
-                    break;
-                case 1:
-                    command = BleCommandUtils.FIREWORK_COMMAND;
-                    break;
-                case 2:
-                    command = BleCommandUtils.BLUE_SKIES_COMMAND;
-                    break;
-                case 3:
-                    command = BleCommandUtils.RAINBOW_COMMAND;
-                    break;
-                case 4:
-                    command = BleCommandUtils.PULSATE_COMMAND;
-                    break;
-                case 5:
-                    command = BleCommandUtils.GLOW_COMMAND;
-                    break;
-                case 6:
-                    command = BleCommandUtils.MONOCHROME_COMMAND;
-                    break;
+            List<LightType> lightTypeList = LightType.getLightTypeList(lightName);
+            int mPopupPosition = 0;
+            if (lightTypeList != null && lightTypeList.size() > 0) {
+                LightType lightType = lightTypeList.get(0);
+                mPopupPosition = lightType.getPopupPosition();
             }
+            String command = BleCommandUtils.getItemCommandByType(id,mPopupPosition, false);
             if (!TextUtils.isEmpty(command) && !TextUtils.isEmpty(mMacAddress)) {
                 mLightModel.WriteCommand(MyApplication.getBluetoothClient(mContext), mMacAddress
                         , mServiceUUID, mCharacterUUID, command);
             }
-            SharedPreferenceUtils.saveClickPosition(mContext, id);
+
         } else {
             mLightView.showHintDialog();
         }

@@ -17,7 +17,7 @@ public interface EditLightPresenter {
 
     void setLightBrightness(String lightNo, int brightness);
 
-    void initBleLightColor(String lightNo, int position);
+    void initBleLightColor(int position);
 
     void updateLightColor(String lightNo, int position, String color);
 

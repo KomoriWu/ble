@@ -78,6 +78,23 @@ public class EditLightPresenterImpl implements EditLightPresenter, ColorPicker.
         writeCommand(command);
     }
 
+    public static final String MOON_LIGHT1 = "lmol";
+    public static final String MOON_LIGHT2 = "lmpl";
+    public static final String FIREWORKS = "lfwk";
+    public static final String HOT_WHEELS = "lhwl";
+    public static final String SPECTRUM = "lrbw";
+    public static final String FULL_SPECTRUM = "lfrb";
+    public static final String PULSATE = "lclg";
+    public static final String MORPH = "lmop";
+    public static final String BEAT_METER = "lhst";
+    public static final String CYCLE_ALL = "lcbn";
+    public static final String CYCLE = "lclr";
+    public static final String WAVE1 = "lwav";
+    public static final String WAVE2 = "lwbv";
+    public static final String SOLO = "lsol";
+    public static final String MOOD = "lmod";
+    public static final String AURORA = "laur";
+
     @Override
     public void setLightBrightness(String lightNo, int brightness) {
         String command = BleCommandUtils.getLightBrightCommand(lightNo, Integer.
@@ -86,8 +103,8 @@ public class EditLightPresenterImpl implements EditLightPresenter, ColorPicker.
     }
 
     @Override
-    public void initBleLightColor(String lightNo, int position) {
-        String command = BleCommandUtils.getInitCommandByType(lightNo, position);
+    public void initBleLightColor(int position) {
+        String command = BleCommandUtils.getItemCommandByType(position, position,false);
         writeCommand(command);
     }
 
