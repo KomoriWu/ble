@@ -1,8 +1,5 @@
 package com.example.txtledbluetooth.light.model;
 
-import android.content.Context;
-
-import com.example.txtledbluetooth.bean.LightType;
 import com.inuker.bluetooth.library.BluetoothClient;
 
 import java.util.UUID;
@@ -15,5 +12,4 @@ import java.util.UUID;
 public interface LightModel {
     void WriteCommand(BluetoothClient client, String macAddress, UUID serviceUUID,
                       UUID characterUUID, String command);
-    void saveLightDate(LightType lightType);
 }

@@ -112,7 +112,19 @@ public class RgbColor extends SugarRecord implements Serializable {
         return RgbColor.find(RgbColor.class, "name = ?", name);
     }
 
-    public  void deleteRgbColorByName() {
+    public static int[] getRgbColors(String name) {
+        int[] colors = new int[7];
+        for (int i = 0; i < 7; i++) {
+            List<RgbColor> rgbColorList = getRgbColorList(name+i);
+            if (rgbColorList != null && rgbColorList.size() > 0) {
+                colors[i] = rgbColorList.get(0).getColorInt();
+            }
+        }
+
+        return colors;
+    }
+
+    public void deleteRgbColorByName() {
         RgbColor.deleteAll(RgbColor.class, "name = ?", name);
     }
 }

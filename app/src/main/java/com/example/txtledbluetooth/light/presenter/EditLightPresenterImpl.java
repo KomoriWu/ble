@@ -6,7 +6,6 @@ import android.view.View;
 
 import com.example.txtledbluetooth.R;
 import com.example.txtledbluetooth.application.MyApplication;
-import com.example.txtledbluetooth.bean.LightType;
 import com.example.txtledbluetooth.light.model.LightModel;
 import com.example.txtledbluetooth.light.model.LightModelImpl;
 import com.example.txtledbluetooth.light.view.EditLightView;
@@ -62,6 +61,9 @@ public class EditLightPresenterImpl implements EditLightPresenter, ColorPicker.
             case R.id.tv_toolbar_right:
                 mEditLightView.revertColor();
                 break;
+            case R.id.rg_color_board:
+                mEditLightView.setPaintPixel();
+                break;
         }
     }
 
@@ -95,16 +97,12 @@ public class EditLightPresenterImpl implements EditLightPresenter, ColorPicker.
         writeCommand(command);
     }
 
-    @Override
-    public void saveLightDate(LightType lightType) {
-        mLightModel.saveLightDate(lightType);
-    }
 
     @Override
-    public void onColorSelect(int color,float x, float y) {
+    public void onColorSelect(int color, float x, float y) {
         if (mIsSetOnColorSelectListener) {
             mBgView.setBackgroundColor(color);
-            mEditLightView.setTvColor(color,x,y);
+            mEditLightView.setTvColor(color, x, y);
         }
     }
 

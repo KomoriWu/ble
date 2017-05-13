@@ -22,12 +22,6 @@ import android.widget.Toast;
 
 import com.example.txtledbluetooth.R;
 import com.example.txtledbluetooth.base.BaseActivity;
-import com.example.txtledbluetooth.bean.LightRgb1;
-import com.example.txtledbluetooth.bean.LightRgb2;
-import com.example.txtledbluetooth.bean.LightRgb3;
-import com.example.txtledbluetooth.bean.LightRgb7;
-import com.example.txtledbluetooth.bean.LightType;
-import com.example.txtledbluetooth.bean.ModelType;
 import com.example.txtledbluetooth.bean.RgbColor;
 import com.example.txtledbluetooth.light.presenter.EditLightPresenter;
 import com.example.txtledbluetooth.light.presenter.EditLightPresenterImpl;
@@ -141,8 +135,9 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         etColorWell.setOnEditorActionListener(this);
         seekBarSpeed.setOnSeekBarChangeListener(this);
         seekBarBright.setOnSeekBarChangeListener(this);
+
         setViewBoardDefaultColor();
-        mColorPicker.setPaintPixel(30,50);
+        rbBoard1.setChecked(true);
     }
 
 
@@ -154,7 +149,6 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
 
     @Override
     public void onCheckedChanged(RadioGroup radioGroup, int i) {
-        RadioButton radioButton = (RadioButton) findViewById(radioGroup.getCheckedRadioButtonId());
         mBgView = viewBoard1;
         switch (i) {
             case R.id.rb_board1:
@@ -186,7 +180,17 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
                 mBgView = viewBoard7;
                 break;
         }
-        mEditLightPresenter.viewOnclick(radioButton, mBgView);
+        mEditLightPresenter.viewOnclick(radioGroup, mBgView);
+    }
+
+    @Override
+    public void setPaintPixel() {
+        List<RgbColor> rgbColorList = RgbColor.getRgbColorList(mLightName + mModelTypeFlags +
+                radioGroup.getTag());
+        if (rgbColorList != null && rgbColorList.size() > 0) {
+            RgbColor rgbColor = rgbColorList.get(0);
+            mColorPicker.setPaintPixel(rgbColor.getX(), rgbColor.getY());
+        }
     }
 
     public void initPopupWindow() {
@@ -243,35 +247,51 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     @Override
     public void revertColor() {
         radioGroup.check(R.id.rb_board1);
-        setViewBoardDefaultColor();
         setEtDefaultData();
         mEditLightPresenter.updateLightColor(BleCommandUtils.getLightNo(mPosition),
                 (int) radioGroup.getTag(), getString(R.string.red_color));
+        RgbColor.deleteAll(RgbColor.class);
+        setViewBoardDefaultColor();
     }
 
-    private void setViewBoardDefaultColor() {
-        List<RgbColor> rgbColorList = RgbColor.getRgbColorList(mLightName + mModelTypeFlags +
-                radioGroup.getTag());
-        if (rgbColorList != null && rgbColorList.size() > 0) {
-            RgbColor rgbColor = rgbColorList.get(0);
-            viewBoard1.setBackgroundColor(rgbColor.getColorInt());
-            mColorPicker.setPaintPixel(rgbColor.getX(),rgbColor.getY());
-            viewBoard2.setBackgroundColor(getResources().getColor(R.color.orange));
-            viewBoard3.setBackgroundColor(getResources().getColor(R.color.yellow));
-            viewBoard4.setBackgroundColor(getResources().getColor(R.color.green));
-            viewBoard5.setBackgroundColor(getResources().getColor(R.color.blue));
-            viewBoard6.setBackgroundColor(getResources().getColor(R.color.indigo));
-            viewBoard7.setBackgroundColor(getResources().getColor(R.color.purple));
-        } else {
-            viewBoard1.setBackgroundColor(getResources().getColor(R.color.red));
-            viewBoard2.setBackgroundColor(getResources().getColor(R.color.orange));
-            viewBoard3.setBackgroundColor(getResources().getColor(R.color.yellow));
-            viewBoard4.setBackgroundColor(getResources().getColor(R.color.green));
-            viewBoard5.setBackgroundColor(getResources().getColor(R.color.blue));
-            viewBoard6.setBackgroundColor(getResources().getColor(R.color.indigo));
-            viewBoard7.setBackgroundColor(getResources().getColor(R.color.purple));
-        }
 
+    private void setViewBoardDefaultColor() {
+        int[] colors = RgbColor.getRgbColors(mLightName + mModelTypeFlags);
+        View view = viewBoard1;
+        int defaultColor = R.color.red;
+        if (colors != null && colors.length == 7) {
+            for (int i = 0; i < 7; i++) {
+                defaultColor= Utils.getDefaultColor(this, i);
+                switch (i) {
+                    case 0:
+                        view = viewBoard1;
+                        break;
+                    case 1:
+                        view = viewBoard2;
+                        break;
+                    case 2:
+                        view = viewBoard3;
+                        break;
+                    case 3:
+                        view = viewBoard4;
+                        break;
+                    case 4:
+                        view = viewBoard5;
+                        break;
+                    case 5:
+                        view = viewBoard6;
+                        break;
+                    case 6:
+                        view = viewBoard7;
+                        break;
+                }
+                if (colors[i] == 0) {
+                    view.setBackgroundColor(defaultColor);
+                } else {
+                    view.setBackgroundColor(colors[i]);
+                }
+            }
+        }
     }
 
     @Override
@@ -290,6 +310,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
 
     private void initEditLightUi(String type) {
         mModelTypeFlags = type;
+        setPaintPixel();
         if (type.equals(getString(R.string.random)) || type.contains(getString(R.string.white)) || type.contains(getString(R.string.default_)) ||
                 type.contains(getString(R.string.moon_light)) || type.contains(getString(R.string.full))) {
             mEditLightPresenter.setIsSetOnColorSelectListener(false);

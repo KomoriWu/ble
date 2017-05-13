@@ -180,4 +180,31 @@ public class Utils {
         return minute + ":" + second;
     }
 
+    public static int getDefaultColor(Context context, int position) {
+        int defaultColor = R.color.red;
+        switch (position) {
+            case 0:
+                defaultColor = R.color.red;
+                break;
+            case 1:
+                defaultColor = R.color.orange;
+                break;
+            case 2:
+                defaultColor = R.color.yellow;
+                break;
+            case 3:
+                defaultColor = R.color.green;
+                break;
+            case 4:
+                defaultColor = R.color.blue;
+                break;
+            case 5:
+                defaultColor = R.color.indigo;
+                break;
+            case 6:
+                defaultColor = R.color.purple;
+                break;
+        }
+        return context.getResources().getColor(defaultColor);
+    }
 }

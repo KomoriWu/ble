@@ -7,7 +7,7 @@ package com.example.txtledbluetooth.light.view;
 
 public interface EditLightView {
     void showPopWindow();
-
     void setTvColor(int color,float x, float y);
     void revertColor();
+    void setPaintPixel();
 }

@@ -2,7 +2,6 @@ package com.example.txtledbluetooth.light.presenter;
 
 import android.view.View;
 
-import com.example.txtledbluetooth.bean.LightType;
 
 /**
  * Created by KomoriWu
@@ -22,5 +21,4 @@ public interface EditLightPresenter {
 
     void updateLightColor(String lightNo, int position, String color);
 
-    void saveLightDate(LightType lightType);
 }
