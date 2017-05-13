@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.example.txtledbluetooth.R;
 import com.example.txtledbluetooth.base.BaseActivity;
+import com.example.txtledbluetooth.bean.LightType;
 import com.example.txtledbluetooth.bean.RgbColor;
 import com.example.txtledbluetooth.light.presenter.EditLightPresenter;
 import com.example.txtledbluetooth.light.presenter.EditLightPresenterImpl;
@@ -29,6 +30,7 @@ import com.example.txtledbluetooth.light.view.EditLightView;
 import com.example.txtledbluetooth.utils.BleCommandUtils;
 import com.example.txtledbluetooth.utils.Utils;
 import com.example.txtledbluetooth.widget.ColorPicker;
+import com.nostra13.universalimageloader.utils.L;
 
 import java.util.List;
 
@@ -102,6 +104,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     private long mFirstDrag;
     private String mLightName;
     private String mModelTypeFlags;
+    private int mPopupPosition = 0;
     private Handler mHandler = new Handler() {
         @Override
         public void dispatchMessage(Message msg) {
@@ -126,18 +129,29 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         tvTitle.setText(mLightName);
         tvRevert.setVisibility(View.VISIBLE);
         tvRevert.setText(getString(R.string.revert));
+        intLightType();
         mPosition = getIntent().getIntExtra(Utils.LIGHT_MODEL_ID, 0);
         initPopupWindow();
         radioGroup.setOnCheckedChangeListener(this);
         mEditLightPresenter = new EditLightPresenterImpl(this, this, mColorPicker);
 
-        onPopupWindowItemClick(0, tvChoseType.getText().toString());
+        onPopupWindowItemClick(mPopupPosition, tvChoseType.getText().toString());
         etColorWell.setOnEditorActionListener(this);
         seekBarSpeed.setOnSeekBarChangeListener(this);
         seekBarBright.setOnSeekBarChangeListener(this);
 
         setViewBoardDefaultColor();
         rbBoard1.setChecked(true);
+    }
+
+    private void intLightType() {
+        List<LightType> lightTypeList = LightType.getLightTypeList(mLightName);
+        if (lightTypeList != null && lightTypeList.size() > 0) {
+            LightType lightType = lightTypeList.get(0);
+            mPopupPosition = lightType.getPopupPosition();
+            seekBarBright.setProgress(lightType.getBrightness());
+            seekBarSpeed.setProgress(lightType.getSpeed());
+        }
     }
 
 
@@ -181,6 +195,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
                 break;
         }
         mEditLightPresenter.viewOnclick(radioGroup, mBgView);
+
     }
 
     @Override
@@ -190,13 +205,14 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         if (rgbColorList != null && rgbColorList.size() > 0) {
             RgbColor rgbColor = rgbColorList.get(0);
             mColorPicker.setPaintPixel(rgbColor.getX(), rgbColor.getY());
+            updateTvColor(rgbColor.getR(), rgbColor.getG(), rgbColor.getB(), rgbColor.getColorStr());
         }
     }
 
     public void initPopupWindow() {
         mPopupItems = Utils.getPopWindowItems(this, mPosition);
-        tvChoseType.setText(mPopupItems[0]);
-        mModelTypeFlags = mPopupItems[0];
+        tvChoseType.setText(mPopupItems[mPopupPosition]);
+        mModelTypeFlags = mPopupItems[mPopupPosition];
         View popWindowView = getLayoutInflater().inflate(R.layout.popup_window, null);
         RecyclerView popupRecyclerView = (RecyclerView) popWindowView.findViewById(R.id.recycler_view);
         popupRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -222,10 +238,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         String g1 = Integer.toHexString(g);
         String b1 = Integer.toHexString(b);
         String colorStr = r1 + g1 + b1;
-        etColorR.setText(r + "");
-        etColorG.setText(g + "");
-        etColorB.setText(b + "");
-        etColorWell.setText(colorStr);
+        updateTvColor(r, g, b, colorStr);
 
         mFirstDrag = System.currentTimeMillis();
         Message message = mHandler.obtainMessage();
@@ -244,6 +257,13 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
 
     }
 
+    private void updateTvColor(int r, int g, int b, String colorStr) {
+        etColorR.setText(r + "");
+        etColorG.setText(g + "");
+        etColorB.setText(b + "");
+        etColorWell.setText(colorStr);
+    }
+
     @Override
     public void revertColor() {
         radioGroup.check(R.id.rb_board1);
@@ -258,10 +278,10 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     private void setViewBoardDefaultColor() {
         int[] colors = RgbColor.getRgbColors(mLightName + mModelTypeFlags);
         View view = viewBoard1;
-        int defaultColor = R.color.red;
+        int defaultColor;
         if (colors != null && colors.length == 7) {
             for (int i = 0; i < 7; i++) {
-                defaultColor= Utils.getDefaultColor(this, i);
+                defaultColor = Utils.getDefaultColor(this, i);
                 switch (i) {
                     case 0:
                         view = viewBoard1;
@@ -296,6 +316,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
 
     @Override
     public void onPopupWindowItemClick(int position, String type) {
+        mPopupPosition = position;
         tvChoseType.setText(type);
         radioGroup.check(R.id.rb_board1);
         initEditLightUi(type);
@@ -500,11 +521,14 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     @Override
     protected void onPause() {
         super.onPause();
+        LightType lightType = new LightType(mLightName, seekBarSpeed.getProgress(),
+                seekBarBright.getProgress(), mPopupPosition);
+        lightType.deleteLightTypeByName();
+        lightType.save();
     }
 
     private void saveColor(Bundle data) {
         String name = mLightName + mModelTypeFlags + radioGroup.getTag();
-
         int r = data.getInt(Utils.COLOR_R);
         int g = data.getInt(Utils.COLOR_G);
         int b = data.getInt(Utils.COLOR_B);
@@ -516,4 +540,6 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         rgbColor.deleteRgbColorByName();
         rgbColor.save();
     }
+
+
 }

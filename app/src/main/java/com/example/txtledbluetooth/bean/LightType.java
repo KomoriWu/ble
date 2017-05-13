@@ -6,12 +6,13 @@ import com.orm.dsl.Table;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by KomoriWu
  * on 2017-05-12.
  */
-@Table(name = "light_model")
+@Table(name = "light_type")
 public class LightType extends SugarRecord implements Serializable {
     @SerializedName("name")
     private String name;
@@ -19,25 +20,25 @@ public class LightType extends SugarRecord implements Serializable {
     private int speed;
     @SerializedName("brightness")
     private int brightness;
-    @SerializedName("rgb_color_list")
-    private ArrayList<RgbColor> rgbColorArrayList;
+    @SerializedName("popup_position")
+    private int popupPosition;
 
     public LightType() {
     }
 
-    public LightType(String name, int speed, int brightness, ArrayList<RgbColor> rgbColorArrayList) {
+    public LightType(String name, int speed, int brightness, int popupPosition) {
         this.name = name;
         this.speed = speed;
         this.brightness = brightness;
-        this.rgbColorArrayList = rgbColorArrayList;
+        this.popupPosition = popupPosition;
     }
 
-    public ArrayList<RgbColor> getRgbColorArrayList() {
-        return rgbColorArrayList;
+    public int getPopupPosition() {
+        return popupPosition;
     }
 
-    public void setRgbColorArrayList(ArrayList<RgbColor> rgbColorArrayList) {
-        this.rgbColorArrayList = rgbColorArrayList;
+    public void setPopupPosition(int popupPosition) {
+        this.popupPosition = popupPosition;
     }
 
     public String getName() {
@@ -64,4 +65,11 @@ public class LightType extends SugarRecord implements Serializable {
         this.brightness = brightness;
     }
 
+    public static List<LightType> getLightTypeList(String name) {
+        return LightType.find(LightType.class, "name = ?", name);
+    }
+
+    public void deleteLightTypeByName() {
+        LightType.deleteAll(LightType.class, "name = ?", name);
+    }
 }
