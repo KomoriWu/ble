@@ -51,6 +51,7 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
     private LightPresenter mLightPresenter;
     private boolean mIsChecked;
     private String mLightName;
+    private String[] mLightNames;
 
     @Override
 
@@ -58,7 +59,7 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
         View view = inflater.inflate(R.layout.fragment_light, null);
         ButterKnife.bind(this, view);
         mLightPresenter = new LightPresenterImpl(this, getActivity());
-
+        mLightNames=getActivity().getResources().getStringArray(R.array.lighting_name);
         aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
@@ -89,6 +90,7 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
 
     @Override
     public void editLight(int id) {
+        mLightName = mLightNames[id];
         Intent intent = new Intent(getActivity(), EditLightActivity.class);
         intent.putExtra(Utils.LIGHT_MODEL_ID, id);
         intent.putExtra(Utils.LIGHT_MODEL_NAME, mLightName);
@@ -102,8 +104,7 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
 
     @Override
     public void onItemClick(View view, int position) {
-        String[] lightNames = getActivity().getResources().getStringArray(R.array.lighting_name);
-        mLightName = lightNames[position];
+        mLightName = mLightNames[position];
         mLightPresenter.operateItemBluetooth(mIsChecked, mLightName, position);
     }
 

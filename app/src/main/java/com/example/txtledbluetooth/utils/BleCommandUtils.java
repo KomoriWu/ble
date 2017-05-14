@@ -101,7 +101,7 @@ public class BleCommandUtils {
                 lightNo = CYCLE;
                 break;
             case 10:
-                if (isFirstItem) {
+                if (!isFirstItem) {
                     lightNo = WAVE1;
                 } else {
                     lightNo = WAVE2;
@@ -144,6 +144,7 @@ public class BleCommandUtils {
             case 8:
             case 9:
             case 11:
+            case 10:
                 isFirstItem = popupPosition == 0 ? true : false;
                 command.append(popupPosition + "$" + colors[0] + END);
                 break;
@@ -158,11 +159,6 @@ public class BleCommandUtils {
                 for (int i = 0; i < count; i++) {
                     command.append(colors[i] + END);
                 }
-                break;
-            case 10:
-                isFirstItem = popupPosition == 0 ? true : false;
-                int countColor = isFirstItem ? 1 : 0;
-                command.append(countColor + "$" + colors[0] + END);
                 break;
         }
         return HEAD + getLightNo(position, isFirstItem) + "$" + COLOR_DATA + command.toString();
@@ -185,6 +181,7 @@ public class BleCommandUtils {
     }
 
     public static String updateLightColor(String lightNo, int position, String color) {
-        return HEAD + "l" + lightNo + "#" + color + END;
+        String command = "010" + position + "$";
+        return HEAD + lightNo + "$" + MODIFY_COLOR + command + color + END;
     }
 }

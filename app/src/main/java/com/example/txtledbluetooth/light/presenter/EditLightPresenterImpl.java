@@ -97,6 +97,7 @@ public class EditLightPresenterImpl implements EditLightPresenter, ColorPicker.
     @Override
     public void updateLightColor(String lightNo, int position, String color) {
         String command = BleCommandUtils.updateLightColor(lightNo, position, color);
+        Log.d("BLE Write Command:", command);
         writeCommand(command);
     }
 

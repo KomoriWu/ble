@@ -113,8 +113,8 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
             super.dispatchMessage(msg);
             if (msg.what == START_SORT) {
                 if ((System.currentTimeMillis() - mFirstDrag) >= SORT_DELAY_MILLISECONDS) {
-                    mEditLightPresenter.updateLightColor(BleCommandUtils.getLightNo(mPosition, false),
-                            (int) radioGroup.getTag(), msg.obj.toString());
+                    mEditLightPresenter.updateLightColor(BleCommandUtils.getLightNo(mPosition,
+                            false), (int) radioGroup.getTag() + 1, msg.obj.toString());
                     saveColor(msg.getData());
                 }
             }
@@ -328,7 +328,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void initBleLightColor(int popupPosition) {
-        mEditLightPresenter.operateItemBluetooth(mLightName, mPosition,popupPosition);
+        mEditLightPresenter.operateItemBluetooth(mLightName, mPosition, popupPosition);
 
     }
 
