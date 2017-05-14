@@ -51,14 +51,12 @@ public class LightPresenterImpl implements LightPresenter {
     @Override
     public void operateItemBluetooth(boolean mIsChecked, String lightName,int id) {
         if (mIsChecked) {
-
-            String command = BleCommandUtils.getItemCommandByType(mContext,id,lightName, false);
+            String command = BleCommandUtils.getItemCommandByType(mContext,id,lightName);
             Log.d("BLE Write Command:", command);
             if (!TextUtils.isEmpty(command) && !TextUtils.isEmpty(mMacAddress)) {
                 mLightModel.WriteCommand(MyApplication.getBluetoothClient(mContext), mMacAddress
                         , mServiceUUID, mCharacterUUID, command);
             }
-
         } else {
             mLightView.showHintDialog();
         }

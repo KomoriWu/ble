@@ -120,17 +120,23 @@ public class BleCommandUtils {
         return lightNo;
     }
 
-    public static String getItemCommandByType(Context context, int position, String lightName,
-                                              boolean isFirstItem) {
+    public static String getItemCommandByType(Context context, int position, String lightName) {
+        return getItemCommandByType(context, position, -1, lightName);
+    }
+
+    public static String getItemCommandByType(Context context, int position, int popupPosition,
+                                              String lightName) {
+        boolean isFirstItem = false;
         StringBuffer command = new StringBuffer("FF0");
-        List<LightType> lightTypeList = LightType.getLightTypeList(lightName);
-        int mPopupPosition = 0;
-        if (lightTypeList != null && lightTypeList.size() > 0) {
-            LightType lightType = lightTypeList.get(0);
-            mPopupPosition = lightType.getPopupPosition();
+        if (popupPosition == -1) {
+            List<LightType> lightTypeList = LightType.getLightTypeList(lightName);
+            if (lightTypeList != null && lightTypeList.size() > 0) {
+                LightType lightType = lightTypeList.get(0);
+                popupPosition = lightType.getPopupPosition();
+            }
         }
         String[] popupItems = Utils.getPopWindowItems(context, position);
-        String[] colors = RgbColor.getRgbColorStr(lightName + popupItems[mPopupPosition]);
+        String[] colors = RgbColor.getRgbColorStr(lightName + popupItems[popupPosition]);
         switch (position) {
             case 0:
             case 3:
@@ -138,8 +144,8 @@ public class BleCommandUtils {
             case 8:
             case 9:
             case 11:
-                isFirstItem = mPopupPosition == 0 ? true : false;
-                command.append(mPopupPosition + "$" + colors[0] + END);
+                isFirstItem = popupPosition == 0 ? true : false;
+                command.append(popupPosition + "$" + colors[0] + END);
                 break;
             case 1:
             case 2:
@@ -147,14 +153,14 @@ public class BleCommandUtils {
             case 6:
             case 7:
             case 12:
-                int count = getColorCount(popupItems[mPopupPosition], position);
+                int count = getColorCount(popupItems[popupPosition], position);
                 command.append(count + "$");
                 for (int i = 0; i < count; i++) {
                     command.append(colors[i] + END);
                 }
                 break;
             case 10:
-                isFirstItem = mPopupPosition == 0 ? true : false;
+                isFirstItem = popupPosition == 0 ? true : false;
                 int countColor = isFirstItem ? 1 : 0;
                 command.append(countColor + "$" + colors[0] + END);
                 break;

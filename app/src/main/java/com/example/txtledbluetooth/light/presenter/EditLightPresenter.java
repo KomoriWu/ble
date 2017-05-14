@@ -17,7 +17,7 @@ public interface EditLightPresenter {
 
     void setLightBrightness(String lightNo, int brightness);
 
-    void initBleLightColor(int position);
+    void operateItemBluetooth(String lightName, int position,int popupPosition);
 
     void updateLightColor(String lightNo, int position, String color);
 

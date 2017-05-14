@@ -327,8 +327,9 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         mPopWindow.dismiss();
     }
 
-    private void initBleLightColor(int position) {
-        mEditLightPresenter.initBleLightColor(position);
+    private void initBleLightColor(int popupPosition) {
+        mEditLightPresenter.operateItemBluetooth(mLightName, mPosition,popupPosition);
+
     }
 
     private void initEditLightUi(String type) {
