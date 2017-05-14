@@ -53,6 +53,7 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
     private String mLightName;
 
     @Override
+
     public View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_light, null);
         ButterKnife.bind(this, view);
@@ -88,8 +89,6 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
 
     @Override
     public void editLight(int id) {
-        String[] lightNames = getActivity().getResources().getStringArray(R.array.lighting_name);
-        mLightName = lightNames[id];
         Intent intent = new Intent(getActivity(), EditLightActivity.class);
         intent.putExtra(Utils.LIGHT_MODEL_ID, id);
         intent.putExtra(Utils.LIGHT_MODEL_NAME, mLightName);
@@ -103,7 +102,9 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
 
     @Override
     public void onItemClick(View view, int position) {
-        mLightPresenter.operateItemBluetooth(mIsChecked, mLightName,position);
+        String[] lightNames = getActivity().getResources().getStringArray(R.array.lighting_name);
+        mLightName = lightNames[position];
+        mLightPresenter.operateItemBluetooth(mIsChecked, mLightName, position);
     }
 
     @Override

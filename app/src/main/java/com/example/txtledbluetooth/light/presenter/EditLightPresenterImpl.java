@@ -2,6 +2,7 @@ package com.example.txtledbluetooth.light.presenter;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
 import com.example.txtledbluetooth.R;
@@ -104,7 +105,7 @@ public class EditLightPresenterImpl implements EditLightPresenter, ColorPicker.
 
     @Override
     public void initBleLightColor(int position) {
-        String command = BleCommandUtils.getItemCommandByType(position, position,false);
+        String command = BleCommandUtils.getItemCommandByType(mContext, position, "", false);
         writeCommand(command);
     }
 

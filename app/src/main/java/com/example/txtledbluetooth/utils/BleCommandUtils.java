@@ -1,5 +1,12 @@
 package com.example.txtledbluetooth.utils;
 
+import android.content.Context;
+
+import com.example.txtledbluetooth.bean.LightType;
+import com.example.txtledbluetooth.bean.RgbColor;
+
+import java.util.List;
+
 /**
  * Created by KomoriWu
  * on 2017-04-24.
@@ -113,19 +120,25 @@ public class BleCommandUtils {
         return lightNo;
     }
 
-    public static String getItemCommandByType(int position, int popupPosition,
+    public static String getItemCommandByType(Context context, int position, String lightName,
                                               boolean isFirstItem) {
         StringBuffer command = new StringBuffer("FF0");
-
+        List<LightType> lightTypeList = LightType.getLightTypeList(lightName);
+        int mPopupPosition = 0;
+        if (lightTypeList != null && lightTypeList.size() > 0) {
+            LightType lightType = lightTypeList.get(0);
+            mPopupPosition = lightType.getPopupPosition();
+        }
+        String[] popupItems = Utils.getPopWindowItems(context, position);
+        String[] colors = RgbColor.getRgbColorStr(lightName + popupItems[mPopupPosition]);
         switch (position) {
             case 0:
-                isFirstItem = popupPosition == 0 ? true : false;
-                if (!isFirstItem) {
-                    command.append("1$FF0000");
-                }
+                isFirstItem = mPopupPosition == 0 ? true : false;
+                command.append(mPopupPosition + "$" + colors[0]);
                 break;
         }
-        return HEAD + getLightNo(position, isFirstItem) + "$" + COLOR_DATA + command.toString() + END;
+        return HEAD + getLightNo(position, isFirstItem) + "$" + COLOR_DATA + command.toString()
+                + END;
     }
 
     public static String updateLightColor(String lightNo, int position, String color) {

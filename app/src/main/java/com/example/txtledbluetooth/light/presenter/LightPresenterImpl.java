@@ -3,6 +3,7 @@ package com.example.txtledbluetooth.light.presenter;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.example.txtledbluetooth.application.MyApplication;
 import com.example.txtledbluetooth.bean.LightType;
@@ -50,13 +51,9 @@ public class LightPresenterImpl implements LightPresenter {
     @Override
     public void operateItemBluetooth(boolean mIsChecked, String lightName,int id) {
         if (mIsChecked) {
-            List<LightType> lightTypeList = LightType.getLightTypeList(lightName);
-            int mPopupPosition = 0;
-            if (lightTypeList != null && lightTypeList.size() > 0) {
-                LightType lightType = lightTypeList.get(0);
-                mPopupPosition = lightType.getPopupPosition();
-            }
-            String command = BleCommandUtils.getItemCommandByType(id,mPopupPosition, false);
+
+            String command = BleCommandUtils.getItemCommandByType(mContext,id,lightName, false);
+            Log.d("BLE Write Command:", command);
             if (!TextUtils.isEmpty(command) && !TextUtils.isEmpty(mMacAddress)) {
                 mLightModel.WriteCommand(MyApplication.getBluetoothClient(mContext), mMacAddress
                         , mServiceUUID, mCharacterUUID, command);
