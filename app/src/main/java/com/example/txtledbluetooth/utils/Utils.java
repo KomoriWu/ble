@@ -48,6 +48,9 @@ public class Utils {
     public static final String PIXEL_X = "pixel_x";
     public static final String PIXEL_Y = "pixel_y";
     public static final int STREAM_TYPE = AudioManager.STREAM_MUSIC;
+    public static final String SEEK_BAR_PROGRESS_BRIGHT = "bright_progress";
+    public static final String SEEK_BAR_PROGRESS_SPEED = "speed_progress";
+    public static final int SEEK_BAR_MAX = 255;
 
     public static DisplayImageOptions getImageOptions(int defaultIconId) {
         return getImageOptions(defaultIconId, 0);
@@ -206,5 +209,45 @@ public class Utils {
                 break;
         }
         return context.getResources().getColor(defaultColor);
+    }
+
+    public static HashMap getSeekBarProgress(int position) {
+        HashMap<String, Integer> hashMap = new HashMap<>();
+        int bright = 0;
+        int speed = 0;
+        switch (position) {
+            case 0:
+                bright = (int) (SEEK_BAR_MAX * 0.5);
+                break;
+            case 1:
+                bright = (int) (SEEK_BAR_MAX * 0.5);
+                speed = (int) (SEEK_BAR_MAX * 0.25);
+                break;
+            case 2:
+            case 3:
+            case 4:
+            case 9:
+                bright = (int) (SEEK_BAR_MAX * 0.5);
+                speed = (int) (SEEK_BAR_MAX * 0.5);
+                break;
+            case 5:
+                speed = (int) (SEEK_BAR_MAX * 0.25);
+                break;
+            case 7:
+                speed = (int) (SEEK_BAR_MAX * 0.25);
+                bright = (int) (SEEK_BAR_MAX * 0.75);
+                break;
+            case 8:
+                bright = (int) (SEEK_BAR_MAX * 0.75);
+                break;
+            case 10:
+            case 11:
+            case 13:
+                bright = SEEK_BAR_MAX;
+                break;
+        }
+        hashMap.put(SEEK_BAR_PROGRESS_BRIGHT,bright);
+        hashMap.put(SEEK_BAR_PROGRESS_SPEED,speed);
+        return hashMap;
     }
 }

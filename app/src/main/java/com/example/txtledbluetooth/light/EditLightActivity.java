@@ -1,5 +1,6 @@
 package com.example.txtledbluetooth.light;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -32,6 +33,7 @@ import com.example.txtledbluetooth.utils.Utils;
 import com.example.txtledbluetooth.widget.ColorPicker;
 import com.nostra13.universalimageloader.utils.L;
 
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -132,9 +134,9 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         tvTitle.setText(mLightName);
         tvRevert.setVisibility(View.VISIBLE);
         tvRevert.setText(getString(R.string.revert));
-        intLightType();
         mPosition = getIntent().getIntExtra(Utils.LIGHT_MODEL_ID, 0);
-        mLightNo=BleCommandUtils.getLightNo(mPosition, false);
+        intLightType();
+        mLightNo = BleCommandUtils.getLightNo(mPosition, false);
         initPopupWindow();
         radioGroup.setOnCheckedChangeListener(this);
         mEditLightPresenter = new EditLightPresenterImpl(this, this, mColorPicker);
@@ -148,13 +150,28 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         rbBoard1.setChecked(true);
     }
 
+
     private void intLightType() {
         List<LightType> lightTypeList = LightType.getLightTypeList(mLightName);
         if (lightTypeList != null && lightTypeList.size() > 0) {
             LightType lightType = lightTypeList.get(0);
             mPopupPosition = lightType.getPopupPosition();
-            seekBarBright.setProgress(lightType.getBrightness());
-            seekBarSpeed.setProgress(lightType.getSpeed());
+
+            HashMap<String, Integer> hashMap = Utils.getSeekBarProgress(mPosition);
+            if (lightType.getBrightness() == 0) {
+                seekBarBright.setProgress(hashMap.get(Utils.SEEK_BAR_PROGRESS_BRIGHT));
+            }else {
+                seekBarBright.setProgress(lightType.getBrightness());
+            }
+            if (lightType.getSpeed() == 0) {
+                seekBarSpeed.setProgress(hashMap.get(Utils.SEEK_BAR_PROGRESS_SPEED));
+            }else {
+                seekBarSpeed.setProgress(lightType.getSpeed());
+            }
+        } else {
+            HashMap<String, Integer> hashMap = Utils.getSeekBarProgress(mPosition);
+            seekBarBright.setProgress(hashMap.get(Utils.SEEK_BAR_PROGRESS_BRIGHT));
+            seekBarSpeed.setProgress(hashMap.get(Utils.SEEK_BAR_PROGRESS_SPEED));
         }
     }
 

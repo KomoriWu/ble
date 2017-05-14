@@ -6,6 +6,7 @@ import com.example.txtledbluetooth.R;
 import com.example.txtledbluetooth.bean.LightType;
 import com.example.txtledbluetooth.bean.RgbColor;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -51,6 +52,7 @@ public class BleCommandUtils {
     public static final String RESET = HEAD + "erst" + END;
     public static final String CLOSE_SOUND = HEAD + "esvt:0" + END;
     public static final String OPEN_SOUND = HEAD + "esvt:1" + END;
+
 
     //灯光速度
     public static String getLightSpeedCommand(String lightNo, String speedHex) {
@@ -139,6 +141,8 @@ public class BleCommandUtils {
             if (lightTypeList != null && lightTypeList.size() > 0) {
                 LightType lightType = lightTypeList.get(0);
                 popupPosition = lightType.getPopupPosition();
+            } else {
+                popupPosition = 0;
             }
         }
         String[] popupItems = Utils.getPopWindowItems(context, position);
@@ -190,5 +194,6 @@ public class BleCommandUtils {
         String command = "010" + position + "$";
         return HEAD + lightNo + "$" + MODIFY_COLOR + command + color + END;
     }
+
 
 }
