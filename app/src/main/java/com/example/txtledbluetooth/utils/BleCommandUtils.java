@@ -133,12 +133,49 @@ public class BleCommandUtils {
         String[] colors = RgbColor.getRgbColorStr(lightName + popupItems[mPopupPosition]);
         switch (position) {
             case 0:
+            case 3:
+            case 4:
+            case 8:
+            case 9:
+            case 11:
                 isFirstItem = mPopupPosition == 0 ? true : false;
-                command.append(mPopupPosition + "$" + colors[0]);
+                command.append(mPopupPosition + "$" + colors[0] + END);
+                break;
+            case 1:
+            case 2:
+            case 5:
+            case 6:
+            case 7:
+            case 12:
+                int count = getColorCount(popupItems[mPopupPosition], position);
+                command.append(count + "$");
+                for (int i = 0; i < count; i++) {
+                    command.append(colors[i] + END);
+                }
+                break;
+            case 10:
+                isFirstItem = mPopupPosition == 0 ? true : false;
+                int countColor = isFirstItem ? 1 : 0;
+                command.append(countColor + "$" + colors[0] + END);
                 break;
         }
-        return HEAD + getLightNo(position, isFirstItem) + "$" + COLOR_DATA + command.toString()
-                + END;
+        return HEAD + getLightNo(position, isFirstItem) + "$" + COLOR_DATA + command.toString();
+    }
+
+    private static int getColorCount(String popupItem, int position) {
+        int count = 0;
+        if (popupItem.contains("1")) {
+            count = 1;
+        } else if (popupItem.contains("2")) {
+            count = 2;
+        } else if (popupItem.contains("3")) {
+            count = 3;
+        } else if (popupItem.contains("7") || position == 12) {
+            count = 7;
+        } else if (position == 7) {
+            count = 5;
+        }
+        return count;
     }
 
     public static String updateLightColor(String lightNo, int position, String color) {

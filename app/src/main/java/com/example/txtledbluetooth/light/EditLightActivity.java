@@ -86,6 +86,8 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     LinearLayout layoutColorRgb;
     @BindView(R.id.layout_speed)
     LinearLayout layoutSpeed;
+    @BindView(R.id.layout_brightness)
+    LinearLayout layoutBrightness;
     @BindView(R.id.et_r)
     EditText etColorR;
     @BindView(R.id.et_g)
@@ -111,7 +113,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
             super.dispatchMessage(msg);
             if (msg.what == START_SORT) {
                 if ((System.currentTimeMillis() - mFirstDrag) >= SORT_DELAY_MILLISECONDS) {
-                    mEditLightPresenter.updateLightColor(BleCommandUtils.getLightNo(mPosition,false),
+                    mEditLightPresenter.updateLightColor(BleCommandUtils.getLightNo(mPosition, false),
                             (int) radioGroup.getTag(), msg.obj.toString());
                     saveColor(msg.getData());
                 }
@@ -268,7 +270,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     public void revertColor() {
         radioGroup.check(R.id.rb_board1);
         setEtDefaultData();
-        mEditLightPresenter.updateLightColor(BleCommandUtils.getLightNo(mPosition,false),
+        mEditLightPresenter.updateLightColor(BleCommandUtils.getLightNo(mPosition, false),
                 (int) radioGroup.getTag(), getString(R.string.red_color));
         RgbColor.deleteAll(RgbColor.class);
         setViewBoardDefaultColor();
@@ -333,7 +335,8 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         mModelTypeFlags = type;
         setPaintPixel();
         if (type.equals(getString(R.string.random)) || type.contains(getString(R.string.white)) || type.contains(getString(R.string.default_)) ||
-                type.contains(getString(R.string.moon_light)) || type.contains(getString(R.string.full))) {
+                type.contains(getString(R.string.moon_light)) || type.contains(getString(
+                R.string.full)) || type.contains(getString(R.string.rainbow))) {
             mEditLightPresenter.setIsSetOnColorSelectListener(false);
             //fireworks
             if (mPosition == 1 || mPosition == 2 || mPosition == 3 || mPosition == 4) {
@@ -341,7 +344,8 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
             } else {
                 layoutSpeed.setVisibility(View.GONE);
             }
-            if (mPosition == 6) {
+            if (mPosition == 7) {
+                mEditLightPresenter.setIsSetOnColorSelectListener(true);
                 rbBoard1.setVisibility(View.VISIBLE);
                 rbBoard2.setVisibility(View.VISIBLE);
                 rbBoard3.setVisibility(View.VISIBLE);
@@ -376,7 +380,8 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
 //                tvRevert.setClickable(false);
                 setEtNoData();
             }
-        } else if (type.contains("1") || type.contains(getString(R.string.colored))) {
+        } else if (type.contains("1") || type.contains(getString(R.string.colored)) || type.
+                contains(getString(R.string.ice_blue))) {
             mEditLightPresenter.setIsSetOnColorSelectListener(true);
             //moonlight
             if (mPosition == 0) {
@@ -432,7 +437,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
             viewBoard5.setVisibility(View.GONE);
             viewBoard6.setVisibility(View.GONE);
             viewBoard7.setVisibility(View.GONE);
-        } else if (type.contains("7")) {
+        } else if (type.contains("7") || type.contains(getString(R.string.mood))) {
             mEditLightPresenter.setIsSetOnColorSelectListener(true);
             layoutSpeed.setVisibility(View.VISIBLE);
             rbBoard1.setVisibility(View.VISIBLE);
@@ -449,7 +454,10 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
             viewBoard5.setVisibility(View.VISIBLE);
             viewBoard6.setVisibility(View.VISIBLE);
             viewBoard7.setVisibility(View.VISIBLE);
-
+            if (type.contains(getString(R.string.mood))) {
+                layoutSpeed.setVisibility(View.GONE);
+                layoutBrightness.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -510,10 +518,10 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
         if (seekBar.getId() == R.id.sb_speed) {
-            mEditLightPresenter.setLightSpeed(BleCommandUtils.getLightNo(mPosition,false),
+            mEditLightPresenter.setLightSpeed(BleCommandUtils.getLightNo(mPosition, false),
                     seekBar.getProgress());
         } else if (seekBar.getId() == R.id.sb_brightness) {
-            mEditLightPresenter.setLightBrightness(BleCommandUtils.getLightNo(mPosition,false),
+            mEditLightPresenter.setLightBrightness(BleCommandUtils.getLightNo(mPosition, false),
                     seekBar.getProgress());
         }
     }
