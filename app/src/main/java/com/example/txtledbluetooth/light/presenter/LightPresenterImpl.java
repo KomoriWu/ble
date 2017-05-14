@@ -49,14 +49,11 @@ public class LightPresenterImpl implements LightPresenter {
 
 
     @Override
-    public void operateItemBluetooth(boolean mIsChecked, String lightName,int id) {
+    public void operateItemBluetooth(boolean mIsChecked, String lightName, int id) {
         if (mIsChecked) {
-            String command = BleCommandUtils.getItemCommandByType(mContext,id,lightName);
-            Log.d("BLE Write Command:", command);
-            if (!TextUtils.isEmpty(command) && !TextUtils.isEmpty(mMacAddress)) {
-                mLightModel.WriteCommand(MyApplication.getBluetoothClient(mContext), mMacAddress
-                        , mServiceUUID, mCharacterUUID, command);
-            }
+            String command = BleCommandUtils.getItemCommandByType(mContext, id, lightName);
+            writeCommand(command);
+            SharedPreferenceUtils.saveClickPosition(mContext, id);
         } else {
             mLightView.showHintDialog();
         }
@@ -69,12 +66,9 @@ public class LightPresenterImpl implements LightPresenter {
 
     @Override
     public void operateSwitchBluetooth(boolean isChecked) {
-        String command = isChecked ? BleCommandUtils.OPEN : BleCommandUtils.CLOSE;
-        if (!TextUtils.isEmpty(command) && !TextUtils.isEmpty(mMacAddress)) {
-            mLightModel.WriteCommand(MyApplication.getBluetoothClient(mContext),
-                    SharedPreferenceUtils.getMacAddress(mContext), mServiceUUID,
-                    mCharacterUUID, command);
-        }
+        String command = isChecked ? BleCommandUtils.getOpenLightCommand(mContext) :
+                BleCommandUtils.CLOSE;
+        writeCommand(command);
     }
 
     @Override
@@ -103,6 +97,14 @@ public class LightPresenterImpl implements LightPresenter {
         @Override
         protected void onPostExecute(ArrayList<Lighting> lightingArrayList) {
             mLightView.showLightData(lightingArrayList, list);
+        }
+    }
+
+    private void writeCommand(String command) {
+        Log.d("BLE Write Command:", command);
+        if (!TextUtils.isEmpty(command) && !TextUtils.isEmpty(mMacAddress)) {
+            mLightModel.WriteCommand(MyApplication.getBluetoothClient(mContext), mMacAddress,
+                    mServiceUUID, mCharacterUUID, command);
         }
     }
 }

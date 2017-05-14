@@ -90,14 +90,12 @@ public class EditLightPresenterImpl implements EditLightPresenter, ColorPicker.
     public void operateItemBluetooth(String lightName, int position, int popupPosition) {
         String command = BleCommandUtils.getItemCommandByType(mContext, position, popupPosition,
                 lightName);
-        Log.d("BLE Write Command:", command);
         writeCommand(command);
     }
 
     @Override
     public void updateLightColor(String lightNo, int position, String color) {
         String command = BleCommandUtils.updateLightColor(lightNo, position, color);
-        Log.d("BLE Write Command:", command);
         writeCommand(command);
     }
 
@@ -111,6 +109,7 @@ public class EditLightPresenterImpl implements EditLightPresenter, ColorPicker.
     }
 
     private void writeCommand(String command) {
+        Log.d("BLE Write Command:", command);
         if (!TextUtils.isEmpty(command) && !TextUtils.isEmpty(mMacAddress)) {
             mLightModel.WriteCommand(MyApplication.getBluetoothClient(mContext), mMacAddress,
                     mServiceUUID, mCharacterUUID, command);

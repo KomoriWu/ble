@@ -106,6 +106,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     private long mFirstDrag;
     private String mLightName;
     private String mModelTypeFlags;
+    private String mLightNo;
     private int mPopupPosition = 0;
     private Handler mHandler = new Handler() {
         @Override
@@ -113,8 +114,8 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
             super.dispatchMessage(msg);
             if (msg.what == START_SORT) {
                 if ((System.currentTimeMillis() - mFirstDrag) >= SORT_DELAY_MILLISECONDS) {
-                    mEditLightPresenter.updateLightColor(BleCommandUtils.getLightNo(mPosition,
-                            false), (int) radioGroup.getTag() + 1, msg.obj.toString());
+                    mEditLightPresenter.updateLightColor(mLightNo,
+                            (int) radioGroup.getTag() + 1, msg.obj.toString());
                     saveColor(msg.getData());
                 }
             }
@@ -133,6 +134,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         tvRevert.setText(getString(R.string.revert));
         intLightType();
         mPosition = getIntent().getIntExtra(Utils.LIGHT_MODEL_ID, 0);
+        mLightNo=BleCommandUtils.getLightNo(mPosition, false);
         initPopupWindow();
         radioGroup.setOnCheckedChangeListener(this);
         mEditLightPresenter = new EditLightPresenterImpl(this, this, mColorPicker);
@@ -270,7 +272,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     public void revertColor() {
         radioGroup.check(R.id.rb_board1);
         setEtDefaultData();
-        mEditLightPresenter.updateLightColor(BleCommandUtils.getLightNo(mPosition, false),
+        mEditLightPresenter.updateLightColor(mLightNo,
                 (int) radioGroup.getTag(), getString(R.string.red_color));
         RgbColor.deleteAll(RgbColor.class);
         setViewBoardDefaultColor();
@@ -519,11 +521,9 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
         if (seekBar.getId() == R.id.sb_speed) {
-            mEditLightPresenter.setLightSpeed(BleCommandUtils.getLightNo(mPosition, false),
-                    seekBar.getProgress());
+            mEditLightPresenter.setLightSpeed(mLightNo, seekBar.getProgress());
         } else if (seekBar.getId() == R.id.sb_brightness) {
-            mEditLightPresenter.setLightBrightness(BleCommandUtils.getLightNo(mPosition, false),
-                    seekBar.getProgress());
+            mEditLightPresenter.setLightBrightness(mLightNo, seekBar.getProgress());
         }
     }
 

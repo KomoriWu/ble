@@ -2,6 +2,7 @@ package com.example.txtledbluetooth.utils;
 
 import android.content.Context;
 
+import com.example.txtledbluetooth.R;
 import com.example.txtledbluetooth.bean.LightType;
 import com.example.txtledbluetooth.bean.RgbColor;
 
@@ -39,27 +40,26 @@ public class BleCommandUtils {
     //指令类型
     public static final String COLOR_DATA = "YSD$";
     public static final String MODIFY_COLOR = "DYS$";
-    public static final String MODIFY_BRIGHTNESS = "LDD$";
-    public static final String MODIFY_SPEED = "SDD$";
+    public static final String MODIFY_BRIGHTNESS = "LDD$00";
+    public static final String MODIFY_SPEED = "SDD$00";
     public static final String CONTROL_DATA = "KZD$";
 
     //其他设置
     public static final String LIGHT_SPEED = "espd,";
     public static final String LIGHT_BRIGHT = "elux,";
-    public static final String OPEN = HEAD + "etof,all:1" + END;
-    public static final String CLOSE = HEAD + "etof,all:0" + END;
+    public static final String CLOSE = HEAD + CLOSE_LIGHT + END;
     public static final String RESET = HEAD + "erst" + END;
     public static final String CLOSE_SOUND = HEAD + "esvt:0" + END;
     public static final String OPEN_SOUND = HEAD + "esvt:1" + END;
 
     //灯光速度
     public static String getLightSpeedCommand(String lightNo, String speedHex) {
-        return HEAD + lightNo + "$" + MODIFY_SPEED + "00" + speedHex + END;
+        return HEAD + lightNo + "$" + MODIFY_SPEED + speedHex + END;
     }
 
     //灯光亮度
     public static String getLightBrightCommand(String lightNo, String brightHex) {
-        return HEAD + lightNo + "$" + MODIFY_BRIGHTNESS + "00" + brightHex + END;
+        return HEAD + lightNo + "$" + MODIFY_BRIGHTNESS + brightHex + END;
     }
 
     public static String getLightNo(int position, boolean isFirstItem) {
@@ -118,6 +118,12 @@ public class BleCommandUtils {
                 break;
         }
         return lightNo;
+    }
+
+    public static String getOpenLightCommand(Context context) {
+        int position = SharedPreferenceUtils.getClickPosition(context);
+        String lightName = context.getResources().getStringArray(R.array.lighting_name)[position];
+        return getItemCommandByType(context, position, -1, lightName);
     }
 
     public static String getItemCommandByType(Context context, int position, String lightName) {
@@ -184,4 +190,5 @@ public class BleCommandUtils {
         String command = "010" + position + "$";
         return HEAD + lightNo + "$" + MODIFY_COLOR + command + color + END;
     }
+
 }
