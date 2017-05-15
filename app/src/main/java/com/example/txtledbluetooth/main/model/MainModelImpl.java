@@ -27,7 +27,7 @@ import static com.inuker.bluetooth.library.Constants.REQUEST_SUCCESS;
 
 public class MainModelImpl implements MainModel {
     private static final int SEARCH_TIMEOUT = 5000;
-    private static final int SEARCH_TIMEOUT_NUMBER = 2;
+    private static final int SEARCH_TIMEOUT_NUMBER = 3;
 
     @Override
     public void initBle(final Context context, final BluetoothClient client, final BleConnectOptions

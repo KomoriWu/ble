@@ -5,9 +5,13 @@ import android.content.Context;
 import com.example.txtledbluetooth.R;
 import com.example.txtledbluetooth.bean.LightType;
 import com.example.txtledbluetooth.bean.RgbColor;
+import com.inuker.bluetooth.library.BluetoothClient;
+import com.inuker.bluetooth.library.connect.response.BleWriteResponse;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by KomoriWu
@@ -194,6 +198,33 @@ public class BleCommandUtils {
         String command = "010" + position + "$";
         return HEAD + lightNo + "$" + MODIFY_COLOR + command + color + END;
     }
+    //分包
+    public static void divideFrameBleSendData(byte[] data, BluetoothClient client,
+                                        String macAddress, UUID serviceUUID, UUID characterUUID) {
+        int tmpLen = data.length;
+        int start = 0;
+        int end = 0;
+        while (tmpLen > 0) {
+            byte[] sendData = new byte[21];
+            if (tmpLen >= 20) {
+                end += 20;
+                sendData = Arrays.copyOfRange(data, start, end);
+                start += 20;
+                tmpLen -= 20;
+            } else {
+                end += tmpLen;
+                sendData = Arrays.copyOfRange(data, start, end);
+                tmpLen = 0;
+            }
+            client.write(macAddress, serviceUUID,
+                    characterUUID, sendData,
+                    new BleWriteResponse() {
+                        @Override
+                        public void onResponse(int code) {
+                        }
+                    });
 
+        }
+    }
 
 }
