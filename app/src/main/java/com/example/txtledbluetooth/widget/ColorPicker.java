@@ -40,7 +40,7 @@ public class ColorPicker extends ImageView implements View.OnTouchListener {
 
     public ColorPicker(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        mBitmap = BitmapFactory.decodeResource(context.getResources(), R.mipmap.img_rgb);
+        mBitmap = BitmapFactory.decodeResource(context.getResources(), R.mipmap.circle);
         mWidth = mBitmap.getWidth();
         mHeight = mBitmap.getHeight();
         setImageBitmap(mBitmap);

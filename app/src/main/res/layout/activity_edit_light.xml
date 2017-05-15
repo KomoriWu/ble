@@ -28,8 +28,8 @@
 
         <com.example.txtledbluetooth.widget.ColorPicker
             android:id="@+id/color_picker"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="260dp"
+            android:layout_height="260dp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/activity_vertical_margin" />
 
