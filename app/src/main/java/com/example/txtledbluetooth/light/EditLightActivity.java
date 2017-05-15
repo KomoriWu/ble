@@ -33,6 +33,7 @@ import com.example.txtledbluetooth.utils.Utils;
 import com.example.txtledbluetooth.widget.ColorPicker;
 import com.nostra13.universalimageloader.utils.L;
 
+import java.text.Format;
 import java.util.HashMap;
 import java.util.List;
 
@@ -160,12 +161,12 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
             HashMap<String, Integer> hashMap = Utils.getSeekBarProgress(mPosition);
             if (lightType.getBrightness() == 0) {
                 seekBarBright.setProgress(hashMap.get(Utils.SEEK_BAR_PROGRESS_BRIGHT));
-            }else {
+            } else {
                 seekBarBright.setProgress(lightType.getBrightness());
             }
             if (lightType.getSpeed() == 0) {
                 seekBarSpeed.setProgress(hashMap.get(Utils.SEEK_BAR_PROGRESS_SPEED));
-            }else {
+            } else {
                 seekBarSpeed.setProgress(lightType.getSpeed());
             }
         } else {
@@ -255,9 +256,9 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         int r = Color.red(color);
         int g = Color.green(color);
         int b = Color.blue(color);
-        String r1 = Integer.toHexString(r);
-        String g1 = Integer.toHexString(g);
-        String b1 = Integer.toHexString(b);
+        String r1 = getBothColor(r);
+        String g1 =getBothColor(g);
+        String b1 = getBothColor(b);
         String colorStr = r1 + g1 + b1;
         updateTvColor(r, g, b, colorStr);
 
@@ -275,6 +276,15 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         bundle.putString(Utils.COLOR_STR, colorStr);
         message.setData(bundle);
         mHandler.sendMessageDelayed(message, SORT_DELAY_MILLISECONDS);
+
+    }
+
+    public String getBothColor(int str) {
+        if (Integer.toString(str).getBytes().length < 2) {
+            return "0" + Integer.toHexString(str);
+        } else {
+            return Integer.toHexString(str);
+        }
 
     }
 
