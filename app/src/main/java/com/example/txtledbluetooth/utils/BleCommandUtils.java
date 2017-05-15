@@ -8,8 +8,8 @@ import com.example.txtledbluetooth.bean.RgbColor;
 import com.inuker.bluetooth.library.BluetoothClient;
 import com.inuker.bluetooth.library.connect.response.BleWriteResponse;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,8 +19,9 @@ import java.util.UUID;
  */
 
 public class BleCommandUtils {
-    public static final String HEAD = "GP$";
-    public static final String END = "$";
+    public static final String DIVISION = "$";
+    public static final String HEAD = "GP"+DIVISION;
+    public static final String END_MARK = "\r\n";
 
     //模式指令
     public static final String MOON_LIGHT1 = "lmol";
@@ -43,29 +44,29 @@ public class BleCommandUtils {
     public static final String CLOSE_LIGHT = "etof";
 
     //指令类型
-    public static final String COLOR_DATA = "YSD$";
-    public static final String MODIFY_COLOR = "DYS$";
-    public static final String MODIFY_BRIGHTNESS = "LDD$00";
-    public static final String MODIFY_SPEED = "SDD$00";
-    public static final String CONTROL_DATA = "KZD$";
+    public static final String COLOR_DATA = "YSD"+DIVISION;
+    public static final String MODIFY_COLOR = "DYS"+DIVISION;
+    public static final String MODIFY_BRIGHTNESS = "LDD"+DIVISION+"00";
+    public static final String MODIFY_SPEED = "SDD"+DIVISION+"00";
+    public static final String CONTROL_DATA = "KZD"+DIVISION;
 
     //其他设置
     public static final String LIGHT_SPEED = "espd,";
     public static final String LIGHT_BRIGHT = "elux,";
-    public static final String CLOSE = HEAD + CLOSE_LIGHT + END;
-    public static final String RESET = HEAD + "erst" + END;
-    public static final String CLOSE_SOUND = HEAD + "esvt:0" + END;
-    public static final String OPEN_SOUND = HEAD + "esvt:1" + END;
+    public static final String CLOSE = HEAD + CLOSE_LIGHT + DIVISION +END_MARK;
+    public static final String RESET = HEAD + "erst" + DIVISION;
+    public static final String CLOSE_SOUND = HEAD + "esvt:0" + DIVISION;
+    public static final String OPEN_SOUND = HEAD + "esvt:1" + DIVISION;
 
 
     //灯光速度
     public static String getLightSpeedCommand(String lightNo, String speedHex) {
-        return HEAD + lightNo + "$" + MODIFY_SPEED + speedHex + END;
+        return HEAD + lightNo + DIVISION + MODIFY_SPEED + speedHex + DIVISION +END_MARK;
     }
 
     //灯光亮度
     public static String getLightBrightCommand(String lightNo, String brightHex) {
-        return HEAD + lightNo + "$" + MODIFY_BRIGHTNESS + brightHex + END;
+        return HEAD + lightNo + DIVISION + MODIFY_BRIGHTNESS + brightHex + DIVISION +END_MARK;
     }
 
     public static String getLightNo(int position, boolean isFirstItem) {
@@ -160,7 +161,7 @@ public class BleCommandUtils {
             case 11:
             case 10:
                 isFirstItem = popupPosition == 0 ? true : false;
-                command.append(popupPosition + "$" + colors[0] + END);
+                command.append(popupPosition + DIVISION + colors[0] + DIVISION);
                 break;
             case 1:
             case 2:
@@ -169,13 +170,14 @@ public class BleCommandUtils {
             case 7:
             case 12:
                 int count = getColorCount(popupItems[popupPosition], position);
-                command.append(count + "$");
+                command.append(count + DIVISION);
                 for (int i = 0; i < count; i++) {
-                    command.append(colors[i] + END);
+                    command.append(colors[i] + DIVISION);
                 }
                 break;
         }
-        return HEAD + getLightNo(position, isFirstItem) + "$" + COLOR_DATA + command.toString();
+        return HEAD + getLightNo(position, isFirstItem) + DIVISION + COLOR_DATA + command.toString() +
+                END_MARK;
     }
 
     private static int getColorCount(String popupItem, int position) {
@@ -195,12 +197,13 @@ public class BleCommandUtils {
     }
 
     public static String updateLightColor(String lightNo, int position, String color) {
-        String command = "010" + position + "$";
-        return HEAD + lightNo + "$" + MODIFY_COLOR + command + color + END;
+        String command = "010" + position + DIVISION;
+        return HEAD + lightNo + DIVISION + MODIFY_COLOR + command + color + DIVISION + END_MARK;
     }
+
     //分包
     public static void divideFrameBleSendData(byte[] data, BluetoothClient client,
-                                        String macAddress, UUID serviceUUID, UUID characterUUID) {
+                                              String macAddress, UUID serviceUUID, UUID characterUUID) {
         int tmpLen = data.length;
         int start = 0;
         int end = 0;
@@ -223,8 +226,6 @@ public class BleCommandUtils {
                         public void onResponse(int code) {
                         }
                     });
-
         }
     }
-
 }
