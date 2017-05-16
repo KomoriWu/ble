@@ -7,11 +7,14 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.media.AudioManager;
+import android.os.Bundle;
 import android.view.inputmethod.InputMethodManager;
 
 import com.example.txtledbluetooth.R;
 import com.example.txtledbluetooth.bean.Lighting;
+import com.example.txtledbluetooth.bean.RgbColor;
 import com.inuker.bluetooth.library.connect.options.BleConnectOptions;
 import com.inuker.bluetooth.library.search.SearchRequest;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -51,6 +54,7 @@ public class Utils {
     public static final String SEEK_BAR_PROGRESS_BRIGHT = "bright_progress";
     public static final String SEEK_BAR_PROGRESS_SPEED = "speed_progress";
     public static final int SEEK_BAR_MAX = 255;
+    public static final String DEFAULT_COLORS = "default_colors";
 
     public static DisplayImageOptions getImageOptions(int defaultIconId) {
         return getImageOptions(defaultIconId, 0);
@@ -183,33 +187,6 @@ public class Utils {
         return minute + ":" + second;
     }
 
-    public static int getDefaultColor(Context context, int position) {
-        int defaultColor = R.color.red;
-        switch (position) {
-            case 0:
-                defaultColor = R.color.red;
-                break;
-            case 1:
-                defaultColor = R.color.orange;
-                break;
-            case 2:
-                defaultColor = R.color.yellow;
-                break;
-            case 3:
-                defaultColor = R.color.green;
-                break;
-            case 4:
-                defaultColor = R.color.blue;
-                break;
-            case 5:
-                defaultColor = R.color.indigo;
-                break;
-            case 6:
-                defaultColor = R.color.purple;
-                break;
-        }
-        return context.getResources().getColor(defaultColor);
-    }
 
     public static HashMap getSeekBarProgress(int position) {
         HashMap<String, Integer> hashMap = new HashMap<>();
@@ -246,8 +223,28 @@ public class Utils {
                 bright = SEEK_BAR_MAX;
                 break;
         }
-        hashMap.put(SEEK_BAR_PROGRESS_BRIGHT,bright);
-        hashMap.put(SEEK_BAR_PROGRESS_SPEED,speed);
+        hashMap.put(SEEK_BAR_PROGRESS_BRIGHT, bright);
+        hashMap.put(SEEK_BAR_PROGRESS_SPEED, speed);
         return hashMap;
     }
+
+
+    public static void saveDefaultColors() {
+        RgbColor.deleteDefaultRgbColors();
+        new RgbColor(DEFAULT_COLORS + 0, 255, 0, 0, 0, 0, Color.rgb(
+                255, 0, 0), "ff0000").save(); //view 1 红色
+        new RgbColor(DEFAULT_COLORS + 1, 255, 255, 0, 0, 0, Color.rgb(
+                255, 255, 0), "ffff00").save();//view 2 黄色
+        new RgbColor(DEFAULT_COLORS + 2, 0, 255, 0, 0, 0, Color.rgb(
+                0, 255, 0), "00ff00").save();//view 3 绿色
+        new RgbColor(DEFAULT_COLORS + 3, 0, 255, 255, 0, 0, Color.rgb(
+                0, 255, 255), "00ffff").save();//view 4 浅绿
+        new RgbColor(DEFAULT_COLORS + 4, 0, 0, 255, 0, 0, Color.rgb(
+                0, 0, 255), "0000ff").save();//view 5 蓝色
+        new RgbColor(DEFAULT_COLORS + 5, 255, 0, 255, 0, 0, Color.rgb(
+                255, 0, 255), "ff00ff").save();//view 6 紫色
+        new RgbColor(DEFAULT_COLORS + 6, 255, 255, 255, 0, 0, Color.rgb(
+                255, 255, 255), "ffffff").save();//view 7 白色
+    }
+
 }

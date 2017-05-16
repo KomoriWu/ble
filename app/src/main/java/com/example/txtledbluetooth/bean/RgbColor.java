@@ -1,5 +1,6 @@
 package com.example.txtledbluetooth.bean;
 
+import com.example.txtledbluetooth.utils.Utils;
 import com.google.gson.annotations.SerializedName;
 import com.orm.SugarRecord;
 import com.orm.dsl.Table;
@@ -116,9 +117,10 @@ public class RgbColor extends SugarRecord implements Serializable {
         int[] colors = new int[7];
         for (int i = 0; i < 7; i++) {
             List<RgbColor> rgbColorList = getRgbColorList(name + i);
-            if (rgbColorList != null && rgbColorList.size() > 0) {
-                colors[i] = rgbColorList.get(0).getColorInt();
+            if (rgbColorList == null || rgbColorList.size() == 0) {
+                rgbColorList = getRgbColorList(Utils.DEFAULT_COLORS + i);
             }
+            colors[i] = rgbColorList.get(0).getColorInt();
         }
 
         return colors;
@@ -128,9 +130,10 @@ public class RgbColor extends SugarRecord implements Serializable {
         String[] colors = new String[7];
         for (int i = 0; i < 7; i++) {
             List<RgbColor> rgbColorList = getRgbColorList(name + i);
-            if (rgbColorList != null && rgbColorList.size() > 0) {
-                colors[i] = rgbColorList.get(0).getColorStr();
+            if (rgbColorList == null || rgbColorList.size() == 0) {
+                rgbColorList = getRgbColorList(Utils.DEFAULT_COLORS + i);
             }
+            colors[i] = rgbColorList.get(0).getColorStr();
         }
 
         return colors;
@@ -139,4 +142,18 @@ public class RgbColor extends SugarRecord implements Serializable {
     public void deleteRgbColorByName() {
         RgbColor.deleteAll(RgbColor.class, "name = ?", name);
     }
+
+    public static void deleteRgbColors(String name) {
+        for (int i = 0; i < 7; i++) {
+            RgbColor.deleteAll(RgbColor.class, "name = ?", name + i);
+        }
+    }
+
+    public static void deleteDefaultRgbColors() {
+        for (int i = 0; i < 7; i++) {
+            RgbColor.deleteAll(RgbColor.class, "name = ?", Utils.DEFAULT_COLORS+i);
+        }
+    }
+
+
 }

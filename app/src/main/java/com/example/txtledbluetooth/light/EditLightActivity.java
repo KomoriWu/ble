@@ -224,11 +224,12 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     public void setPaintPixel() {
         List<RgbColor> rgbColorList = RgbColor.getRgbColorList(mLightName + mModelTypeFlags +
                 radioGroup.getTag());
-        if (rgbColorList != null && rgbColorList.size() > 0) {
-            RgbColor rgbColor = rgbColorList.get(0);
-            mColorPicker.setPaintPixel(rgbColor.getX(), rgbColor.getY());
-            updateTvColor(rgbColor.getR(), rgbColor.getG(), rgbColor.getB(), rgbColor.getColorStr());
+        if (rgbColorList == null || rgbColorList.size() == 0) {
+            rgbColorList = RgbColor.getRgbColorList(Utils.DEFAULT_COLORS + radioGroup.getTag());
         }
+        RgbColor rgbColor = rgbColorList.get(0);
+        mColorPicker.setPaintPixel(rgbColor.getX(), rgbColor.getY());
+        updateTvColor(rgbColor.getR(), rgbColor.getG(), rgbColor.getB(), rgbColor.getColorStr());
     }
 
     public void initPopupWindow() {
@@ -257,7 +258,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         int g = Color.green(color);
         int b = Color.blue(color);
         String r1 = getBothColor(r);
-        String g1 =getBothColor(g);
+        String g1 = getBothColor(g);
         String b1 = getBothColor(b);
         String colorStr = r1 + g1 + b1;
         updateTvColor(r, g, b, colorStr);
@@ -297,11 +298,10 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
 
     @Override
     public void revertColor() {
+        RgbColor.deleteRgbColors(mLightName + mModelTypeFlags);
         radioGroup.check(R.id.rb_board1);
         setEtDefaultData();
-        mEditLightPresenter.updateLightColor(mLightNo,
-                (int) radioGroup.getTag(), getString(R.string.red_color));
-        RgbColor.deleteAll(RgbColor.class);
+        mEditLightPresenter.operateItemBluetooth(mLightName, mPosition, mPopupPosition);
         setViewBoardDefaultColor();
     }
 
@@ -309,10 +309,8 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     private void setViewBoardDefaultColor() {
         int[] colors = RgbColor.getRgbColors(mLightName + mModelTypeFlags);
         View view = viewBoard1;
-        int defaultColor;
         if (colors != null && colors.length == 7) {
             for (int i = 0; i < 7; i++) {
-                defaultColor = Utils.getDefaultColor(this, i);
                 switch (i) {
                     case 0:
                         view = viewBoard1;
@@ -336,11 +334,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
                         view = viewBoard7;
                         break;
                 }
-                if (colors[i] == 0) {
-                    view.setBackgroundColor(defaultColor);
-                } else {
-                    view.setBackgroundColor(colors[i]);
-                }
+                view.setBackgroundColor(colors[i]);
             }
         }
     }

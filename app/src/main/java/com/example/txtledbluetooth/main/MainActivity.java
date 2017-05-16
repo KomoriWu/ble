@@ -92,6 +92,8 @@ public class MainActivity extends BaseActivity implements MainView {
         initPermission();
 //        switchMusic();
 
+        //初始化默认颜色
+        Utils.saveDefaultColors();
     }
 
     private void initPermission() {
@@ -128,7 +130,7 @@ public class MainActivity extends BaseActivity implements MainView {
 
     @Override
     public void showProgress() {
-        mProgressDialog =ProgressDialog.show(this, "", getString(R.string.init_the_bluetooth),
+        mProgressDialog = ProgressDialog.show(this, "", getString(R.string.init_the_bluetooth),
                 true, true, new DialogInterface.OnCancelListener() {
                     @Override
                     public void onCancel(DialogInterface dialog) {
