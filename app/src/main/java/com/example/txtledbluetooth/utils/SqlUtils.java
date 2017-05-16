@@ -70,6 +70,21 @@ public class SqlUtils {
         new RgbColor(DEFAULT_COLORS + itemNames[11] + Utils.getPopWindowItems(context, 11)[0] + 0,
                 255, 125, 0).save();
 
+        new RgbColor(DEFAULT_COLORS + itemNames[12] + Utils.getPopWindowItems(context, 12)[0] + 0,
+                245, 208, 20).save();
+        new RgbColor(DEFAULT_COLORS + itemNames[12] + Utils.getPopWindowItems(context, 12)[0] + 1,
+                245, 208, 20).save();
+        new RgbColor(DEFAULT_COLORS + itemNames[12] + Utils.getPopWindowItems(context, 12)[0] + 2,
+                245, 122, 20).save();
+        new RgbColor(DEFAULT_COLORS + itemNames[12] + Utils.getPopWindowItems(context, 12)[0] + 3,
+                245, 122, 20).save();
+        new RgbColor(DEFAULT_COLORS + itemNames[12] + Utils.getPopWindowItems(context, 12)[0] + 4,
+                245, 122, 20).save();
+        new RgbColor(DEFAULT_COLORS + itemNames[12] + Utils.getPopWindowItems(context, 12)[0] + 5,
+                245, 208, 20).save();
+        new RgbColor(DEFAULT_COLORS + itemNames[12] + Utils.getPopWindowItems(context, 12)[0] + 6,
+                245, 208, 20).save();
+
 
         new RgbColor(DEFAULT_COLORS + 0, 255, 0, 0).save(); //view 1 红色
         new RgbColor(DEFAULT_COLORS + 1, 255, 255, 0).save();//view 2 黄色

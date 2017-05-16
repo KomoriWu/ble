@@ -143,7 +143,7 @@
                 <EditText
                     android:id="@+id/et_r"
                     style="@style/et_color_board"
-                    android:text="255" />
+                     />
 
 
             </LinearLayout>
@@ -164,7 +164,7 @@
                 <EditText
                     android:id="@+id/et_g"
                     style="@style/et_color_board"
-                    android:text="0" />
+                    />
 
             </LinearLayout>
 
@@ -184,7 +184,7 @@
                 <EditText
                     android:id="@+id/et_b"
                     style="@style/et_color_board"
-                    android:text="0" />
+                     />
 
             </LinearLayout>
 
@@ -210,7 +210,7 @@
                     android:digits="@string/et_digits"
                     android:maxLength="6"
                     android:paddingRight="@dimen/min_margin"
-                    android:text="ff0000" />
+                     />
 
             </LinearLayout>
 

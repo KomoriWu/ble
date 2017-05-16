@@ -11,6 +11,7 @@
         <item>@string/beat_meter</item>
         <item>@string/cycle_all</item>
         <item>@string/cycle</item>
+
         <item>@string/wave</item>
         <item>@string/solo</item>
         <item>@string/mood</item>
