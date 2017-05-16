@@ -169,6 +169,7 @@ public class BleCommandUtils {
                 command.append(popupPosition + DIVISION + colors[0] + DIVISION);
                 break;
             case 10:
+                isFirstItem = popupPosition == 0 ? false : true;
                 int count = popupPosition == 0 ? 1 : 0;
                 command.append(count + DIVISION + colors[0] + DIVISION);
                 break;
