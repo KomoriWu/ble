@@ -1,5 +1,8 @@
 package com.example.txtledbluetooth.bean;
 
+import android.graphics.Color;
+
+import com.example.txtledbluetooth.utils.SqlUtils;
 import com.example.txtledbluetooth.utils.Utils;
 import com.google.gson.annotations.SerializedName;
 import com.orm.SugarRecord;
@@ -34,15 +37,35 @@ public class RgbColor extends SugarRecord implements Serializable {
     public RgbColor() {
     }
 
-    public RgbColor(String name, int r, int g, int b, float x, float y, int colorInt, String colorStr) {
+    public RgbColor(String name, int r, int g, int b, float x, float y) {
         this.name = name;
         this.r = r;
         this.g = g;
         this.b = b;
         this.x = x;
         this.y = y;
-        this.colorInt = colorInt;
-        this.colorStr = colorStr;
+        this.colorInt = Color.rgb(r, g, b);
+        this.colorStr = getBothColor(r) + getBothColor(g) + getBothColor(b);
+    }
+
+    public RgbColor(String name, int r, int g, int b) {
+        this.name = name;
+        this.r = r;
+        this.g = g;
+        this.b = b;
+        this.x = 0;
+        this.y = 0;
+        this.colorInt = Color.rgb(r, g, b);
+        this.colorStr = getBothColor(r) + getBothColor(g) + getBothColor(b);
+    }
+
+    public String getBothColor(int str) {
+        if (Integer.toString(str).getBytes().length < 2) {
+            return "0" + Integer.toHexString(str);
+        } else {
+            return Integer.toHexString(str);
+        }
+
     }
 
     public float getX() {
@@ -118,7 +141,7 @@ public class RgbColor extends SugarRecord implements Serializable {
         for (int i = 0; i < 7; i++) {
             List<RgbColor> rgbColorList = getRgbColorList(name + i);
             if (rgbColorList == null || rgbColorList.size() == 0) {
-                rgbColorList = getRgbColorList(Utils.DEFAULT_COLORS + i);
+                rgbColorList = SqlUtils.getDefaultColors(name,i);
             }
             colors[i] = rgbColorList.get(0).getColorInt();
         }
@@ -131,7 +154,7 @@ public class RgbColor extends SugarRecord implements Serializable {
         for (int i = 0; i < 7; i++) {
             List<RgbColor> rgbColorList = getRgbColorList(name + i);
             if (rgbColorList == null || rgbColorList.size() == 0) {
-                rgbColorList = getRgbColorList(Utils.DEFAULT_COLORS + i);
+                rgbColorList = SqlUtils.getDefaultColors(name,i);
             }
             colors[i] = rgbColorList.get(0).getColorStr();
         }
@@ -146,12 +169,6 @@ public class RgbColor extends SugarRecord implements Serializable {
     public static void deleteRgbColors(String name) {
         for (int i = 0; i < 7; i++) {
             RgbColor.deleteAll(RgbColor.class, "name = ?", name + i);
-        }
-    }
-
-    public static void deleteDefaultRgbColors() {
-        for (int i = 0; i < 7; i++) {
-            RgbColor.deleteAll(RgbColor.class, "name = ?", Utils.DEFAULT_COLORS+i);
         }
     }
 

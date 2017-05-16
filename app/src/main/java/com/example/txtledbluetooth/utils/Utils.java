@@ -31,10 +31,10 @@ import java.util.HashMap;
 public class Utils {
     public static final String ITEM_RIGHT_TEXT = "item_right_text";
     public static final String AUDIO_PROMPTS_DEFAULT_MODEL = "Voice and Tones";
-    public static final String BLE_NAME = "Creative Halo";// 调试 HMSoft
+    public static final String BLE_NAME = "HMSoft";// 调试 HMSoft
     public static final String BLE_ADDRESS = "ble_address";
     public static final String RECEIVE_SERVICE = "6677";
-    public static final String SEND_SERVICE = "7777";  //调试 0000
+    public static final String SEND_SERVICE = "0000";  //调试 0000
     public static final String LIGHT_MODEL_NAME = "light_model_name";
     public static final String LIGHT_MODEL_ID = "light_model_id";
     public static final String DURATION = "duration";
@@ -46,15 +46,13 @@ public class Utils {
     public static final String COLOR_R = "color_r";
     public static final String COLOR_G = "color_g";
     public static final String COLOR_B = "color_b";
-    public static final String COLOR_STR = "color_str";
-    public static final String COLOR_INT = "color_int";
     public static final String PIXEL_X = "pixel_x";
     public static final String PIXEL_Y = "pixel_y";
     public static final int STREAM_TYPE = AudioManager.STREAM_MUSIC;
     public static final String SEEK_BAR_PROGRESS_BRIGHT = "bright_progress";
     public static final String SEEK_BAR_PROGRESS_SPEED = "speed_progress";
     public static final int SEEK_BAR_MAX = 255;
-    public static final String DEFAULT_COLORS = "default_colors";
+
 
     public static DisplayImageOptions getImageOptions(int defaultIconId) {
         return getImageOptions(defaultIconId, 0);
@@ -229,22 +227,5 @@ public class Utils {
     }
 
 
-    public static void saveDefaultColors() {
-        RgbColor.deleteDefaultRgbColors();
-        new RgbColor(DEFAULT_COLORS + 0, 255, 0, 0, 0, 0, Color.rgb(
-                255, 0, 0), "ff0000").save(); //view 1 红色
-        new RgbColor(DEFAULT_COLORS + 1, 255, 255, 0, 0, 0, Color.rgb(
-                255, 255, 0), "ffff00").save();//view 2 黄色
-        new RgbColor(DEFAULT_COLORS + 2, 0, 255, 0, 0, 0, Color.rgb(
-                0, 255, 0), "00ff00").save();//view 3 绿色
-        new RgbColor(DEFAULT_COLORS + 3, 0, 255, 255, 0, 0, Color.rgb(
-                0, 255, 255), "00ffff").save();//view 4 浅绿
-        new RgbColor(DEFAULT_COLORS + 4, 0, 0, 255, 0, 0, Color.rgb(
-                0, 0, 255), "0000ff").save();//view 5 蓝色
-        new RgbColor(DEFAULT_COLORS + 5, 255, 0, 255, 0, 0, Color.rgb(
-                255, 0, 255), "ff00ff").save();//view 6 紫色
-        new RgbColor(DEFAULT_COLORS + 6, 255, 255, 255, 0, 0, Color.rgb(
-                255, 255, 255), "ffffff").save();//view 7 白色
-    }
 
 }

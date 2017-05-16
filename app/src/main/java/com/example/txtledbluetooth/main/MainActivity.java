@@ -24,6 +24,7 @@ import com.example.txtledbluetooth.R;
 import com.example.txtledbluetooth.about.AboutFragment;
 import com.example.txtledbluetooth.application.MyApplication;
 import com.example.txtledbluetooth.base.BaseActivity;
+import com.example.txtledbluetooth.bean.RgbColor;
 import com.example.txtledbluetooth.dashboard.DashboardFragment;
 import com.example.txtledbluetooth.light.LightFragment;
 import com.example.txtledbluetooth.main.presenter.MainPresenter;
@@ -33,7 +34,9 @@ import com.example.txtledbluetooth.music.MusicFragment;
 import com.example.txtledbluetooth.setting.SettingFragment;
 import com.example.txtledbluetooth.sources.SourcesFragment;
 import com.example.txtledbluetooth.utils.AlertUtils;
+import com.example.txtledbluetooth.utils.SqlUtils;
 import com.example.txtledbluetooth.utils.Utils;
+import com.nostra13.universalimageloader.utils.L;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionNo;
 import com.yanzhenjie.permission.PermissionYes;
@@ -93,7 +96,10 @@ public class MainActivity extends BaseActivity implements MainView {
 //        switchMusic();
 
         //初始化默认颜色
-        Utils.saveDefaultColors();
+        List<RgbColor> rgbColorList = RgbColor.getRgbColorList(SqlUtils.DEFAULT_COLORS + 0);
+        if (rgbColorList == null || rgbColorList.size() == 0) {
+            SqlUtils.saveDefaultColors(this);
+        }
     }
 
     private void initPermission() {

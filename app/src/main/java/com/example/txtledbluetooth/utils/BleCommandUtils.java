@@ -154,6 +154,13 @@ public class BleCommandUtils {
         String[] colors = RgbColor.getRgbColorStr(lightName + popupItems[popupPosition]);
         switch (position) {
             case 0:
+                isFirstItem = popupPosition == 0 ? true : false;
+                if (isFirstItem){
+                    command.append(1 + DIVISION + "ffffff" + DIVISION);
+                }else {
+                    command.append(1 + DIVISION + colors[0] + DIVISION);
+                }
+                break;
             case 3:
             case 4:
             case 8:
