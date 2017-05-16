@@ -58,6 +58,8 @@
         <item name="android:background">@color/item_selected_bg</item>
         <item name="android:maxLength">3</item>
         <item name="android:maxLines">1</item>
+        <item name="android:digits">@string/et_digits_rgb</item>
+        <item name="android:imeOptions">actionGo</item>
         <item name="android:paddingLeft">@dimen/min_margin</item>
         <item name="android:paddingRight">@dimen/item_padding_left</item>
     </style>

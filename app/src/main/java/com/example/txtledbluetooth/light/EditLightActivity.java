@@ -144,6 +144,9 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
 
         onPopupWindowItemClick(mPopupPosition, tvChoseType.getText().toString());
         etColorWell.setOnEditorActionListener(this);
+        etColorR.setOnEditorActionListener(this);
+        etColorG.setOnEditorActionListener(this);
+        etColorB.setOnEditorActionListener(this);
         seekBarSpeed.setOnSeekBarChangeListener(this);
         seekBarBright.setOnSeekBarChangeListener(this);
 
@@ -262,21 +265,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         String b1 = getBothColor(b);
         String colorStr = r1 + g1 + b1;
         updateTvColor(r, g, b, colorStr);
-
-        mFirstDrag = System.currentTimeMillis();
-        Message message = mHandler.obtainMessage();
-        message.what = START_SORT;
-        message.obj = colorStr;
-        Bundle bundle = new Bundle();
-        bundle.putInt(Utils.COLOR_R, r);
-        bundle.putInt(Utils.COLOR_G, g);
-        bundle.putInt(Utils.COLOR_B, b);
-        bundle.putInt(Utils.COLOR_INT, color);
-        bundle.putFloat(Utils.PIXEL_X, x);
-        bundle.putFloat(Utils.PIXEL_Y, y);
-        bundle.putString(Utils.COLOR_STR, colorStr);
-        message.setData(bundle);
-        mHandler.sendMessageDelayed(message, SORT_DELAY_MILLISECONDS);
+        postUpdateHandler(r, g, b, color, x, y);
 
     }
 
@@ -497,22 +486,67 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
 
     @Override
     public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-        String[] temp = etColorWell.getText().toString().split("");
-        if (temp.length == 7) {
-            String strR = Integer.valueOf(temp[1] + temp[2], 16).toString();
-            String strG = Integer.valueOf(temp[3] + temp[4], 16).toString();
-            String strB = Integer.valueOf(temp[5] + temp[6], 16).toString();
-            etColorR.setText(strR);
-            etColorG.setText(strG);
-            etColorB.setText(strB);
-            mBgView.setBackgroundColor(Color.rgb(Integer.parseInt(strR), Integer.parseInt(strG),
-                    Integer.parseInt(strB)));
+        EditText editText = (EditText) findViewById(textView.getId());
+        editText.setSelection(editText.getText().length());
+        if (editText == etColorR || editText == etColorG || editText == etColorB) {
+            if (-1 < Integer.parseInt(editText.getText().toString().trim()) &&
+                    Integer.parseInt(editText.getText().toString().trim()) < 256) {
+                int r = Integer.parseInt(etColorR.getText().toString().trim());
+                int g = Integer.parseInt(etColorG.getText().toString().trim());
+                int b = Integer.parseInt(etColorB.getText().toString().trim());
+                String r1 = getBothColor(r);
+                String g1 = getBothColor(g);
+                String b1 = getBothColor(b);
+                String colorStr = r1 + g1 + b1;
+                etColorWell.setText(colorStr);
+                int colorInt = Color.rgb(r, g, b);
+                mBgView.setBackgroundColor(colorInt);
+                postUpdateHandler(r, g, b, colorInt, 0, 0);
+            }else {
+                Toast.makeText(this, R.string.color_value_hint, Toast.LENGTH_SHORT).show();
+            }
         } else {
-            Toast.makeText(this, R.string.color_value_hint, Toast.LENGTH_SHORT).show();
+            String[] temp = etColorWell.getText().toString().split("");
+            if (temp.length == 7) {
+                String strR = Integer.valueOf(temp[1] + temp[2], 16).toString();
+                String strG = Integer.valueOf(temp[3] + temp[4], 16).toString();
+                String strB = Integer.valueOf(temp[5] + temp[6], 16).toString();
+                int r = Integer.parseInt(strR);
+                int g = Integer.parseInt(strG);
+                int b = Integer.parseInt(strB);
+                int colorInt = Color.rgb(r, g, b);
+                etColorR.setText(strR);
+                etColorG.setText(strG);
+                etColorB.setText(strB);
+                mBgView.setBackgroundColor(colorInt);
+                postUpdateHandler(r, g, b, colorInt, 0, 0);
+            } else {
+                Toast.makeText(this, R.string.color_value_hint, Toast.LENGTH_SHORT).show();
+            }
         }
         etColorWell.setCursorVisible(false);
+        etColorR.setCursorVisible(false);
+        etColorG.setCursorVisible(false);
+        etColorB.setCursorVisible(false);
         Utils.hideKeyboard(this);
         return false;
+    }
+
+    private void postUpdateHandler(int r, int g, int b, int colorInt, float x, float y) {
+        mFirstDrag = System.currentTimeMillis();
+        Message message = mHandler.obtainMessage();
+        message.what = START_SORT;
+        message.obj = etColorWell.getText().toString();
+        Bundle bundle = new Bundle();
+        bundle.putInt(Utils.COLOR_R, r);
+        bundle.putInt(Utils.COLOR_G, g);
+        bundle.putInt(Utils.COLOR_B, b);
+        bundle.putInt(Utils.COLOR_INT, colorInt);
+        bundle.putFloat(Utils.PIXEL_X, x);
+        bundle.putFloat(Utils.PIXEL_Y, y);
+        bundle.putString(Utils.COLOR_STR, etColorWell.getText().toString());
+        message.setData(bundle);
+        mHandler.sendMessageDelayed(message, SORT_DELAY_MILLISECONDS);
     }
 
     public void setEtNoData() {
