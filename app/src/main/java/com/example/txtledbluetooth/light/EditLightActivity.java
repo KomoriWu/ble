@@ -277,10 +277,12 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void updateTvColor(int r, int g, int b, String colorStr) {
-        etColorR.setText(r + "");
-        etColorG.setText(g + "");
-        etColorB.setText(b + "");
-        etColorWell.setText(colorStr);
+        if (etColorR.isEnabled()) {
+            etColorR.setText(r + "");
+            etColorG.setText(g + "");
+            etColorB.setText(b + "");
+            etColorWell.setText(colorStr);
+        }
     }
 
     @Override
@@ -359,7 +361,8 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
             mEditLightPresenter.setIsSetOnColorSelectListener(false);
             setEtEnable(false);
             //fireworks
-            if (mPosition == 1 || mPosition == 2 || mPosition == 3 || mPosition == 4) {
+            if (mPosition == 1 || mPosition == 2 || mPosition == 3 || mPosition == 4||
+                    mPosition == 10) {
                 layoutSpeed.setVisibility(View.VISIBLE);
             } else {
                 layoutSpeed.setVisibility(View.GONE);
@@ -399,6 +402,8 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
                 viewBoard6.setVisibility(View.GONE);
                 viewBoard7.setVisibility(View.GONE);
             } else {
+                mEditLightPresenter.setIsSetOnColorSelectListener(false);
+                setEtEnable(false);
                 rbBoard1.setVisibility(View.GONE);
                 rbBoard2.setVisibility(View.GONE);
                 rbBoard3.setVisibility(View.GONE);
@@ -414,7 +419,8 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
                 viewBoard6.setVisibility(View.GONE);
                 viewBoard7.setVisibility(View.GONE);
             }
-            if (mPosition == 0 || mPosition == 1 || mPosition == 2 || mPosition == 3) {
+            if (mPosition == 0 || mPosition == 1 || mPosition == 2 || mPosition == 3||
+                    mPosition==4||mPosition==5||mPosition==8||mPosition==10||mPosition==13) {
 //                tvRevert.setClickable(false);
                 setEtNoData();
             }

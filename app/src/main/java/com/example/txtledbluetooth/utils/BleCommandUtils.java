@@ -20,7 +20,7 @@ import java.util.UUID;
 
 public class BleCommandUtils {
     public static final String DIVISION = "$";
-    public static final String HEAD = "GP"+DIVISION;
+    public static final String HEAD = "GP" + DIVISION;
     public static final String END_MARK = "\r\n";
 
     //模式指令
@@ -44,16 +44,16 @@ public class BleCommandUtils {
     public static final String CLOSE_LIGHT = "etof";
 
     //指令类型
-    public static final String COLOR_DATA = "YSD"+DIVISION;
-    public static final String MODIFY_COLOR = "DYS"+DIVISION;
-    public static final String MODIFY_BRIGHTNESS = "LDD"+DIVISION+"00";
-    public static final String MODIFY_SPEED = "SDD"+DIVISION+"00";
-    public static final String CONTROL_DATA = "KZD"+DIVISION;
+    public static final String COLOR_DATA = "YSD" + DIVISION;
+    public static final String MODIFY_COLOR = "DYS" + DIVISION;
+    public static final String MODIFY_BRIGHTNESS = "LDD" + DIVISION + "00";
+    public static final String MODIFY_SPEED = "SDD" + DIVISION + "00";
+    public static final String CONTROL_DATA = "KZD" + DIVISION;
 
     //其他设置
     public static final String LIGHT_SPEED = "espd,";
     public static final String LIGHT_BRIGHT = "elux,";
-    public static final String CLOSE = HEAD + CLOSE_LIGHT + DIVISION +END_MARK;
+    public static final String CLOSE = HEAD + CLOSE_LIGHT + DIVISION + END_MARK;
     public static final String RESET = HEAD + "erst" + DIVISION;
     public static final String CLOSE_SOUND = HEAD + "esvt:0" + DIVISION;
     public static final String OPEN_SOUND = HEAD + "esvt:1" + DIVISION;
@@ -61,12 +61,12 @@ public class BleCommandUtils {
 
     //灯光速度
     public static String getLightSpeedCommand(String lightNo, String speedHex) {
-        return HEAD + lightNo + DIVISION + MODIFY_SPEED + speedHex + DIVISION +END_MARK;
+        return HEAD + lightNo + DIVISION + MODIFY_SPEED + speedHex + DIVISION + END_MARK;
     }
 
     //灯光亮度
     public static String getLightBrightCommand(String lightNo, String brightHex) {
-        return HEAD + lightNo + DIVISION + MODIFY_BRIGHTNESS + brightHex + DIVISION +END_MARK;
+        return HEAD + lightNo + DIVISION + MODIFY_BRIGHTNESS + brightHex + DIVISION + END_MARK;
     }
 
     public static String getLightNo(int position, boolean isFirstItem) {
@@ -155,9 +155,9 @@ public class BleCommandUtils {
         switch (position) {
             case 0:
                 isFirstItem = popupPosition == 0 ? true : false;
-                if (isFirstItem){
+                if (isFirstItem) {
                     command.append(1 + DIVISION + "ffffff" + DIVISION);
-                }else {
+                } else {
                     command.append(1 + DIVISION + colors[0] + DIVISION);
                 }
                 break;
@@ -165,20 +165,23 @@ public class BleCommandUtils {
             case 4:
             case 8:
             case 9:
-            case 11:
-            case 10:
                 isFirstItem = popupPosition == 0 ? true : false;
                 command.append(popupPosition + DIVISION + colors[0] + DIVISION);
+                break;
+            case 10:
+                int count = popupPosition == 0 ? 1 : 0;
+                command.append(count + DIVISION + colors[0] + DIVISION);
                 break;
             case 1:
             case 2:
             case 5:
             case 6:
             case 7:
+            case 11:
             case 12:
-                int count = getColorCount(popupItems[popupPosition], position);
-                command.append(count + DIVISION);
-                for (int i = 0; i < count; i++) {
+                int count2 = getColorCount(popupItems[popupPosition], position);
+                command.append(count2 + DIVISION);
+                for (int i = 0; i < count2; i++) {
                     command.append(colors[i] + DIVISION);
                 }
                 break;
@@ -189,7 +192,7 @@ public class BleCommandUtils {
 
     private static int getColorCount(String popupItem, int position) {
         int count = 0;
-        if (popupItem.contains("1")) {
+        if (popupItem.contains("1") || position == 11) {
             count = 1;
         } else if (popupItem.contains("2")) {
             count = 2;
