@@ -46,6 +46,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         SeekBar.OnSeekBarChangeListener {
     private static final int START_SORT = 1;
     private static final int SORT_DELAY_MILLISECONDS = 300;
+    public static final int VIEW_VISIBLE = 0;
     @BindView(R.id.tv_toolbar_right)
     TextView tvRevert;
     @BindView(R.id.tv_chose_color_type)
@@ -319,7 +320,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
             updateTvColor(r, g, b, colorStr);
         }
         HashMap<String, Integer> hashMap = LightSbProgress.getSbProgressMap(mLightName +
-                mModelTypeFlags, mPopupPosition);
+                mModelTypeFlags, mPosition);
         seekBarBright.setProgress(hashMap.get(Utils.SEEK_BAR_PROGRESS_BRIGHT));
         seekBarSpeed.setProgress(hashMap.get(Utils.SEEK_BAR_PROGRESS_SPEED));
     }
@@ -332,13 +333,19 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         tvChoseType.setText(type);
         radioGroup.check(R.id.rb_board1);
         initEditLightUi(type);
-        initBleLightColor(position);
         setViewBoardDefaultColor();
+        initBleLightCommand(position);
         mPopWindow.dismiss();
     }
 
-    private void initBleLightColor(int popupPosition) {
+    private void initBleLightCommand(int popupPosition) {
         mEditLightPresenter.operateItemBluetooth(mLightName, mPosition, popupPosition);
+        if (layoutSpeed.getVisibility() == VIEW_VISIBLE) {
+            mEditLightPresenter.setLightSpeed(mLightNo, seekBarSpeed.getProgress());
+        }
+        if (layoutBrightness.getVisibility() == VIEW_VISIBLE) {
+            mEditLightPresenter.setLightBrightness(mLightNo, seekBarBright.getProgress());
+        }
 
     }
 
