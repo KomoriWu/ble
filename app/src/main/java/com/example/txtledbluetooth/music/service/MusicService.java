@@ -60,8 +60,7 @@ public class MusicService extends Service {
                     mMediaPlayer.setDataSource(songUrl);
                     mMediaPlayer.prepare();
                     mMediaPlayer.start();
-                }
-                catch (IllegalStateException e) {
+                } catch (IllegalStateException e) {
                     mMediaPlayer = null;
                     mMediaPlayer = new MediaPlayer();
                 }
@@ -103,7 +102,12 @@ public class MusicService extends Service {
 
         @Override
         public boolean isPlaying() {
-            return mMediaPlayer.isPlaying();
+            if (mMediaPlayer != null) {
+                return mMediaPlayer.isPlaying();
+            } else {
+                return false;
+            }
+
         }
 
         @Override

@@ -1,16 +1,12 @@
 package com.example.txtledbluetooth.base;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.example.txtledbluetooth.R;
 
 /**
  * Created by KomoriWu
@@ -42,5 +38,11 @@ public abstract class BaseFragment extends Fragment {
         if (progressDialog != null) {
             progressDialog.hide();
         }
+    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+//        RefWatcher refWatcher = MyApplication.getRefWatcher(getActivity());
+//        refWatcher.watch(this);
     }
 }

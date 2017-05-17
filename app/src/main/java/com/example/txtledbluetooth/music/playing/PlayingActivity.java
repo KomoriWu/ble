@@ -412,11 +412,10 @@ public class PlayingActivity extends BaseActivity implements Observer, PlayingVi
     }
 
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
         unbindService(mServiceConn);
     }
-
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {

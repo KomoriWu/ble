@@ -511,7 +511,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
 
 
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
         if (!mColorPicker.isRecycled()) {
             mColorPicker.recycle();

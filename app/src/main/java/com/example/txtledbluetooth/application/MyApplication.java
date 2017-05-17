@@ -1,6 +1,5 @@
 package com.example.txtledbluetooth.application;
 
-import android.app.Application;
 import android.content.Context;
 
 import com.inuker.bluetooth.library.BluetoothClient;
@@ -16,11 +15,17 @@ import com.orm.SugarApp;
 public class MyApplication extends SugarApp {
     private static ImageLoader mImageLoader;
     private static BluetoothClient mBluetoothClient;
+//    private RefWatcher refWatcher;
+
+//    public static RefWatcher getRefWatcher(Context context) {
+//        MyApplication application = (MyApplication) context.getApplicationContext();
+//        return application.refWatcher;
+//    }
 
     @Override
     public void onCreate() {
         super.onCreate();
-
+//        refWatcher = LeakCanary.install(this);
     }
 
     public static ImageLoader getImageLoader(Context context) {
@@ -40,7 +45,7 @@ public class MyApplication extends SugarApp {
         if (mBluetoothClient == null) {
             synchronized (BluetoothClient.class) {
                 if (mBluetoothClient == null) {
-                    mBluetoothClient= new BluetoothClient(context);
+                    mBluetoothClient = new BluetoothClient(context);
                 }
             }
         }
