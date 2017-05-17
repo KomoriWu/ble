@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.example.txtledbluetooth.R;
 import com.example.txtledbluetooth.base.BaseActivity;
+import com.example.txtledbluetooth.bean.LightSbProgress;
 import com.example.txtledbluetooth.bean.LightType;
 import com.example.txtledbluetooth.bean.RgbColor;
 import com.example.txtledbluetooth.light.presenter.EditLightPresenter;
@@ -156,22 +157,6 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         if (lightTypeList != null && lightTypeList.size() > 0) {
             LightType lightType = lightTypeList.get(0);
             mPopupPosition = lightType.getPopupPosition();
-
-            HashMap<String, Integer> hashMap = Utils.getSeekBarProgress(mPosition);
-            if (lightType.getBrightness() == 0) {
-                seekBarBright.setProgress(hashMap.get(Utils.SEEK_BAR_PROGRESS_BRIGHT));
-            } else {
-                seekBarBright.setProgress(lightType.getBrightness());
-            }
-            if (lightType.getSpeed() == 0) {
-                seekBarSpeed.setProgress(hashMap.get(Utils.SEEK_BAR_PROGRESS_SPEED));
-            } else {
-                seekBarSpeed.setProgress(lightType.getSpeed());
-            }
-        } else {
-            HashMap<String, Integer> hashMap = Utils.getSeekBarProgress(mPosition);
-            seekBarBright.setProgress(hashMap.get(Utils.SEEK_BAR_PROGRESS_BRIGHT));
-            seekBarSpeed.setProgress(hashMap.get(Utils.SEEK_BAR_PROGRESS_SPEED));
         }
     }
 
@@ -333,6 +318,10 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
             String colorStr = r1 + g1 + b1;
             updateTvColor(r, g, b, colorStr);
         }
+        HashMap<String, Integer> hashMap = LightSbProgress.getSbProgressMap(mLightName +
+                mModelTypeFlags, mPopupPosition);
+        seekBarBright.setProgress(hashMap.get(Utils.SEEK_BAR_PROGRESS_BRIGHT));
+        seekBarSpeed.setProgress(hashMap.get(Utils.SEEK_BAR_PROGRESS_SPEED));
     }
 
     @Override
@@ -608,13 +597,17 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         } else if (seekBar.getId() == R.id.sb_brightness) {
             mEditLightPresenter.setLightBrightness(mLightNo, seekBar.getProgress());
         }
+
+        LightSbProgress lightSbProgress = new LightSbProgress(mLightName + mModelTypeFlags,
+                seekBarSpeed.getProgress(), seekBarBright.getProgress());
+        lightSbProgress.deleteSbProgressByName();
+        lightSbProgress.save();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        LightType lightType = new LightType(mLightName, seekBarSpeed.getProgress(),
-                seekBarBright.getProgress(), mPopupPosition);
+        LightType lightType = new LightType(mLightName, mPopupPosition);
         lightType.deleteLightTypeByName();
         lightType.save();
     }
