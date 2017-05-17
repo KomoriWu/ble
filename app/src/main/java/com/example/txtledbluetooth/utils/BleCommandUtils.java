@@ -108,7 +108,7 @@ public class BleCommandUtils {
                 lightNo = CYCLE;
                 break;
             case 10:
-                if (!isFirstItem) {
+                if (isFirstItem) {
                     lightNo = WAVE1;
                 } else {
                     lightNo = WAVE2;
@@ -165,11 +165,10 @@ public class BleCommandUtils {
             case 4:
             case 8:
             case 9:
-                isFirstItem = popupPosition == 0 ? true : false;
                 command.append(popupPosition + DIVISION + colors[0] + DIVISION);
                 break;
             case 10:
-                isFirstItem = popupPosition == 0 ? false : true;
+                isFirstItem = popupPosition == 0 ? true : false;
                 int count = popupPosition == 0 ? 1 : 0;
                 command.append(count + DIVISION + colors[0] + DIVISION);
                 break;

@@ -31,10 +31,10 @@ import java.util.HashMap;
 public class Utils {
     public static final String ITEM_RIGHT_TEXT = "item_right_text";
     public static final String AUDIO_PROMPTS_DEFAULT_MODEL = "Voice and Tones";
-    public static final String BLE_NAME = "Creative Halo";// 调试 HMSoft
+    public static final String BLE_NAME = "HMSoft";// 调试 HMSoft
     public static final String BLE_ADDRESS = "ble_address";
     public static final String RECEIVE_SERVICE = "6677";
-    public static final String SEND_SERVICE = "7777";  //调试 0000
+    public static final String SEND_SERVICE = "0000";  //调试 0000
     public static final String LIGHT_MODEL_NAME = "light_model_name";
     public static final String LIGHT_MODEL_ID = "light_model_id";
     public static final String DURATION = "duration";

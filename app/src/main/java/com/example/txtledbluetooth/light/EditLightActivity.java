@@ -135,7 +135,6 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         tvRevert.setText(getString(R.string.revert));
         mPosition = getIntent().getIntExtra(Utils.LIGHT_MODEL_ID, 0);
         intLightType();
-        mLightNo = BleCommandUtils.getLightNo(mPosition, false);
         initPopupWindow();
         radioGroup.setOnCheckedChangeListener(this);
         mEditLightPresenter = new EditLightPresenterImpl(this, this, mColorPicker);
@@ -338,6 +337,8 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
 
     @Override
     public void onPopupWindowItemClick(int position, String type) {
+        mLightNo = BleCommandUtils.getLightNo(mPosition, position == 0 ? true : false);
+
         mPopupPosition = position;
         tvChoseType.setText(type);
         radioGroup.check(R.id.rb_board1);
@@ -361,7 +362,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
             mEditLightPresenter.setIsSetOnColorSelectListener(false);
             setEtEnable(false);
             //fireworks
-            if (mPosition == 1 || mPosition == 2 || mPosition == 3 || mPosition == 4||
+            if (mPosition == 1 || mPosition == 2 || mPosition == 3 || mPosition == 4 ||
                     mPosition == 10) {
                 layoutSpeed.setVisibility(View.VISIBLE);
             } else {
@@ -419,8 +420,8 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
                 viewBoard6.setVisibility(View.GONE);
                 viewBoard7.setVisibility(View.GONE);
             }
-            if (mPosition == 0 || mPosition == 1 || mPosition == 2 || mPosition == 3||
-                    mPosition==4||mPosition==5||mPosition==8||mPosition==10||mPosition==13) {
+            if (mPosition == 0 || mPosition == 1 || mPosition == 2 || mPosition == 3 ||
+                    mPosition == 4 || mPosition == 5 || mPosition == 8 || mPosition == 10 || mPosition == 13) {
 //                tvRevert.setClickable(false);
                 setEtNoData();
             }
