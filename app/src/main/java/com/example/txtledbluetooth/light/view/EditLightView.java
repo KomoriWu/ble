@@ -9,7 +9,12 @@ import com.example.txtledbluetooth.bean.RgbColor;
 
 public interface EditLightView {
     void showPopWindow();
-    void setTvColor(int color,float x, float y);
+
+    void setTvColor(int color, float x, float y);
+
     void revertColor();
+
     void setPaintPixel(RgbColor rgbColor);
+
+    void onWriteFailure();
 }

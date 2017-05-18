@@ -19,11 +19,13 @@ import java.util.UUID;
  */
 
 public class LightModelImpl implements LightModel {
+
     @Override
     public void WriteCommand(BluetoothClient client, String macAddress, UUID serviceUUID,
-                             UUID characterUUID, String command) {
+                             UUID characterUUID, String command,
+                             OnInterfaceWriteCommand onInterfaceWriteCommand) {
         BleCommandUtils.divideFrameBleSendData(command.getBytes(), client,
-                macAddress, serviceUUID, characterUUID);
+                macAddress, serviceUUID, characterUUID,onInterfaceWriteCommand);
     }
 
     @Override
@@ -78,5 +80,8 @@ public class LightModelImpl implements LightModel {
         return rgbColorList.get(0);
     }
 
+    public interface OnInterfaceWriteCommand {
+        void onWriteFailure();
+    }
 
 }

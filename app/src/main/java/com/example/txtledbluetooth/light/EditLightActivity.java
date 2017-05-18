@@ -28,6 +28,7 @@ import com.example.txtledbluetooth.bean.RgbColor;
 import com.example.txtledbluetooth.light.presenter.EditLightPresenter;
 import com.example.txtledbluetooth.light.presenter.EditLightPresenterImpl;
 import com.example.txtledbluetooth.light.view.EditLightView;
+import com.example.txtledbluetooth.utils.AlertUtils;
 import com.example.txtledbluetooth.utils.BleCommandUtils;
 import com.example.txtledbluetooth.utils.Utils;
 import com.example.txtledbluetooth.widget.ColorPicker;
@@ -200,6 +201,11 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     public void setPaintPixel(RgbColor rgbColor) {
         mColorPicker.setPaintPixel(rgbColor.getX(), rgbColor.getY());
         updateTvColor(rgbColor.getR(), rgbColor.getG(), rgbColor.getB(), rgbColor.getColorStr());
+    }
+
+    @Override
+    public void onWriteFailure() {
+        AlertUtils.showAlertDialog(this, R.string.ble_write_failure_hint);
     }
 
     public void initPopupWindow() {

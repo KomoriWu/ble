@@ -14,13 +14,15 @@ import java.util.UUID;
 
 public interface LightModel {
     void WriteCommand(BluetoothClient client, String macAddress, UUID serviceUUID,
-                      UUID characterUUID, String command);
+                      UUID characterUUID, String command, LightModelImpl.OnInterfaceWriteCommand
+                              onInterfaceWriteCommand);
 
     void saveLightSbProgress(Bundle bundle);
 
     void saveLightColor(Bundle bundle);
 
     void saveLightType(String name, int popupPosition);
+
     int getLightType(String name);
 
     RgbColor getLightColor(String sqlName, int position);

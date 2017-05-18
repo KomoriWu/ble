@@ -111,7 +111,9 @@ public class AlertUtils {
                     })
                     .create();
             dialog.setCancelable(true);
-            dialog.show();
+            if (!dialog.isShowing()){
+                dialog.show();
+            }
         }
     }
 
@@ -127,8 +129,8 @@ public class AlertUtils {
         }
     }
 
-    public static void showProgressDialog(Context context,int id) {
-        ProgressDialog progressDialog=new ProgressDialog(context);
+    public static void showProgressDialog(Context context, int id) {
+        ProgressDialog progressDialog = new ProgressDialog(context);
         progressDialog.setMessage(context.getString(id));
         progressDialog.show();
     }

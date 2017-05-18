@@ -100,6 +100,11 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
     }
 
     @Override
+    public void onWriteFailure() {
+        AlertUtils.showAlertDialog(getActivity(), R.string.ble_write_failure_hint);
+    }
+
+    @Override
     public void showHintDialog() {
         AlertUtils.showAlertDialog(getActivity(), R.string.open_switch_hint);
     }

@@ -137,7 +137,13 @@ public class EditLightPresenterImpl implements EditLightPresenter, ColorPicker.
         Log.d("BLE Write Command:", command);
         if (!TextUtils.isEmpty(command) && !TextUtils.isEmpty(mMacAddress)) {
             mLightModel.WriteCommand(MyApplication.getBluetoothClient(mContext), mMacAddress,
-                    mServiceUUID, mCharacterUUID, command);
+                    mServiceUUID, mCharacterUUID, command,
+                    new LightModelImpl.OnInterfaceWriteCommand() {
+                        @Override
+                        public void onWriteFailure() {
+                            mEditLightView.onWriteFailure();
+                        }
+                    });
         }
     }
 

@@ -1,10 +1,13 @@
 package com.example.txtledbluetooth.utils;
 
 import android.content.Context;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.example.txtledbluetooth.R;
 import com.example.txtledbluetooth.bean.LightType;
 import com.example.txtledbluetooth.bean.RgbColor;
+import com.example.txtledbluetooth.light.model.LightModelImpl;
 import com.inuker.bluetooth.library.BluetoothClient;
 import com.inuker.bluetooth.library.connect.response.BleWriteResponse;
 
@@ -213,10 +216,13 @@ public class BleCommandUtils {
 
     //分包
     public static void divideFrameBleSendData(byte[] data, BluetoothClient client,
-                                              String macAddress, UUID serviceUUID, UUID characterUUID) {
+                                              String macAddress, UUID serviceUUID,
+                                              UUID characterUUID, final LightModelImpl.
+            OnInterfaceWriteCommand onInterfaceWriteCommand) {
         int tmpLen = data.length;
         int start = 0;
         int end = 0;
+        final boolean[] isShowDialog = {true};
         while (tmpLen > 0) {
             byte[] sendData = new byte[21];
             if (tmpLen >= 20) {
@@ -229,11 +235,15 @@ public class BleCommandUtils {
                 sendData = Arrays.copyOfRange(data, start, end);
                 tmpLen = 0;
             }
-            client.write(macAddress, serviceUUID,
-                    characterUUID, sendData,
+            client.write(macAddress, serviceUUID, characterUUID, sendData,
                     new BleWriteResponse() {
                         @Override
                         public void onResponse(int code) {
+//                            if (code == -1 && isShowDialog[0]) {
+//                                Log.d("tag", code + "");
+//                                onInterfaceWriteCommand.onWriteFailure();
+//                                isShowDialog[0] = false;
+//                            }
                         }
                     });
         }

@@ -49,10 +49,10 @@ public class LightPresenterImpl implements LightPresenter {
 
 
     @Override
-    public void operateItemBluetooth( String lightName, int id) {
-            String command = BleCommandUtils.getItemCommandByType(mContext, id, lightName);
-            writeCommand(command);
-            SharedPreferenceUtils.saveClickPosition(mContext, id);
+    public void operateItemBluetooth(String lightName, int id) {
+        String command = BleCommandUtils.getItemCommandByType(mContext, id, lightName);
+        writeCommand(command);
+        SharedPreferenceUtils.saveClickPosition(mContext, id);
     }
 
     @Override
@@ -100,7 +100,13 @@ public class LightPresenterImpl implements LightPresenter {
         Log.d("BLE Write Command:", command);
         if (!TextUtils.isEmpty(command) && !TextUtils.isEmpty(mMacAddress)) {
             mLightModel.WriteCommand(MyApplication.getBluetoothClient(mContext), mMacAddress,
-                    mServiceUUID, mCharacterUUID, command);
+                    mServiceUUID, mCharacterUUID, command, new
+                            LightModelImpl.OnInterfaceWriteCommand() {
+                                @Override
+                                public void onWriteFailure() {
+                                    mLightView.onWriteFailure();
+                                }
+                            });
         }
     }
 }
