@@ -49,14 +49,10 @@ public class LightPresenterImpl implements LightPresenter {
 
 
     @Override
-    public void operateItemBluetooth(boolean mIsChecked, String lightName, int id) {
-        if (mIsChecked) {
+    public void operateItemBluetooth( String lightName, int id) {
             String command = BleCommandUtils.getItemCommandByType(mContext, id, lightName);
             writeCommand(command);
             SharedPreferenceUtils.saveClickPosition(mContext, id);
-        } else {
-            mLightView.showHintDialog();
-        }
     }
 
     @Override

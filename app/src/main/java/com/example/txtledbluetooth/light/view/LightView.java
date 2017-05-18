@@ -15,5 +15,4 @@ public interface LightView {
 
     void editLight(int id);
 
-    void showHintDialog();
 }
