@@ -273,9 +273,10 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     @Override
     public void revertColor() {
         RgbColor.deleteRgbColors(mLightName + mModelTypeFlags);
+        LightSbProgress.deleteSbProgressByName(mLightName + mModelTypeFlags);
         radioGroup.check(R.id.rb_board1);
-        mEditLightPresenter.operateItemBluetooth(mLightName, mPosition, mPopupPosition);
         setViewBoardDefaultColor();
+        initBleLightCommand(mPopupPosition);
     }
 
 

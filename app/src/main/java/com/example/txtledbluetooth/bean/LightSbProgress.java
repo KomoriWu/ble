@@ -68,8 +68,11 @@ public class LightSbProgress extends SugarRecord implements Serializable {
         return hashMap;
     }
 
-    public void deleteSbProgressByName() {
+    public static void deleteSbProgressByName(String name) {
         LightSbProgress.deleteAll(LightSbProgress.class, "name = ?", name);
     }
 
+    public void deleteSbProgressByName() {
+        deleteSbProgressByName(name);
+    }
 }
