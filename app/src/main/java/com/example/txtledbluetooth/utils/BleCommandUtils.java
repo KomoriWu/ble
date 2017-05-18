@@ -239,11 +239,11 @@ public class BleCommandUtils {
                     new BleWriteResponse() {
                         @Override
                         public void onResponse(int code) {
-//                            if (code == -1 && isShowDialog[0]) {
-//                                Log.d("tag", code + "");
-//                                onInterfaceWriteCommand.onWriteFailure();
-//                                isShowDialog[0] = false;
-//                            }
+                            if (code == -1 && isShowDialog[0]) {
+                                Log.d("tag", code + "");
+                                onInterfaceWriteCommand.onWriteFailure();
+                                isShowDialog[0] = false;
+                            }
                         }
                     });
         }

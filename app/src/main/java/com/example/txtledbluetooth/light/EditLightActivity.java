@@ -205,7 +205,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
 
     @Override
     public void onWriteFailure() {
-        AlertUtils.showAlertDialog(this, R.string.ble_write_failure_hint);
+//        AlertUtils.showAlertDialog(this, R.string.ble_write_failure_hint);
     }
 
     public void initPopupWindow() {
