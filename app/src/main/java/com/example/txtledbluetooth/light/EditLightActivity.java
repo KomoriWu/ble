@@ -29,7 +29,6 @@ import com.example.txtledbluetooth.light.presenter.EditLightPresenter;
 import com.example.txtledbluetooth.light.presenter.EditLightPresenterImpl;
 import com.example.txtledbluetooth.light.view.EditLightView;
 import com.example.txtledbluetooth.utils.BleCommandUtils;
-import com.example.txtledbluetooth.utils.SqlUtils;
 import com.example.txtledbluetooth.utils.Utils;
 import com.example.txtledbluetooth.widget.ColorPicker;
 
@@ -117,9 +116,8 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
             super.dispatchMessage(msg);
             if (msg.what == START_SORT) {
                 if ((System.currentTimeMillis() - mFirstDrag) >= SORT_DELAY_MILLISECONDS) {
-                    mEditLightPresenter.updateLightColor(mLightNo,
-                            (int) radioGroup.getTag() + 1, msg.obj.toString());
-                    saveColor(msg.getData());
+                    mEditLightPresenter.updateLightColor(mLightNo, (int) radioGroup.getTag()
+                            + 1, msg.obj.toString(), msg.getData());
                 }
             }
 
@@ -165,7 +163,8 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     @OnClick({R.id.tv_toolbar_right, R.id.tv_chose_color_type})
     @Override
     public void onClick(View view) {
-        mEditLightPresenter.viewOnclick(view, viewBoard1);
+        mEditLightPresenter.viewOnclick(view, viewBoard1, mLightName + mModelTypeFlags,
+                (Integer) radioGroup.getTag());
     }
 
     @Override
@@ -201,19 +200,13 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
                 mBgView = viewBoard7;
                 break;
         }
-        mEditLightPresenter.viewOnclick(radioGroup, mBgView);
+        mEditLightPresenter.viewOnclick(radioGroup, mBgView, mLightName + mModelTypeFlags,
+                (Integer) radioGroup.getTag());
 
     }
 
     @Override
-    public void setPaintPixel() {
-        List<RgbColor> rgbColorList = RgbColor.getRgbColorList(mLightName + mModelTypeFlags +
-                radioGroup.getTag());
-        if (rgbColorList == null || rgbColorList.size() == 0) {
-            rgbColorList = SqlUtils.getDefaultColors(mLightName + mModelTypeFlags, (Integer)
-                    radioGroup.getTag());
-        }
-        RgbColor rgbColor = rgbColorList.get(0);
+    public void setPaintPixel(RgbColor rgbColor) {
         mColorPicker.setPaintPixel(rgbColor.getX(), rgbColor.getY());
         updateTvColor(rgbColor.getR(), rgbColor.getG(), rgbColor.getB(), rgbColor.getColorStr());
     }
@@ -248,7 +241,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         String b1 = getBothColor(b);
         String colorStr = r1 + g1 + b1;
         updateTvColor(r, g, b, colorStr);
-        postUpdateHandler(r, g, b, color, x, y);
+        postUpdateHandler(r, g, b, x, y);
 
     }
 
@@ -342,17 +335,18 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     private void initBleLightCommand(int popupPosition) {
         mEditLightPresenter.operateItemBluetooth(mLightName, mPosition, popupPosition);
         if (layoutSpeed.getVisibility() == VIEW_VISIBLE) {
-            mEditLightPresenter.setLightSpeed(mLightNo, seekBarSpeed.getProgress());
+            mEditLightPresenter.setLightSpeed(mLightNo, seekBarSpeed.getProgress(), null);
         }
         if (layoutBrightness.getVisibility() == VIEW_VISIBLE) {
-            mEditLightPresenter.setLightBrightness(mLightNo, seekBarBright.getProgress());
+            mEditLightPresenter.setLightBrightness(mLightNo, seekBarBright.getProgress(), null);
         }
 
     }
 
     private void initEditLightUi(String type) {
         mModelTypeFlags = type;
-        setPaintPixel();
+        setPaintPixel(mEditLightPresenter.getLightColor(mLightName + mModelTypeFlags,
+                (Integer) radioGroup.getTag()));
         if (type.equals(getString(R.string.random)) || type.contains(getString(R.string.white)) || type.contains(getString(R.string.default_)) ||
                 type.contains(getString(R.string.moon_light)) || type.contains(getString(
                 R.string.full)) || type.contains(getString(R.string.rainbow))) {
@@ -534,7 +528,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
                 etColorWell.setText(colorStr);
                 int colorInt = Color.rgb(r, g, b);
                 mBgView.setBackgroundColor(colorInt);
-                postUpdateHandler(r, g, b, colorInt, 0, 0);
+                postUpdateHandler(r, g, b, 0, 0);
             } else {
                 Toast.makeText(this, R.string.color_value_hint, Toast.LENGTH_SHORT).show();
             }
@@ -552,7 +546,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
                 etColorG.setText(strG);
                 etColorB.setText(strB);
                 mBgView.setBackgroundColor(colorInt);
-                postUpdateHandler(r, g, b, colorInt, 0, 0);
+                postUpdateHandler(r, g, b, 0, 0);
             } else {
                 Toast.makeText(this, R.string.color_value_hint, Toast.LENGTH_SHORT).show();
             }
@@ -565,12 +559,14 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         return false;
     }
 
-    private void postUpdateHandler(int r, int g, int b, int colorInt, float x, float y) {
+    private void postUpdateHandler(int r, int g, int b, float x, float y) {
+        String name = mLightName + mModelTypeFlags + radioGroup.getTag();
         mFirstDrag = System.currentTimeMillis();
         Message message = mHandler.obtainMessage();
         message.what = START_SORT;
         message.obj = etColorWell.getText().toString();
         Bundle bundle = new Bundle();
+        bundle.putString(Utils.SQL_NAME, name);
         bundle.putInt(Utils.COLOR_R, r);
         bundle.putInt(Utils.COLOR_G, g);
         bundle.putInt(Utils.COLOR_B, b);
@@ -600,37 +596,23 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
+        Bundle bundle = new Bundle();
+        bundle.putString(Utils.SQL_NAME, mLightName + mModelTypeFlags);
+        bundle.putInt(Utils.SEEK_BAR_PROGRESS_SPEED, seekBarSpeed.getProgress());
+        bundle.putInt(Utils.SEEK_BAR_PROGRESS_BRIGHT, seekBarBright.getProgress());
         if (seekBar.getId() == R.id.sb_speed) {
-            mEditLightPresenter.setLightSpeed(mLightNo, seekBar.getProgress());
+            mEditLightPresenter.setLightSpeed(mLightNo, seekBar.getProgress(), bundle);
         } else if (seekBar.getId() == R.id.sb_brightness) {
-            mEditLightPresenter.setLightBrightness(mLightNo, seekBar.getProgress());
+            mEditLightPresenter.setLightBrightness(mLightNo, seekBar.getProgress(), bundle);
         }
-
-        LightSbProgress lightSbProgress = new LightSbProgress(mLightName + mModelTypeFlags,
-                seekBarSpeed.getProgress(), seekBarBright.getProgress());
-        lightSbProgress.deleteSbProgressByName();
-        lightSbProgress.save();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        LightType lightType = new LightType(mLightName, mPopupPosition);
-        lightType.deleteLightTypeByName();
-        lightType.save();
+        mEditLightPresenter.saveLightType(mLightName, mPopupPosition);
     }
 
-    private void saveColor(Bundle data) {
-        String name = mLightName + mModelTypeFlags + radioGroup.getTag();
-        int r = data.getInt(Utils.COLOR_R);
-        int g = data.getInt(Utils.COLOR_G);
-        int b = data.getInt(Utils.COLOR_B);
-        float x = data.getFloat(Utils.PIXEL_X);
-        float y = data.getFloat(Utils.PIXEL_Y);
-        RgbColor rgbColor = new RgbColor(name, r, g, b, x, y);
-        rgbColor.deleteRgbColorByName();
-        rgbColor.save();
-    }
 
     private void setEtEnable(boolean isEnable) {
         etColorR.setEnabled(isEnable);

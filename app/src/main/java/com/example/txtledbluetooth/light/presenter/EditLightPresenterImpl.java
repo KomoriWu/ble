@@ -1,12 +1,16 @@
 package com.example.txtledbluetooth.light.presenter;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
 import com.example.txtledbluetooth.R;
 import com.example.txtledbluetooth.application.MyApplication;
+import com.example.txtledbluetooth.bean.LightSbProgress;
+import com.example.txtledbluetooth.bean.LightType;
+import com.example.txtledbluetooth.bean.RgbColor;
 import com.example.txtledbluetooth.light.model.LightModel;
 import com.example.txtledbluetooth.light.model.LightModelImpl;
 import com.example.txtledbluetooth.light.view.EditLightView;
@@ -53,7 +57,7 @@ public class EditLightPresenterImpl implements EditLightPresenter, ColorPicker.
     }
 
     @Override
-    public void viewOnclick(View clickView, View bgView) {
+    public void viewOnclick(View clickView, View bgView, String sqlName, int position) {
         mBgView = bgView;
         switch (clickView.getId()) {
             case R.id.tv_chose_color_type:
@@ -63,7 +67,7 @@ public class EditLightPresenterImpl implements EditLightPresenter, ColorPicker.
                 mEditLightView.revertColor();
                 break;
             case R.id.rg_color_board:
-                mEditLightView.setPaintPixel();
+                mEditLightView.setPaintPixel(getLightColor(sqlName, position));
                 break;
         }
     }
@@ -74,16 +78,22 @@ public class EditLightPresenterImpl implements EditLightPresenter, ColorPicker.
     }
 
     @Override
-    public void setLightSpeed(String lightNo, int speed) {
+    public void setLightSpeed(String lightNo, int speed, Bundle bundle) {
         String command = BleCommandUtils.getLightSpeedCommand(lightNo, Integer.toHexString(speed));
         writeCommand(command);
+        if (bundle != null) {
+            mLightModel.saveLightSbProgress(bundle);
+        }
     }
 
     @Override
-    public void setLightBrightness(String lightNo, int brightness) {
+    public void setLightBrightness(String lightNo, int brightness, Bundle bundle) {
         String command = BleCommandUtils.getLightBrightCommand(lightNo, Integer.
                 toHexString(brightness));
         writeCommand(command);
+        if (bundle != null) {
+            mLightModel.saveLightSbProgress(bundle);
+        }
     }
 
     @Override
@@ -94,9 +104,22 @@ public class EditLightPresenterImpl implements EditLightPresenter, ColorPicker.
     }
 
     @Override
-    public void updateLightColor(String lightNo, int position, String color) {
+    public void updateLightColor(String lightNo, int position, String color, Bundle data) {
         String command = BleCommandUtils.updateLightColor(lightNo, position, color);
         writeCommand(command);
+        mLightModel.saveLightColor(data);
+    }
+
+    @Override
+    public void saveLightType(String name, int popupPosition) {
+        LightType lightType = new LightType(name, popupPosition);
+        lightType.deleteLightTypeByName();
+        lightType.save();
+    }
+
+    @Override
+    public RgbColor getLightColor(String sqlName, int position) {
+        return mLightModel.getLightColor(sqlName, position);
     }
 
 

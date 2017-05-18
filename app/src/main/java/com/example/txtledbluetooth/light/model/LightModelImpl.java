@@ -1,13 +1,16 @@
 package com.example.txtledbluetooth.light.model;
 
-import android.bluetooth.BluetoothGattCharacteristic;
-import android.util.Log;
+import android.os.Bundle;
 
+import com.example.txtledbluetooth.bean.LightSbProgress;
+import com.example.txtledbluetooth.bean.LightType;
+import com.example.txtledbluetooth.bean.RgbColor;
 import com.example.txtledbluetooth.utils.BleCommandUtils;
+import com.example.txtledbluetooth.utils.SqlUtils;
+import com.example.txtledbluetooth.utils.Utils;
 import com.inuker.bluetooth.library.BluetoothClient;
-import com.inuker.bluetooth.library.connect.response.BleWriteResponse;
 
-import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -21,6 +24,46 @@ public class LightModelImpl implements LightModel {
                              UUID characterUUID, String command) {
         BleCommandUtils.divideFrameBleSendData(command.getBytes(), client,
                 macAddress, serviceUUID, characterUUID);
+    }
+
+    @Override
+    public void saveLightSbProgress(Bundle bundle) {
+        String name = bundle.getString(Utils.SQL_NAME);
+        int bright = bundle.getInt(Utils.SEEK_BAR_PROGRESS_BRIGHT);
+        int speed = bundle.getInt(Utils.SEEK_BAR_PROGRESS_SPEED);
+        LightSbProgress lightSbProgress = new LightSbProgress(name,
+                bright, speed);
+        lightSbProgress.deleteSbProgressByName();
+        lightSbProgress.save();
+    }
+
+    @Override
+    public void saveLightColor(Bundle bundle) {
+        String name = bundle.getString(Utils.SQL_NAME);
+        int r = bundle.getInt(Utils.COLOR_R);
+        int g = bundle.getInt(Utils.COLOR_G);
+        int b = bundle.getInt(Utils.COLOR_B);
+        float x = bundle.getFloat(Utils.PIXEL_X);
+        float y = bundle.getFloat(Utils.PIXEL_Y);
+        RgbColor rgbColor = new RgbColor(name, r, g, b, x, y);
+        rgbColor.deleteRgbColorByName();
+        rgbColor.save();
+    }
+
+    @Override
+    public void saveLightType(String name, int popupPosition) {
+        LightType lightType = new LightType(name, popupPosition);
+        lightType.deleteLightTypeByName();
+        lightType.save();
+    }
+
+    @Override
+    public RgbColor getLightColor(String sqlName, int position) {
+        List<RgbColor> rgbColorList = RgbColor.getRgbColorList(sqlName + position);
+        if (rgbColorList == null || rgbColorList.size() == 0) {
+            rgbColorList = SqlUtils.getDefaultColors(sqlName, position);
+        }
+        return rgbColorList.get(0);
     }
 
 
