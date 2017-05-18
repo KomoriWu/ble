@@ -129,15 +129,15 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         setContentView(R.layout.activity_edit_light);
         ButterKnife.bind(this);
         initToolbar();
+        mEditLightPresenter = new EditLightPresenterImpl(this, this, mColorPicker);
         mLightName = getIntent().getStringExtra(Utils.LIGHT_MODEL_NAME);
         tvTitle.setText(mLightName);
         tvRevert.setVisibility(View.VISIBLE);
         tvRevert.setText(getString(R.string.revert));
         mPosition = getIntent().getIntExtra(Utils.LIGHT_MODEL_ID, 0);
-        intLightType();
+        mPopupPosition = mEditLightPresenter.getLightType(mLightName);
         initPopupWindow();
         radioGroup.setOnCheckedChangeListener(this);
-        mEditLightPresenter = new EditLightPresenterImpl(this, this, mColorPicker);
 
         onPopupWindowItemClick(mPopupPosition, tvChoseType.getText().toString());
         etColorWell.setOnEditorActionListener(this);
@@ -148,15 +148,6 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         seekBarBright.setOnSeekBarChangeListener(this);
         setViewBoardDefaultColor();
         rbBoard1.setChecked(true);
-    }
-
-
-    private void intLightType() {
-        List<LightType> lightTypeList = LightType.getLightTypeList(mLightName);
-        if (lightTypeList != null && lightTypeList.size() > 0) {
-            LightType lightType = lightTypeList.get(0);
-            mPopupPosition = lightType.getPopupPosition();
-        }
     }
 
 
@@ -354,7 +345,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
             setEtEnable(false);
             //fireworks
             if (mPosition == 1 || mPosition == 2 || mPosition == 3 || mPosition == 4 ||
-                    mPosition == 10) {
+                    mPosition == 5 || mPosition == 10) {
                 layoutSpeed.setVisibility(View.VISIBLE);
             } else {
                 layoutSpeed.setVisibility(View.GONE);

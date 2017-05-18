@@ -207,8 +207,10 @@ public class Utils {
                 speed = (int) (SEEK_BAR_MAX * 0.5);
                 break;
             case 5:
+                bright = (int) (SEEK_BAR_MAX * 0.25);
                 speed = (int) (SEEK_BAR_MAX * 0.25);
                 break;
+            case 6:
             case 7:
                 speed = (int) (SEEK_BAR_MAX * 0.25);
                 bright = (int) (SEEK_BAR_MAX * 0.75);

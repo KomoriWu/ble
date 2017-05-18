@@ -24,8 +24,7 @@ public interface EditLightPresenter {
 
     void updateLightColor(String lightNo, int viewPosition, String color, Bundle data);
     void saveLightType(String name, int popupPosition);
-
-
+    int getLightType(String name);
     RgbColor getLightColor(String sqlName, int position);
 
 }

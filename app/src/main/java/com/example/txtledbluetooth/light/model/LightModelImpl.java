@@ -32,7 +32,7 @@ public class LightModelImpl implements LightModel {
         int bright = bundle.getInt(Utils.SEEK_BAR_PROGRESS_BRIGHT);
         int speed = bundle.getInt(Utils.SEEK_BAR_PROGRESS_SPEED);
         LightSbProgress lightSbProgress = new LightSbProgress(name,
-                bright, speed);
+                speed, bright);
         lightSbProgress.deleteSbProgressByName();
         lightSbProgress.save();
     }
@@ -55,6 +55,18 @@ public class LightModelImpl implements LightModel {
         LightType lightType = new LightType(name, popupPosition);
         lightType.deleteLightTypeByName();
         lightType.save();
+
+    }
+
+    @Override
+    public int getLightType(String name) {
+        List<LightType> lightTypeList = LightType.getLightTypeList(name);
+        if (lightTypeList != null && lightTypeList.size() > 0) {
+            LightType lightType = lightTypeList.get(0);
+            return lightType.getPopupPosition();
+        } else {
+            return 0;
+        }
     }
 
     @Override

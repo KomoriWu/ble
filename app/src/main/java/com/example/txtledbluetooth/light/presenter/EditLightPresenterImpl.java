@@ -8,8 +8,6 @@ import android.view.View;
 
 import com.example.txtledbluetooth.R;
 import com.example.txtledbluetooth.application.MyApplication;
-import com.example.txtledbluetooth.bean.LightSbProgress;
-import com.example.txtledbluetooth.bean.LightType;
 import com.example.txtledbluetooth.bean.RgbColor;
 import com.example.txtledbluetooth.light.model.LightModel;
 import com.example.txtledbluetooth.light.model.LightModelImpl;
@@ -112,9 +110,13 @@ public class EditLightPresenterImpl implements EditLightPresenter, ColorPicker.
 
     @Override
     public void saveLightType(String name, int popupPosition) {
-        LightType lightType = new LightType(name, popupPosition);
-        lightType.deleteLightTypeByName();
-        lightType.save();
+        mLightModel.saveLightType(name, popupPosition);
+
+    }
+
+    @Override
+    public int getLightType(String name) {
+        return mLightModel.getLightType(name);
     }
 
     @Override

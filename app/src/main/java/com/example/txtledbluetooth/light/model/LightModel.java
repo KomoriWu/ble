@@ -21,6 +21,7 @@ public interface LightModel {
     void saveLightColor(Bundle bundle);
 
     void saveLightType(String name, int popupPosition);
+    int getLightType(String name);
 
     RgbColor getLightColor(String sqlName, int position);
 }
