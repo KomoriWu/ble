@@ -50,7 +50,7 @@ public class PlayingActivity extends BaseActivity implements Observer, PlayingVi
     public static final String TAG = PlayingActivity.class.getSimpleName();
     public static final int NEEDLE_ANIM_VALUES = -25;
     public static final int NEEDLE_ANIM_DURATION = 200;
-    public static final int BLURRED_LEVEL =100;
+    public static final int BLURRED_LEVEL = 100;
     public static final String ROTATION = "rotation";
     @BindView(R.id.layout_activity_play)
     RelativeLayout layoutActivityPlay;
@@ -246,67 +246,72 @@ public class PlayingActivity extends BaseActivity implements Observer, PlayingVi
                             startAnim();
                         }
                     } else {
-                        mPlayingPresenter.playMusic(mMusicInterface, mMusicInfoList.get(
-                                mCurrentPosition).getUrl());
-                        startAnim();
-                        mIsExistPlayData = true;
+                        if (mMusicInfoList.size() > 0 && mMusicInfoList != null) {
+                            mPlayingPresenter.playMusic(mMusicInterface, mMusicInfoList.get(
+                                    mCurrentPosition).getUrl());
+                            startAnim();
+                            mIsExistPlayData = true;
+                        }
                     }
 
                 }
                 break;
             case R.id.layout_previous:
-                new AsyncTask<Void, Void, Void>() {
-                    @Override
-                    protected void onPreExecute() {
-                        stopAnim();
-                    }
-
-                    @Override
-                    protected Void doInBackground(Void... voids) {
-                        try {
-                            Thread.sleep(100);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
+                if (mMusicInfoList.size() > 0 && mMusicInfoList != null) {
+                    new AsyncTask<Void, Void, Void>() {
+                        @Override
+                        protected void onPreExecute() {
+                            stopAnim();
                         }
-                        return null;
-                    }
 
-                    @Override
-                    protected void onPostExecute(Void aVoid) {
-                        startAnim();
-                        mPlayingPresenter.playMusic(mMusicInterface, mMusicInfoList.
-                                get(getPreviousSongPosition()).getUrl());
-                        initPlayUi(mCurrentPosition);
-                    }
-                }.execute();
+                        @Override
+                        protected Void doInBackground(Void... voids) {
+                            try {
+                                Thread.sleep(100);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            return null;
+                        }
 
+                        @Override
+                        protected void onPostExecute(Void aVoid) {
+                            startAnim();
+                            mPlayingPresenter.playMusic(mMusicInterface, mMusicInfoList.
+                                    get(getPreviousSongPosition()).getUrl());
+                            initPlayUi(mCurrentPosition);
+                        }
+                    }.execute();
+                }
                 break;
             case R.id.layout_next:
-                new AsyncTask<Void, Void, Void>() {
-                    @Override
-                    protected void onPreExecute() {
-                        stopAnim();
-                    }
-
-                    @Override
-                    protected Void doInBackground(Void... voids) {
-                        try {
-                            Thread.sleep(100);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
+                if (mMusicInfoList.size() > 0 && mMusicInfoList != null) {
+                    new AsyncTask<Void, Void, Void>() {
+                        @Override
+                        protected void onPreExecute() {
+                            stopAnim();
                         }
-                        return null;
-                    }
 
-                    @Override
-                    protected void onPostExecute(Void aVoid) {
-                        startAnim();
-                        mPlayingPresenter.playMusic(mMusicInterface, mMusicInfoList.
-                                get(getNextSongPosition()).getUrl());
-                        initPlayUi(mCurrentPosition);
-                    }
-                }.execute();
-                break;
+                        @Override
+                        protected Void doInBackground(Void... voids) {
+                            try {
+                                Thread.sleep(100);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            return null;
+                        }
+
+                        @Override
+                        protected void onPostExecute(Void aVoid) {
+                            startAnim();
+                            mPlayingPresenter.playMusic(mMusicInterface, mMusicInfoList.
+                                    get(getNextSongPosition()).getUrl());
+                            initPlayUi(mCurrentPosition);
+                        }
+                    }.execute();
+                    break;
+                }
         }
     }
 
@@ -416,6 +421,7 @@ public class PlayingActivity extends BaseActivity implements Observer, PlayingVi
         super.onDestroy();
         unbindService(mServiceConn);
     }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {

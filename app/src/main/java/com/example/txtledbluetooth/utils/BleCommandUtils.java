@@ -57,7 +57,7 @@ public class BleCommandUtils {
     public static final String LIGHT_SPEED = "espd,";
     public static final String LIGHT_BRIGHT = "elux,";
     public static final String CLOSE = HEAD + CLOSE_LIGHT + DIVISION + END_MARK;
-    public static final String RESET = HEAD + "erst" + DIVISION;
+    public static final String RESET = HEAD + "erst" + DIVISION + END_MARK;
     public static final String CLOSE_SOUND = HEAD + "esvt:0" + DIVISION;
     public static final String OPEN_SOUND = HEAD + "esvt:1" + DIVISION;
 

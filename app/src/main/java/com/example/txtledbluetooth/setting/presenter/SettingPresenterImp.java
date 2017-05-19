@@ -2,6 +2,7 @@ package com.example.txtledbluetooth.setting.presenter;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.example.txtledbluetooth.R;
 import com.example.txtledbluetooth.application.MyApplication;
@@ -53,7 +54,6 @@ public class SettingPresenterImp implements SettingPresenter {
                 break;
             case R.id.item_reset:
                 mSettingView.showResetDialog();
-
                 break;
         }
     }
@@ -65,6 +65,7 @@ public class SettingPresenterImp implements SettingPresenter {
     }
 
     private void writeCommand(String command) {
+        Log.d("BLE Write Command:", command);
         if (!TextUtils.isEmpty(command) && !TextUtils.isEmpty(mMacAddress)) {
             mSettingModel.WriteCommand(MyApplication.getBluetoothClient(mContext), mMacAddress,
                     mServiceUUID, mCharacterUUID, command);
