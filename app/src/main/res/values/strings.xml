@@ -87,4 +87,5 @@
     <string name="open_switch_hint">Please turn on the light !</string>
     <string name="ble_write_failure_hint">Failure, please check the bluetooth connection
         for success !</string>
+    <string name="pulsate_to_music">Pulsate to Music</string>
 </resources>

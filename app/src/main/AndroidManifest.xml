@@ -33,24 +33,35 @@
             android:name="DOMAIN_PACKAGE_NAME"
             android:value="com.example.txtledbluetooth.bean" />
 
-        <activity android:name=".main.MainActivity">
+        <activity
+            android:name=".main.MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".setting.AudioPromptsActivity" />
+        <activity
+            android:name=".setting.AudioPromptsActivity"
+            android:screenOrientation="portrait" />
 
-        <service android:name="com.inuker.bluetooth.library.BluetoothService" />
+        <service
+            android:name="com.inuker.bluetooth.library.BluetoothService"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".light.EditLightActivity" />
+        <activity
+            android:name=".light.EditLightActivity"
+            android:screenOrientation="portrait" />
 
-        <service android:name=".music.service.MusicService" />
+        <service
+            android:name=".music.service.MusicService"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".music.playing.PlayingActivity"
-            android:launchMode="singleInstance" />
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

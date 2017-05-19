@@ -12,19 +12,24 @@ import com.example.txtledbluetooth.bean.RgbColor;
  */
 
 public interface EditLightPresenter {
-    void viewOnclick(View clickView, View bgView,String sqlName, int position);
+    void viewOnclick(View clickView, View bgView, String sqlName, int position);
 
     void setIsSetOnColorSelectListener(boolean isSetOnColorSelectListener);
 
-    void setLightSpeed(String lightNo, int speed,Bundle bundle);
+    void setLightSpeed(String lightNo, int speed, Bundle bundle);
 
-    void setLightBrightness(String lightNo, int brightness,Bundle bundle);
+    void setLightBrightness(String lightNo, int brightness, Bundle bundle);
 
-    void operateItemBluetooth(String lightName, int position,int popupPosition);
+    void operateItemBluetooth(String lightName, int position, int popupPosition);
+
+    void operateSwitchBluetooth(String lightNo,boolean isChecked);
 
     void updateLightColor(String lightNo, int viewPosition, String color, Bundle data);
+
     void saveLightType(String name, int popupPosition);
+
     int getLightType(String name);
+
     RgbColor getLightColor(String sqlName, int position);
 
 }

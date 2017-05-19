@@ -248,4 +248,9 @@ public class BleCommandUtils {
                     });
         }
     }
+
+    public static String musicPulseSwitch(String lightNo, boolean isChecked) {
+        String command = isChecked ? "0001" : "0000";
+        return HEAD + lightNo + DIVISION + CONTROL_DATA + command + DIVISION + END_MARK;
+    }
 }

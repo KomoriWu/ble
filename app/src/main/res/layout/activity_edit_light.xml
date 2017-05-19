@@ -11,10 +11,44 @@
         android:id="@+id/layout_appbar"
         layout="@layout/toolbar" />
 
+    <RelativeLayout
+        android:id="@+id/layout_music_pulse"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/title_height"
+        android:layout_below="@+id/layout_appbar"
+        android:layout_marginRight="@dimen/item_padding_left">
+
+        <TextView
+            android:id="@+id/tv_switch"
+            style="@style/main_tv"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/item_padding_left"
+            android:layout_toRightOf="@+id/iv_item_left"
+            android:drawableLeft="@mipmap/icon_music_pulse"
+            android:drawablePadding="@dimen/activity_horizontal_margin"
+            android:text="@string/pulsate_to_music" />
+
+        <Switch
+            android:id="@+id/switch_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:visibility="visible" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="@dimen/item_padding_left"
+            android:background="@color/item_selected_bg" />
+    </RelativeLayout>
+
     <TextView
         android:id="@+id/tv_chose_color_type"
         style="@style/main_tv"
-        android:layout_below="@+id/layout_appbar"
+        android:layout_below="@+id/layout_music_pulse"
         android:layout_marginLeft="@dimen/item_padding_left"
         android:layout_marginTop="@dimen/item_padding_left"
         android:drawablePadding="@dimen/activity_horizontal_margin"
@@ -47,38 +81,31 @@
 
                 <View
                     android:id="@+id/view_board1"
-                    style="@style/view_color_board"
-                    />
+                    style="@style/view_color_board" />
 
                 <View
                     android:id="@+id/view_board2"
-                    style="@style/view_color_board"
-                    />
+                    style="@style/view_color_board" />
 
                 <View
                     android:id="@+id/view_board3"
-                    style="@style/view_color_board"
-                     />
+                    style="@style/view_color_board" />
 
                 <View
                     android:id="@+id/view_board4"
-                    style="@style/view_color_board"
-                   />
+                    style="@style/view_color_board" />
 
                 <View
                     android:id="@+id/view_board5"
-                    style="@style/view_color_board"
-                />
+                    style="@style/view_color_board" />
 
                 <View
                     android:id="@+id/view_board6"
-                    style="@style/view_color_board"
-                  />
+                    style="@style/view_color_board" />
 
                 <View
                     android:id="@+id/view_board7"
-                    style="@style/view_color_board"
-                    />
+                    style="@style/view_color_board" />
             </LinearLayout>
 
             <RadioGroup
@@ -131,9 +158,9 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
+                android:gravity="center"
                 android:orientation="horizontal">
 
                 <TextView
@@ -142,8 +169,7 @@
 
                 <EditText
                     android:id="@+id/et_r"
-                    style="@style/et_color_board"
-                     />
+                    style="@style/et_color_board" />
 
 
             </LinearLayout>
@@ -152,9 +178,9 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
+                android:gravity="center"
                 android:orientation="horizontal">
 
                 <TextView
@@ -163,8 +189,7 @@
 
                 <EditText
                     android:id="@+id/et_g"
-                    style="@style/et_color_board"
-                    />
+                    style="@style/et_color_board" />
 
             </LinearLayout>
 
@@ -172,9 +197,9 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
+                android:gravity="center"
                 android:orientation="horizontal">
 
                 <TextView
@@ -183,8 +208,7 @@
 
                 <EditText
                     android:id="@+id/et_b"
-                    style="@style/et_color_board"
-                     />
+                    style="@style/et_color_board" />
 
             </LinearLayout>
 
@@ -209,8 +233,7 @@
                     android:layout_marginLeft="2dp"
                     android:digits="@string/et_digits"
                     android:maxLength="6"
-                    android:paddingRight="@dimen/min_margin"
-                     />
+                    android:paddingRight="@dimen/min_margin" />
 
             </LinearLayout>
 

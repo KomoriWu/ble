@@ -102,6 +102,12 @@ public class EditLightPresenterImpl implements EditLightPresenter, ColorPicker.
     }
 
     @Override
+    public void operateSwitchBluetooth(String lightNo, boolean isChecked) {
+        String command = BleCommandUtils.musicPulseSwitch(lightNo, isChecked);
+        writeCommand(command);
+    }
+
+    @Override
     public void updateLightColor(String lightNo, int position, String color, Bundle data) {
         String command = BleCommandUtils.updateLightColor(lightNo, position, color);
         writeCommand(command);

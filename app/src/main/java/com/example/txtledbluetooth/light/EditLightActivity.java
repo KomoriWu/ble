@@ -11,12 +11,15 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -91,6 +94,8 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     LinearLayout layoutSpeed;
     @BindView(R.id.layout_brightness)
     LinearLayout layoutBrightness;
+    @BindView(R.id.layout_music_pulse)
+    RelativeLayout layoutMusicPulse;
     @BindView(R.id.et_r)
     EditText etColorR;
     @BindView(R.id.et_g)
@@ -103,6 +108,8 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     SeekBar seekBarSpeed;
     @BindView(R.id.sb_brightness)
     SeekBar seekBarBright;
+    @BindView(R.id.switch_view)
+    Switch switchView;
     private View mBgView;
     private EditLightPresenter mEditLightPresenter;
     private int mPosition;
@@ -121,7 +128,6 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
                             + 1, msg.obj.toString(), msg.getData());
                 }
             }
-
         }
     };
 
@@ -138,6 +144,13 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         mPosition = getIntent().getIntExtra(Utils.LIGHT_MODEL_ID, 0);
         mPopupPosition = mEditLightPresenter.getLightType(mLightName);
         initPopupWindow();
+
+        initListener();
+        setViewBoardDefaultColor();
+        rbBoard1.setChecked(true);
+    }
+
+    private void initListener() {
         radioGroup.setOnCheckedChangeListener(this);
 
         onPopupWindowItemClick(mPopupPosition, tvChoseType.getText().toString());
@@ -147,8 +160,18 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         etColorB.setOnEditorActionListener(this);
         seekBarSpeed.setOnSeekBarChangeListener(this);
         seekBarBright.setOnSeekBarChangeListener(this);
-        setViewBoardDefaultColor();
-        rbBoard1.setChecked(true);
+
+        switchView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                mEditLightPresenter.operateSwitchBluetooth(mLightNo, isChecked);
+            }
+        });
+        if (mPosition == 7) {
+            switchView.setChecked(true);
+            switchView.setClickable(false);
+        }
+
     }
 
 
@@ -496,6 +519,15 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
                 layoutBrightness.setVisibility(View.GONE);
             }
         }
+
+
+        if (mPosition == 5) {
+            layoutMusicPulse.setVisibility(View.GONE);
+        } else {
+            layoutMusicPulse.setVisibility(View.VISIBLE);
+        }
+
+
     }
 
 
