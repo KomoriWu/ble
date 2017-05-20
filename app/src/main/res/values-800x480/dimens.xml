@@ -26,7 +26,8 @@
     <dimen name="playing_iv_disc">222dp</dimen>
     <dimen name="playing_iv_cover">135dp</dimen>
     <dimen name="iv_needle_margin">80dp</dimen>
-
+    <integer name="color_picker_canvas">10</integer>
+    <integer name="color_picker_paint">2</integer>
     <!--字体大小-->
     <dimen name="main_text_size">16sp</dimen>
     <dimen name="big_text_size">18sp</dimen>

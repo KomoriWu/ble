@@ -26,20 +26,23 @@ public class ColorPicker extends ImageView implements View.OnTouchListener {
     private Bitmap mBitmap;//色轮图片
     private int mWidth, mHeight;//色轮图片的尺寸
     private float x, y, radio;
-
+    private Context mContext;
     private OnColorSelectListener mOnColorSelectListener;
     private Paint mPaint;
 
     public ColorPicker(Context context) {
         this(context, null);
+        mContext=context;
     }
 
     public ColorPicker(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
+        mContext=context;
     }
 
     public ColorPicker(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        mContext=context;
         mBitmap = BitmapFactory.decodeResource(context.getResources(), R.mipmap.circle);
         mWidth = mBitmap.getWidth();
         mHeight = mBitmap.getHeight();
@@ -47,7 +50,7 @@ public class ColorPicker extends ImageView implements View.OnTouchListener {
         setOnTouchListener(this);
 
         mPaint = new Paint();
-        mPaint.setStrokeWidth(5);
+        mPaint.setStrokeWidth(getResources().getInteger(R.integer.color_picker_paint));
         mPaint.setColor(Color.BLACK);
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setAntiAlias(true);
@@ -81,7 +84,7 @@ public class ColorPicker extends ImageView implements View.OnTouchListener {
         y = yy;
         invalidate();
         if (mOnColorSelectListener != null) {
-            mOnColorSelectListener.onColorSelect(getColor(xx, yy),x,y);
+            mOnColorSelectListener.onColorSelect(getColor(xx, yy), x, y);
         }
         return true;
     }
@@ -105,7 +108,8 @@ public class ColorPicker extends ImageView implements View.OnTouchListener {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        canvas.drawCircle(x, y, 20, mPaint);
+        canvas.drawCircle(x, y,mContext.getResources().getInteger(R.integer.color_picker_canvas)
+                , mPaint);
     }
 
 
@@ -113,8 +117,8 @@ public class ColorPicker extends ImageView implements View.OnTouchListener {
         this.x = x;
         this.y = y;
 
-        int  w = getWidth();
-        int  h = getHeight();
+        int w = getWidth();
+        int h = getHeight();
 
         int dx = (int) ((x / w) * mWidth);
         int dy = (int) ((y / h) * mHeight);
