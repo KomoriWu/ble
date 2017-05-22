@@ -22,10 +22,11 @@
     <dimen name="music_control_img_height">45dp</dimen>
     <dimen name="play_height">390dp</dimen>
     <dimen name="play_iv_size">263dp</dimen>
-    <dimen name="color_picker_height">240dp</dimen>
+    <dimen name="color_picker_height">140dp</dimen>
     <dimen name="playing_iv_disc">255dp</dimen>
     <dimen name="playing_iv_cover">165dp</dimen>
     <dimen name="iv_needle_margin">100dp</dimen>
+    <dimen name="center_radius">10dp</dimen>
     <integer name="color_picker_canvas">20</integer>
     <integer name="color_picker_paint">5</integer>
 

@@ -14,6 +14,7 @@ import com.example.txtledbluetooth.light.model.LightModelImpl;
 import com.example.txtledbluetooth.light.view.EditLightView;
 import com.example.txtledbluetooth.utils.BleCommandUtils;
 import com.example.txtledbluetooth.utils.SharedPreferenceUtils;
+import com.example.txtledbluetooth.widget.ColorPickView;
 import com.example.txtledbluetooth.widget.ColorPicker;
 
 import java.util.UUID;
@@ -23,10 +24,10 @@ import java.util.UUID;
  * on 2017-04-25.
  */
 
-public class EditLightPresenterImpl implements EditLightPresenter, ColorPicker.
-        OnColorSelectListener {
+public class EditLightPresenterImpl implements EditLightPresenter,
+        ColorPickView.OnColorChangedListener {
     private EditLightView mEditLightView;
-    private ColorPicker mColorPicker;
+    private ColorPickView mColorPicker;
     private Context mContext;
     private View mBgView;
     private boolean mIsSetOnColorSelectListener;
@@ -36,7 +37,7 @@ public class EditLightPresenterImpl implements EditLightPresenter, ColorPicker.
     private UUID mCharacterUUID;
 
     public EditLightPresenterImpl(Context mContext, EditLightView mEditLightView,
-                                  ColorPicker mColorPicker) {
+                                  ColorPickView mColorPicker) {
         this.mContext = mContext;
         this.mEditLightView = mEditLightView;
         this.mColorPicker = mColorPicker;

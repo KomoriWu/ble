@@ -91,9 +91,9 @@ public class MainActivity extends BaseActivity implements MainView {
         setupDrawerContent(navigationView);
 
         mCurrentFragment = new DashboardFragment();
-        switchDashboard();
-        initPermission();
-//        switchMusic();
+//        switchDashboard();
+//        initPermission();
+        switchLighting();
 
         //初始化默认颜色
         List<RgbColor> rgbColorList = RgbColor.getRgbColorList(SqlUtils.DEFAULT_COLORS + 0);

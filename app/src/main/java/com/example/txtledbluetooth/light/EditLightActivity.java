@@ -32,7 +32,7 @@ import com.example.txtledbluetooth.light.presenter.EditLightPresenterImpl;
 import com.example.txtledbluetooth.light.view.EditLightView;
 import com.example.txtledbluetooth.utils.BleCommandUtils;
 import com.example.txtledbluetooth.utils.Utils;
-import com.example.txtledbluetooth.widget.ColorPicker;
+import com.example.txtledbluetooth.widget.ColorPickView;
 
 import java.util.HashMap;
 
@@ -67,7 +67,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     private PopupWindow mPopWindow;
     private String[] mPopupItems;
     @BindView(R.id.color_picker)
-    ColorPicker mColorPicker;
+    ColorPickView mColorPicker;
     @BindView(R.id.rg_color_board)
     RadioGroup radioGroup;
     @BindView(R.id.rb_board1)
@@ -225,7 +225,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
 
     @Override
     public void setPaintPixel(RgbColor rgbColor) {
-        mColorPicker.setPaintPixel(rgbColor.getX(), rgbColor.getY());
+//        mColorPicker.setPaintPixel(rgbColor.getX(), rgbColor.getY());
         updateTvColor(rgbColor.getR(), rgbColor.getG(), rgbColor.getB(), rgbColor.getColorStr());
     }
 
@@ -269,7 +269,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     }
 
     public String getBothColor(int str) {
-        if (Integer.toString(str).getBytes().length < 2) {
+        if (str < 16) {
             return "0" + Integer.toHexString(str);
         } else {
             return Integer.toHexString(str);
