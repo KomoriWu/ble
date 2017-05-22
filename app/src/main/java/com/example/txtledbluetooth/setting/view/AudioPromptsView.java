@@ -8,7 +8,6 @@ package com.example.txtledbluetooth.setting.view;
 public interface AudioPromptsView {
     void selectOff();
 
-    void selectTones();
 
     void selectVoiceAndTones();
 }

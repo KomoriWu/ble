@@ -26,9 +26,9 @@ public class RgbColor extends SugarRecord implements Serializable {
     @SerializedName("b")
     private int b;
     @SerializedName("x")
-    private float x;
+    private int x;
     @SerializedName("y")
-    private float y;
+    private int y;
     @SerializedName("color_int")
     private int colorInt;
     @SerializedName("color_str")
@@ -37,7 +37,7 @@ public class RgbColor extends SugarRecord implements Serializable {
     public RgbColor() {
     }
 
-    public RgbColor(String name, int r, int g, int b, float x, float y) {
+    public RgbColor(String name, int r, int g, int b, int x, int y) {
         this.name = name;
         this.r = r;
         this.g = g;
@@ -68,19 +68,19 @@ public class RgbColor extends SugarRecord implements Serializable {
 
     }
 
-    public float getX() {
+    public int getX() {
         return x;
     }
 
-    public void setX(float x) {
+    public void setX(int x) {
         this.x = x;
     }
 
-    public float getY() {
+    public int getY() {
         return y;
     }
 
-    public void setY(float y) {
+    public void setY(int y) {
         this.y = y;
     }
 

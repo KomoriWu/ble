@@ -17,15 +17,10 @@
         custom:iv_right="@mipmap/icon_selected"
         custom:text_left_top="@string/off" />
 
-    <com.example.txtledbluetooth.widget.ItemLayout
-        android:id="@+id/item_tones_only"
-        style="@style/main_tv"
-        android:layout_below="@+id/item_off"
-        custom:text_left_top="@string/tones_only" />
 
     <com.example.txtledbluetooth.widget.ItemLayout
         android:id="@+id/item_voice_and_tones"
         style="@style/main_tv"
-        android:layout_below="@+id/item_tones_only"
+        android:layout_below="@+id/item_off"
         custom:text_left_top="@string/voice_and_tones" />
 </RelativeLayout>

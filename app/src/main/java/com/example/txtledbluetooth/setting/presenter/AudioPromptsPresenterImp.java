@@ -49,10 +49,6 @@ public class AudioPromptsPresenterImp implements AudioPromptsPresenter {
                 command = BleCommandUtils.CLOSE_SOUND;
                 mPromptsView.selectOff();
                 break;
-            case R.id.item_tones_only:
-                command = BleCommandUtils.OPEN_SOUND;
-                mPromptsView.selectTones();
-                break;
             case R.id.item_voice_and_tones:
                 command = BleCommandUtils.OPEN_SOUND;
                 mPromptsView.selectVoiceAndTones();

@@ -225,7 +225,9 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
 
     @Override
     public void setPaintPixel(RgbColor rgbColor) {
-//        mColorPicker.setPaintPixel(rgbColor.getX(), rgbColor.getY());
+        if (rgbColor.getX() != 0 && rgbColor.getY() != 0) {
+            mColorPicker.setPaintPixel(rgbColor.getX(), rgbColor.getY());
+        }
         updateTvColor(rgbColor.getR(), rgbColor.getG(), rgbColor.getB(), rgbColor.getColorStr());
     }
 
@@ -255,7 +257,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     }
 
     @Override
-    public void setTvColor(int color, float x, float y) {
+    public void setTvColor(int color, int x, int y) {
         int r = Color.red(color);
         int g = Color.green(color);
         int b = Color.blue(color);
@@ -572,7 +574,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         return false;
     }
 
-    private void postUpdateHandler(int r, int g, int b, float x, float y) {
+    private void postUpdateHandler(int r, int g, int b, int x, int y) {
         String name = mLightName + mModelTypeFlags + radioGroup.getTag();
         mFirstDrag = System.currentTimeMillis();
         Message message = mHandler.obtainMessage();
@@ -583,8 +585,8 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         bundle.putInt(Utils.COLOR_R, r);
         bundle.putInt(Utils.COLOR_G, g);
         bundle.putInt(Utils.COLOR_B, b);
-        bundle.putFloat(Utils.PIXEL_X, x);
-        bundle.putFloat(Utils.PIXEL_Y, y);
+        bundle.putInt(Utils.PIXEL_X, x);
+        bundle.putInt(Utils.PIXEL_Y, y);
         message.setData(bundle);
         mHandler.sendMessageDelayed(message, SORT_DELAY_MILLISECONDS);
     }

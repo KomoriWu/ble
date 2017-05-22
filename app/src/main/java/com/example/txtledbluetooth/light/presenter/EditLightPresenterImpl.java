@@ -15,7 +15,6 @@ import com.example.txtledbluetooth.light.view.EditLightView;
 import com.example.txtledbluetooth.utils.BleCommandUtils;
 import com.example.txtledbluetooth.utils.SharedPreferenceUtils;
 import com.example.txtledbluetooth.widget.ColorPickView;
-import com.example.txtledbluetooth.widget.ColorPicker;
 
 import java.util.UUID;
 
@@ -127,7 +126,7 @@ public class EditLightPresenterImpl implements EditLightPresenter,
 
 
     @Override
-    public void onColorSelect(int color, float x, float y) {
+    public void onColorSelect(int color, int x, int y) {
         if (mIsSetOnColorSelectListener) {
             mBgView.setBackgroundColor(color);
             mEditLightView.setTvColor(color, x, y);

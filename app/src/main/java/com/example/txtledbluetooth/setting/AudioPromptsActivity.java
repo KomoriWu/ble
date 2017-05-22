@@ -18,8 +18,6 @@ import butterknife.ButterKnife;
 public class AudioPromptsActivity extends BaseActivity implements AudioPromptsView {
     @BindView(R.id.item_off)
     ItemLayout itemOff;
-    @BindView(R.id.item_tones_only)
-    ItemLayout itemTonesOnly;
     @BindView(R.id.item_voice_and_tones)
     ItemLayout itemVoiceAndTones;
     private AudioPromptsPresenter mPromptsPresenter;
@@ -39,13 +37,6 @@ public class AudioPromptsActivity extends BaseActivity implements AudioPromptsVi
                 mPromptsPresenter.choseModel(v.getId());
             }
         });
-        itemTonesOnly.setOnItemListener(new ItemLayout.OnItemListener() {
-            @Override
-            public void onClickItemListener(View v) {
-                v.setId(R.id.item_tones_only);
-                mPromptsPresenter.choseModel(v.getId());
-            }
-        });
         itemVoiceAndTones.setOnItemListener(new ItemLayout.OnItemListener() {
             @Override
             public void onClickItemListener(View v) {
@@ -59,9 +50,7 @@ public class AudioPromptsActivity extends BaseActivity implements AudioPromptsVi
         String itemText = SharedPreferenceUtils.getAudioPromptsModel(this);
         if (itemText.equals(itemOff.getTvLeftStr())) {
             selectOffEffect();
-        } else if (itemText.equals(itemTonesOnly.getTvLeftStr())) {
-            selectTonesSelected();
-        } else if (itemText.equals(itemVoiceAndTones.getTvLeftStr())) {
+        }  else if (itemText.equals(itemVoiceAndTones.getTvLeftStr())) {
             selectVoiceAndTonesEffect();
         }
     }
@@ -73,11 +62,6 @@ public class AudioPromptsActivity extends BaseActivity implements AudioPromptsVi
         resultModel(itemOff);
     }
 
-    @Override
-    public void selectTones() {
-        selectTonesSelected();
-        resultModel(itemTonesOnly);
-    }
 
     @Override
     public void selectVoiceAndTones() {
@@ -87,19 +71,12 @@ public class AudioPromptsActivity extends BaseActivity implements AudioPromptsVi
 
     private void selectOffEffect() {
         itemOff.setIsItemSelected(true);
-        itemTonesOnly.setIsItemSelected(false);
         itemVoiceAndTones.setIsItemSelected(false);
     }
 
-    private void selectTonesSelected() {
-        itemOff.setIsItemSelected(false);
-        itemTonesOnly.setIsItemSelected(true);
-        itemVoiceAndTones.setIsItemSelected(false);
-    }
 
     private void selectVoiceAndTonesEffect() {
         itemOff.setIsItemSelected(false);
-        itemTonesOnly.setIsItemSelected(false);
         itemVoiceAndTones.setIsItemSelected(true);
     }
 
