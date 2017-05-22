@@ -3,21 +3,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity">
     <group>
-        <item
+       <!-- <item
             android:id="@+id/nav_item_dashboard"
             android:checked="true"
             android:checkable="true"
             android:icon="@mipmap/icon_nav_dashboard_0"
-            android:title="@string/dashboard" />
+            android:title="@string/dashboard" />-->
         <item
             android:id="@+id/nav_item_sources"
             android:checkable="true"
             android:icon="@mipmap/icon_nav_sources_0"
             android:title="@string/sources" />
-        <item
-            android:id="@+id/nav_item_music" android:checkable="true"
-            android:icon="@mipmap/icon_nav_music_0"
-            android:title="@string/music" />
+        <!-- <item
+             android:id="@+id/nav_item_music" android:checkable="true"
+             android:icon="@mipmap/icon_nav_music_0"
+             android:title="@string/music" />-->
         <item
             android:id="@+id/nav_item_lighting"
             android:checkable="true"

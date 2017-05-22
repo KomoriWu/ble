@@ -253,7 +253,7 @@
             android:layout_below="@+id/layout_color_rgb"
             android:layout_marginLeft="@dimen/board_height"
             android:layout_marginRight="@dimen/board_height"
-            android:layout_marginTop="@dimen/divide_padding_right"
+            android:layout_marginTop="@dimen/speed_margin_top"
             android:gravity="center"
             android:orientation="horizontal">
 
@@ -278,19 +278,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/layout_brightness"
-            android:layout_marginLeft="@dimen/seek_bar_margin_left"
-            android:layout_marginRight="@dimen/seek_bar_margin_right"
-            android:layout_marginTop="@dimen/item_padding_left"
+            android:layout_marginLeft="@dimen/divide_padding_right"
+            android:layout_marginRight="@dimen/board_height"
+            android:layout_marginTop="@dimen/speed_margin_top"
             android:gravity="center"
             android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/min_margin"
                 android:src="@mipmap/icon_decrease_speed" />
 
             <SeekBar
                 android:id="@+id/sb_speed"
+                android:layout_marginLeft="@dimen/speed_margin_left"
                 style="@style/seek_bar" />
 
             <ImageView

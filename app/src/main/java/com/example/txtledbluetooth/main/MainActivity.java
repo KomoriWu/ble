@@ -92,8 +92,8 @@ public class MainActivity extends BaseActivity implements MainView {
 
         mCurrentFragment = new DashboardFragment();
 //        switchDashboard();
-//        initPermission();
         switchLighting();
+        initPermission();
 
         //初始化默认颜色
         List<RgbColor> rgbColorList = RgbColor.getRgbColorList(SqlUtils.DEFAULT_COLORS + 0);
@@ -159,7 +159,7 @@ public class MainActivity extends BaseActivity implements MainView {
 
     @Override
     public void switchSources() {
-        tvScan.setVisibility(View.GONE);
+        tvScan.setVisibility(View.VISIBLE);
         tvTitle.setText(R.string.sources);
         if (mSourcesFragment == null) {
             mSourcesFragment = new SourcesFragment();
