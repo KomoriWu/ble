@@ -45,8 +45,8 @@ public class MainModelImpl implements MainModel {
 
                     @Override
                     public void onDeviceFounded(SearchResult device) {
-                        if (device.getName().contains(Utils.BLE_NAME)) {
-//                            if (device.getAddress().contains("6A")) {  //调试
+//                        if (device.getName().contains(Utils.BLE_NAME)) {
+                            if (device.getAddress().contains("6A")) {  //调试
                                 client.stopSearch();
                                 connBle(context, client, bleConnectOptions, device.getAddress(),
                                         device.getName(), onInitBleListener);

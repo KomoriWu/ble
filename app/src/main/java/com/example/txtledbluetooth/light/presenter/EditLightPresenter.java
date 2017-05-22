@@ -16,9 +16,9 @@ public interface EditLightPresenter {
 
     void setIsSetOnColorSelectListener(boolean isSetOnColorSelectListener);
 
-    void setLightSpeed(String lightNo, int speed, Bundle bundle);
+    void setLightSpeed(String lightNo, int speed);
 
-    void setLightBrightness(String lightNo, int brightness, Bundle bundle);
+    void setLightBrightness(String lightNo, int brightness);
 
     void operateItemBluetooth(String lightName, int position, int popupPosition);
 
@@ -26,7 +26,7 @@ public interface EditLightPresenter {
 
     void updateLightColor(String lightNo, int viewPosition, String color, Bundle data);
 
-    void saveLightType(String name, int popupPosition);
+    void saveLightType(Bundle bundle);
 
     int getLightType(String name);
 

@@ -25,19 +25,16 @@ import android.widget.Toast;
 
 import com.example.txtledbluetooth.R;
 import com.example.txtledbluetooth.base.BaseActivity;
-import com.example.txtledbluetooth.bean.LightSbProgress;
 import com.example.txtledbluetooth.bean.LightType;
 import com.example.txtledbluetooth.bean.RgbColor;
 import com.example.txtledbluetooth.light.presenter.EditLightPresenter;
 import com.example.txtledbluetooth.light.presenter.EditLightPresenterImpl;
 import com.example.txtledbluetooth.light.view.EditLightView;
-import com.example.txtledbluetooth.utils.AlertUtils;
 import com.example.txtledbluetooth.utils.BleCommandUtils;
 import com.example.txtledbluetooth.utils.Utils;
 import com.example.txtledbluetooth.widget.ColorPicker;
 
 import java.util.HashMap;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,7 +46,6 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         SeekBar.OnSeekBarChangeListener {
     private static final int START_SORT = 1;
     private static final int SORT_DELAY_MILLISECONDS = 300;
-    public static final int VIEW_VISIBLE = 0;
     @BindView(R.id.tv_toolbar_right)
     TextView tvRevert;
     @BindView(R.id.tv_chose_color_type)
@@ -144,7 +140,6 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         mPosition = getIntent().getIntExtra(Utils.LIGHT_MODEL_ID, 0);
         mPopupPosition = mEditLightPresenter.getLightType(mLightName);
         initPopupWindow();
-
         initListener();
         setViewBoardDefaultColor();
         rbBoard1.setChecked(true);
@@ -172,6 +167,14 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
             switchView.setClickable(false);
         }
 
+        if (mPosition == 5) {
+            layoutMusicPulse.setVisibility(View.GONE);
+        } else {
+            layoutMusicPulse.setVisibility(View.VISIBLE);
+        }
+        HashMap<String, Integer> hashMap = LightType.getSbProgressMap(mLightName, mPosition);
+        seekBarBright.setProgress(hashMap.get(Utils.SEEK_BAR_PROGRESS_BRIGHT));
+        seekBarSpeed.setProgress(hashMap.get(Utils.SEEK_BAR_PROGRESS_SPEED));
     }
 
 
@@ -286,7 +289,6 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     @Override
     public void revertColor() {
         RgbColor.deleteRgbColors(mLightName + mModelTypeFlags);
-        LightSbProgress.deleteSbProgressByName(mLightName + mModelTypeFlags);
         radioGroup.check(R.id.rb_board1);
         setViewBoardDefaultColor();
         initBleLightCommand(mPopupPosition);
@@ -333,10 +335,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
             String colorStr = r1 + g1 + b1;
             updateTvColor(r, g, b, colorStr);
         }
-        HashMap<String, Integer> hashMap = LightSbProgress.getSbProgressMap(mLightName +
-                mModelTypeFlags, mPosition);
-        seekBarBright.setProgress(hashMap.get(Utils.SEEK_BAR_PROGRESS_BRIGHT));
-        seekBarSpeed.setProgress(hashMap.get(Utils.SEEK_BAR_PROGRESS_SPEED));
+
     }
 
     @Override
@@ -354,13 +353,6 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
 
     private void initBleLightCommand(int popupPosition) {
         mEditLightPresenter.operateItemBluetooth(mLightName, mPosition, popupPosition);
-        if (layoutSpeed.getVisibility() == VIEW_VISIBLE) {
-            mEditLightPresenter.setLightSpeed(mLightNo, seekBarSpeed.getProgress(), null);
-        }
-        if (layoutBrightness.getVisibility() == VIEW_VISIBLE) {
-            mEditLightPresenter.setLightBrightness(mLightNo, seekBarBright.getProgress(), null);
-        }
-
     }
 
     private void initEditLightUi(String type) {
@@ -432,7 +424,8 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
                 viewBoard7.setVisibility(View.GONE);
             }
             if (mPosition == 0 || mPosition == 1 || mPosition == 2 || mPosition == 3 ||
-                    mPosition == 4 || mPosition == 5 || mPosition == 8 || mPosition == 10 || mPosition == 13) {
+                    mPosition == 4 || mPosition == 5 || mPosition == 8 || mPosition == 10 ||
+                    mPosition == 13) {
 //                tvRevert.setClickable(false);
                 setEtNoData();
             }
@@ -519,15 +512,6 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
                 layoutBrightness.setVisibility(View.GONE);
             }
         }
-
-
-        if (mPosition == 5) {
-            layoutMusicPulse.setVisibility(View.GONE);
-        } else {
-            layoutMusicPulse.setVisibility(View.VISIBLE);
-        }
-
-
     }
 
 
@@ -625,21 +609,22 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
-        Bundle bundle = new Bundle();
-        bundle.putString(Utils.SQL_NAME, mLightName + mModelTypeFlags);
-        bundle.putInt(Utils.SEEK_BAR_PROGRESS_SPEED, seekBarSpeed.getProgress());
-        bundle.putInt(Utils.SEEK_BAR_PROGRESS_BRIGHT, seekBarBright.getProgress());
         if (seekBar.getId() == R.id.sb_speed) {
-            mEditLightPresenter.setLightSpeed(mLightNo, seekBar.getProgress(), bundle);
+            mEditLightPresenter.setLightSpeed(mLightNo, seekBar.getProgress());
         } else if (seekBar.getId() == R.id.sb_brightness) {
-            mEditLightPresenter.setLightBrightness(mLightNo, seekBar.getProgress(), bundle);
+            mEditLightPresenter.setLightBrightness(mLightNo, seekBar.getProgress());
         }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        mEditLightPresenter.saveLightType(mLightName, mPopupPosition);
+        Bundle bundle = new Bundle();
+        bundle.putString(Utils.SQL_NAME, mLightName);
+        bundle.putInt(Utils.POPUP_POSITION, mPopupPosition);
+        bundle.putInt(Utils.SEEK_BAR_PROGRESS_SPEED, seekBarSpeed.getProgress());
+        bundle.putInt(Utils.SEEK_BAR_PROGRESS_BRIGHT, seekBarBright.getProgress());
+        mEditLightPresenter.saveLightType(bundle);
     }
 
 

@@ -17,11 +17,10 @@ public interface LightModel {
                       UUID characterUUID, String command, LightModelImpl.OnInterfaceWriteCommand
                               onInterfaceWriteCommand);
 
-    void saveLightSbProgress(Bundle bundle);
 
     void saveLightColor(Bundle bundle);
 
-    void saveLightType(String name, int popupPosition);
+    void saveLightType(Bundle bundle);
 
     int getLightType(String name);
 

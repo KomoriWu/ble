@@ -76,22 +76,16 @@ public class EditLightPresenterImpl implements EditLightPresenter, ColorPicker.
     }
 
     @Override
-    public void setLightSpeed(String lightNo, int speed, Bundle bundle) {
+    public void setLightSpeed(String lightNo, int speed) {
         String command = BleCommandUtils.getLightSpeedCommand(lightNo, Integer.toHexString(speed));
         writeCommand(command);
-        if (bundle != null) {
-            mLightModel.saveLightSbProgress(bundle);
-        }
     }
 
     @Override
-    public void setLightBrightness(String lightNo, int brightness, Bundle bundle) {
+    public void setLightBrightness(String lightNo, int brightness) {
         String command = BleCommandUtils.getLightBrightCommand(lightNo, Integer.
                 toHexString(brightness));
         writeCommand(command);
-        if (bundle != null) {
-            mLightModel.saveLightSbProgress(bundle);
-        }
     }
 
     @Override
@@ -115,8 +109,8 @@ public class EditLightPresenterImpl implements EditLightPresenter, ColorPicker.
     }
 
     @Override
-    public void saveLightType(String name, int popupPosition) {
-        mLightModel.saveLightType(name, popupPosition);
+    public void saveLightType(Bundle bundle) {
+        mLightModel.saveLightType(bundle);
 
     }
 

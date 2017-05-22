@@ -2,7 +2,6 @@ package com.example.txtledbluetooth.light.model;
 
 import android.os.Bundle;
 
-import com.example.txtledbluetooth.bean.LightSbProgress;
 import com.example.txtledbluetooth.bean.LightType;
 import com.example.txtledbluetooth.bean.RgbColor;
 import com.example.txtledbluetooth.utils.BleCommandUtils;
@@ -25,19 +24,9 @@ public class LightModelImpl implements LightModel {
                              UUID characterUUID, String command,
                              OnInterfaceWriteCommand onInterfaceWriteCommand) {
         BleCommandUtils.divideFrameBleSendData(command.getBytes(), client,
-                macAddress, serviceUUID, characterUUID,onInterfaceWriteCommand);
+                macAddress, serviceUUID, characterUUID, onInterfaceWriteCommand);
     }
 
-    @Override
-    public void saveLightSbProgress(Bundle bundle) {
-        String name = bundle.getString(Utils.SQL_NAME);
-        int bright = bundle.getInt(Utils.SEEK_BAR_PROGRESS_BRIGHT);
-        int speed = bundle.getInt(Utils.SEEK_BAR_PROGRESS_SPEED);
-        LightSbProgress lightSbProgress = new LightSbProgress(name,
-                speed, bright);
-        lightSbProgress.deleteSbProgressByName();
-        lightSbProgress.save();
-    }
 
     @Override
     public void saveLightColor(Bundle bundle) {
@@ -53,8 +42,12 @@ public class LightModelImpl implements LightModel {
     }
 
     @Override
-    public void saveLightType(String name, int popupPosition) {
-        LightType lightType = new LightType(name, popupPosition);
+    public void saveLightType(Bundle bundle) {
+        String name = bundle.getString(Utils.SQL_NAME);
+        int popupPosition = bundle.getInt(Utils.POPUP_POSITION);
+        int bright = bundle.getInt(Utils.SEEK_BAR_PROGRESS_BRIGHT);
+        int speed = bundle.getInt(Utils.SEEK_BAR_PROGRESS_SPEED);
+        LightType lightType = new LightType(name, speed, bright, popupPosition);
         lightType.deleteLightTypeByName();
         lightType.save();
 
