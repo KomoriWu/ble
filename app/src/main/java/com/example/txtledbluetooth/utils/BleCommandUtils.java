@@ -36,7 +36,6 @@ public class BleCommandUtils {
     public static final String PULSATE = "lclg";
     public static final String MORPH = "lmop";
     public static final String BEAT_METER = "lhst";
-    public static final String CYCLE_ALL = "lcbn";
     public static final String CYCLE = "lclr";
     public static final String WAVE1 = "lwav";
     public static final String WAVE2 = "lwbv";
@@ -105,25 +104,22 @@ public class BleCommandUtils {
                 lightNo = BEAT_METER;
                 break;
             case 8:
-                lightNo = CYCLE_ALL;
-                break;
-            case 9:
                 lightNo = CYCLE;
                 break;
-            case 10:
+            case 9:
                 if (isFirstItem) {
                     lightNo = WAVE1;
                 } else {
                     lightNo = WAVE2;
                 }
                 break;
-            case 11:
+            case 10:
                 lightNo = SOLO;
                 break;
-            case 12:
+            case 11:
                 lightNo = MOOD;
                 break;
-            case 13:
+            case 12:
                 lightNo = AURORA;
                 break;
         }
@@ -195,13 +191,13 @@ public class BleCommandUtils {
 
     private static int getColorCount(String popupItem, int position) {
         int count = 0;
-        if (popupItem.contains("1") || position == 11) {
+        if (popupItem.contains("1") || position == 10) {
             count = 1;
         } else if (popupItem.contains("2")) {
             count = 2;
         } else if (popupItem.contains("3")) {
             count = 3;
-        } else if (popupItem.contains("7") || position == 12) {
+        } else if (popupItem.contains("7") || position == 11) {
             count = 7;
         } else if (position == 7) {
             count = 5;

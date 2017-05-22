@@ -368,7 +368,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
             setEtEnable(false);
             //fireworks
             if (mPosition == 1 || mPosition == 2 || mPosition == 3 || mPosition == 4 ||
-                    mPosition == 5 || mPosition == 10) {
+                    mPosition == 5 || mPosition == 9) {
                 layoutSpeed.setVisibility(View.VISIBLE);
             } else {
                 layoutSpeed.setVisibility(View.GONE);
@@ -390,7 +390,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
                 viewBoard5.setVisibility(View.VISIBLE);
                 viewBoard6.setVisibility(View.GONE);
                 viewBoard7.setVisibility(View.GONE);
-            } else if (mPosition == 11) {
+            } else if (mPosition == 10) {
                 mEditLightPresenter.setIsSetOnColorSelectListener(true);
                 setEtEnable(true);
                 rbBoard1.setVisibility(View.VISIBLE);
@@ -426,13 +426,13 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
                 viewBoard7.setVisibility(View.GONE);
             }
             if (mPosition == 0 || mPosition == 1 || mPosition == 2 || mPosition == 3 ||
-                    mPosition == 4 || mPosition == 5 || mPosition == 8 || mPosition == 10 ||
-                    mPosition == 13) {
+                    mPosition == 4 || mPosition == 5  || mPosition == 9 ||
+                    mPosition == 12) {
 //                tvRevert.setClickable(false);
                 setEtNoData();
             }
         } else if (type.contains("1") || type.contains(getString(R.string.colored)) || type.
-                contains(getString(R.string.ice_blue))) {
+                contains(getString(R.string.single_color))) {
             mEditLightPresenter.setIsSetOnColorSelectListener(true);
             setEtEnable(true);
             //moonlight

@@ -9,10 +9,9 @@
         <item>@string/pulsate</item>
         <item>@string/morph</item>
         <item>@string/beat_meter</item>
-        <item>@string/cycle_all</item>
         <item>@string/cycle</item>
-
         <item>@string/wave</item>
+
         <item>@string/solo</item>
         <item>@string/mood</item>
         <item>@string/aurora</item>
@@ -48,7 +47,7 @@
         <item>@string/default_</item>
     </string-array>
     <string-array name="wave_color_type">
-        <item>@string/ice_blue</item>
+        <item>@string/single_color</item>
         <item>@string/rainbow</item>
     </string-array>
     <string-array name="solo_color_type">

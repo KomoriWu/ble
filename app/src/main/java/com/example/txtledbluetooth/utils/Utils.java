@@ -92,12 +92,12 @@ public class Utils {
         int[] lightIcons = {R.mipmap.icon_moon_light, R.mipmap.icon_fireworks,
                 R.mipmap.icon_hot_wheels, R.mipmap.icon_spectrum, R.mipmap.icon_full_spectrum,
                 R.mipmap.icon_pulsate, R.mipmap.icon_morph, R.mipmap.icon_beat_meter,
-                R.mipmap.icon_cycle_all, R.mipmap.icon_cycle, R.mipmap.icon_wave,
+                R.mipmap.icon_cycle, R.mipmap.icon_wave,
                 R.mipmap.icon_solo, R.mipmap.icon_mood, R.mipmap.icon_aurora};
         ArrayList<Lighting> lightingList = new ArrayList<>();
         boolean isEdit;
         for (int i = 0; i < lightIcons.length; i++) {
-            if (i == 9) {
+            if (i == 8) {
                 isEdit = false;
             } else {
                 isEdit = true;
@@ -130,8 +130,7 @@ public class Utils {
                 break;
             case 3:
             case 7:
-            case 8:
-            case 13:
+            case 12:
                 items = context.getResources().getStringArray(R.array.spectrum_color_type);
                 break;
             case 4:
@@ -143,13 +142,13 @@ public class Utils {
             case 6:
                 items = context.getResources().getStringArray(R.array.morph_color_type);
                 break;
-            case 10:
+            case 9:
                 items = context.getResources().getStringArray(R.array.wave_color_type);
                 break;
-            case 11:
+            case 10:
                 items = context.getResources().getStringArray(R.array.solo_color_type);
                 break;
-            case 12:
+            case 11:
                 items = context.getResources().getStringArray(R.array.mood_color_type);
                 break;
 
@@ -203,7 +202,7 @@ public class Utils {
             case 2:
             case 3:
             case 4:
-            case 9:
+            case 8:
                 bright = (int) (SEEK_BAR_MAX * 0.5);
                 speed = (int) (SEEK_BAR_MAX * 0.5);
                 break;
@@ -216,12 +215,9 @@ public class Utils {
                 speed = (int) (SEEK_BAR_MAX * 0.25);
                 bright = (int) (SEEK_BAR_MAX * 0.75);
                 break;
-            case 8:
-                bright = (int) (SEEK_BAR_MAX * 0.75);
-                break;
+            case 9:
             case 10:
-            case 11:
-            case 13:
+            case 12:
                 bright = SEEK_BAR_MAX;
                 break;
         }
