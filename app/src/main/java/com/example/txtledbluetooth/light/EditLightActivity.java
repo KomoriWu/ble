@@ -314,6 +314,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         LightType.deleteLightTypeByName(mSpecialTypeSqlName);
         radioGroup.check(R.id.rb_board1);
         setViewBoardDefaultColor();
+        initSpecialView(!(mPosition == 0 || mPosition == 9));
         operateItemBluetooth(mPopupPosition);
         operateSeekBar(true);
         mEditLightPresenter.operateSwitchBluetooth(mLightNo, LightType.getPulseIsOpen(
