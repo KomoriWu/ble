@@ -46,6 +46,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         SeekBar.OnSeekBarChangeListener {
     private static final int START_SORT = 1;
     private static final int SORT_DELAY_MILLISECONDS = 300;
+    public static final int VIEW_VISIBLE = 0;
     @BindView(R.id.tv_toolbar_right)
     TextView tvRevert;
     @BindView(R.id.tv_chose_color_type)
@@ -115,6 +116,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     private String mLightNo;
     private int mPopupPosition = 0;
     private String mSpecialTypeSqlName;
+    private boolean mIsReturn;
     private Handler mHandler = new Handler() {
         @Override
         public void dispatchMessage(Message msg) {
@@ -173,20 +175,25 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         switchView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (mIsReturn) return;
                 mEditLightPresenter.operateSwitchBluetooth(mLightNo, isChecked);
                 saveSpecialType();
             }
         });
         rbBoard1.setChecked(true);
+        initSpecialView(!(mPosition == 0 || mPosition == 9));
+    }
 
-        if (!(mPosition == 0 || mPosition == 9)) {
+    public void initSpecialView(boolean isInit) {
+        if (isInit) {
+            mIsReturn = true;
             switchView.setChecked(LightType.getPulseIsOpen(mSpecialTypeSqlName));
+            mIsReturn = false;
             HashMap<String, Integer> hashMap = LightType.getSbProgressMap(mSpecialTypeSqlName, mPosition);
             seekBarBright.setProgress(hashMap.get(Utils.SEEK_BAR_PROGRESS_BRIGHT));
             seekBarSpeed.setProgress(hashMap.get(Utils.SEEK_BAR_PROGRESS_SPEED));
         }
     }
-
 
     @OnClick({R.id.tv_toolbar_right, R.id.tv_chose_color_type})
     @Override
@@ -302,11 +309,15 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     }
 
     @Override
-    public void revertColor() {
+    public void revert() {
         RgbColor.deleteRgbColors(mLightName + mModelTypeFlags);
+        LightType.deleteLightTypeByName(mSpecialTypeSqlName);
         radioGroup.check(R.id.rb_board1);
         setViewBoardDefaultColor();
-        initBleLightCommand(mPopupPosition);
+        operateItemBluetooth(mPopupPosition);
+        operateSeekBar(true);
+        mEditLightPresenter.operateSwitchBluetooth(mLightNo, LightType.getPulseIsOpen(
+                mSpecialTypeSqlName));
     }
 
 
@@ -351,13 +362,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
             updateTvColor(r, g, b, colorStr);
         }
 
-        if (mPosition == 0 || mPosition == 9) {
-            HashMap<String, Integer> hashMap = LightType.getSbProgressMap(mSpecialTypeSqlName, mPosition);
-            seekBarBright.setProgress(hashMap.get(Utils.SEEK_BAR_PROGRESS_BRIGHT));
-            seekBarSpeed.setProgress(hashMap.get(Utils.SEEK_BAR_PROGRESS_SPEED));
-
-            switchView.setChecked(LightType.getPulseIsOpen(mSpecialTypeSqlName));
-        }
+        initSpecialView(mPosition == 0 || mPosition == 9);
     }
 
     @Override
@@ -367,14 +372,27 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         tvChoseType.setText(type);
         radioGroup.check(R.id.rb_board1);
         initEditLightUi(type);
-        mSpecialTypeSqlName = mPosition == 0 || mPosition == 9 ? mLightName + mModelTypeFlags : mLightName;
+        mSpecialTypeSqlName = mPosition == 0 || mPosition == 9 ? mLightName +
+                mModelTypeFlags : mLightName;
         setViewBoardDefaultColor();
-        initBleLightCommand(position);
+        operateItemBluetooth(position);
         mPopWindow.dismiss();
     }
 
-    private void initBleLightCommand(int popupPosition) {
+    private void operateItemBluetooth(int popupPosition) {
         mEditLightPresenter.operateItemBluetooth(mLightName, mPosition, popupPosition);
+    }
+
+    private void operateSeekBar(boolean isOperate) {
+        if (isOperate) {
+            if (layoutSpeed.getVisibility() == VIEW_VISIBLE) {
+                mEditLightPresenter.setLightSpeed(mLightNo, seekBarSpeed.getProgress());
+            }
+            if (layoutBrightness.getVisibility() == VIEW_VISIBLE) {
+                mEditLightPresenter.setLightBrightness(mLightNo, seekBarBright.getProgress());
+            }
+        }
+
     }
 
     private void initEditLightUi(String type) {

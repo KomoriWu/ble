@@ -62,7 +62,7 @@ public class EditLightPresenterImpl implements EditLightPresenter,
                 mEditLightView.showPopWindow();
                 break;
             case R.id.tv_toolbar_right:
-                mEditLightView.revertColor();
+                mEditLightView.revert();
                 break;
             case R.id.rg_color_board:
                 mEditLightView.setPaintPixel(getLightColor(sqlName, position));

@@ -28,6 +28,7 @@ public class LightModelImpl implements LightModel {
     }
 
 
+
     @Override
     public void saveLightColor(Bundle bundle) {
         String name = bundle.getString(Utils.SQL_NAME);

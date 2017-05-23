@@ -30,6 +30,26 @@ public class SharedPreferenceUtils {
     public static final String LAST_PLAY_POSITION_KEY = "last_play_position_key";
 
 
+    public static void saveReceiveService(Context context, String serviceUUID) {
+        SharedPreferenceUtils.saveSharedPreference(context, RECEIVE_SERVICE_NAME,
+                RECEIVE_SERVICE_KEY, serviceUUID);
+    }
+
+    public static String getReceiveService(Context context) {
+        return SharedPreferenceUtils.getSharedPreferenceString(context, RECEIVE_SERVICE_NAME,
+                RECEIVE_SERVICE_KEY);
+    }
+
+    public static void saveReceiveCharacter(Context context, String characterUUID) {
+        SharedPreferenceUtils.saveSharedPreference(context, RECEIVE_CHARACTER_NAME,
+                RECEIVE_CHARACTER_KEY, characterUUID);
+    }
+
+    public static String getReceiveCharacter(Context context) {
+        return SharedPreferenceUtils.getSharedPreferenceString(context, RECEIVE_CHARACTER_NAME,
+                RECEIVE_CHARACTER_KEY);
+    }
+
     public static void saveLastPlayPosition(Context context, int position) {
         SharedPreferenceUtils.saveSharedPreference(context, LAST_PLAY_POSITION_NAME,
                 LAST_PLAY_POSITION_KEY, position);

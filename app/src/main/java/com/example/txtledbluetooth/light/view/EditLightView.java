@@ -12,7 +12,7 @@ public interface EditLightView {
 
     void setTvColor(int color, int x, int y);
 
-    void revertColor();
+    void revert();
 
     void setPaintPixel(RgbColor rgbColor);
 

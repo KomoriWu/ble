@@ -2,6 +2,8 @@ package com.example.txtledbluetooth.main.model;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.example.txtledbluetooth.R;
 import com.example.txtledbluetooth.utils.SharedPreferenceUtils;
@@ -9,6 +11,7 @@ import com.example.txtledbluetooth.utils.Utils;
 import com.inuker.bluetooth.library.BluetoothClient;
 import com.inuker.bluetooth.library.connect.options.BleConnectOptions;
 import com.inuker.bluetooth.library.connect.response.BleConnectResponse;
+import com.inuker.bluetooth.library.connect.response.BleNotifyResponse;
 import com.inuker.bluetooth.library.model.BleGattCharacter;
 import com.inuker.bluetooth.library.model.BleGattProfile;
 import com.inuker.bluetooth.library.model.BleGattService;
@@ -17,6 +20,7 @@ import com.inuker.bluetooth.library.search.SearchResult;
 import com.inuker.bluetooth.library.search.response.SearchResponse;
 
 import java.util.List;
+import java.util.UUID;
 
 import static com.inuker.bluetooth.library.Constants.REQUEST_SUCCESS;
 
@@ -47,9 +51,9 @@ public class MainModelImpl implements MainModel {
                     public void onDeviceFounded(SearchResult device) {
                         if (device.getName().contains(Utils.BLE_NAME)) {
 //                            if (device.getAddress().contains("6A")) {  //调试
-                                client.stopSearch();
-                                connBle(context, client, bleConnectOptions, device.getAddress(),
-                                        device.getName(), onInitBleListener);
+                            client.stopSearch();
+                            connBle(context, client, bleConnectOptions, device.getAddress(),
+                                    device.getName(), onInitBleListener);
 //                            }
                         }
                     }
@@ -74,24 +78,45 @@ public class MainModelImpl implements MainModel {
 
     }
 
-    private void connBle(final Context context, BluetoothClient client, BleConnectOptions
+    private void connBle(final Context context, final BluetoothClient client, BleConnectOptions
             bleConnectOptions, final String address, final String name,
                          final OnInitBleListener onInitBleListener) {
         client.connect(address, bleConnectOptions, new BleConnectResponse() {
             @Override
             public void onResponse(int code, BleGattProfile profile) {
                 if (code == REQUEST_SUCCESS) {
+                    SharedPreferenceUtils.saveMacAddress(context, address);
                     List<BleGattService> services = profile.getServices();
                     for (BleGattService service : services) {
                         if (service.getUUID().toString().contains(Utils.SEND_SERVICE)) {
                             List<BleGattCharacter> characters = service.getCharacters();
                             for (BleGattCharacter character : characters) {
                                 //save uuid
-                                SharedPreferenceUtils.saveMacAddress(context, address);
                                 SharedPreferenceUtils.saveSendService(context,
                                         service.getUUID().toString());
                                 SharedPreferenceUtils.saveSendCharacter(context,
                                         character.getUuid().toString());
+                            }
+                        } else if (service.getUUID().toString().contains(Utils.RECEIVE_SERVICE)) {
+                            List<BleGattCharacter> characters = service.getCharacters();
+                            for (BleGattCharacter character : characters) {
+                                //save uuid
+                                SharedPreferenceUtils.saveReceiveService(context,
+                                        service.getUUID().toString());
+                                SharedPreferenceUtils.saveReceiveCharacter(context,
+                                        character.getUuid().toString());
+                                client.notify(address, service.getUUID(), character.getUuid(), new
+                                        BleNotifyResponse() {
+                                            @Override
+                                            public void onNotify(UUID service, UUID character, byte[] value) {
+                                                Log.d("notify", new String(value));
+                                            }
+
+                                            @Override
+                                            public void onResponse(int code) {
+
+                                            }
+                                        });
                             }
                         }
 

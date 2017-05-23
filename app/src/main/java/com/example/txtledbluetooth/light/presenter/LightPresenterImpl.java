@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.txtledbluetooth.application.MyApplication;
 import com.example.txtledbluetooth.bean.LightType;
@@ -14,10 +15,13 @@ import com.example.txtledbluetooth.light.view.LightView;
 import com.example.txtledbluetooth.utils.BleCommandUtils;
 import com.example.txtledbluetooth.utils.SharedPreferenceUtils;
 import com.example.txtledbluetooth.utils.Utils;
+import com.inuker.bluetooth.library.connect.response.BleReadResponse;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import static com.inuker.bluetooth.library.Code.REQUEST_SUCCESS;
 
 /**
  * Created by KomoriWu
@@ -108,5 +112,6 @@ public class LightPresenterImpl implements LightPresenter {
                                 }
                             });
         }
+
     }
 }
