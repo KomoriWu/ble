@@ -47,7 +47,8 @@ public class LightModelImpl implements LightModel {
         int popupPosition = bundle.getInt(Utils.POPUP_POSITION);
         int bright = bundle.getInt(Utils.SEEK_BAR_PROGRESS_BRIGHT);
         int speed = bundle.getInt(Utils.SEEK_BAR_PROGRESS_SPEED);
-        LightType lightType = new LightType(name, speed, bright, popupPosition);
+        boolean isOpen = bundle.getBoolean(Utils.PULSE_IS_OPEN);
+        LightType lightType = new LightType(name, speed, bright, popupPosition, isOpen);
         lightType.deleteLightTypeByName();
         lightType.save();
 

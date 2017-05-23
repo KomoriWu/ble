@@ -28,7 +28,7 @@
             android:layout_toRightOf="@+id/iv_item_left"
             android:drawableLeft="@mipmap/icon_music_pulse"
             android:drawablePadding="@dimen/activity_horizontal_margin"
-            android:text="@string/pulsate_to_music" />
+            android:text="@string/pulse_to_music" />
 
         <Switch
             android:id="@+id/switch_view"
@@ -292,8 +292,9 @@
 
             <SeekBar
                 android:id="@+id/sb_speed"
+                style="@style/seek_bar"
                 android:layout_marginLeft="@dimen/speed_margin_left"
-                style="@style/seek_bar" />
+                android:max="10" />
 
             <ImageView
                 android:layout_width="wrap_content"

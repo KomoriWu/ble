@@ -22,17 +22,29 @@ public class LightType extends SugarRecord implements Serializable {
     private int speed;
     @SerializedName("brightness")
     private int brightness;
-    @SerializedName("popup_position")
+    @SerializedName("popupPosition")
     private int popupPosition;
+    @SerializedName("isOpen")
+    private boolean isOpen;
 
     public LightType() {
     }
 
-    public LightType(String name, int speed, int brightness, int popupPosition) {
+
+    public LightType(String name, int speed, int brightness, int popupPosition, boolean isOpen) {
         this.name = name;
         this.speed = speed;
         this.brightness = brightness;
         this.popupPosition = popupPosition;
+        this.isOpen = isOpen;
+    }
+
+    public boolean isOpen() {
+        return isOpen;
+    }
+
+    public void setOpen(boolean open) {
+        isOpen = open;
     }
 
     public int getSpeed() {
@@ -75,13 +87,13 @@ public class LightType extends SugarRecord implements Serializable {
     public void deleteLightTypeByName() {
         LightType.deleteAll(LightType.class, "name = ?", name);
     }
+
     public static void deleteLightTypeByName(String name) {
         LightType.deleteAll(LightType.class, "name = ?", name);
     }
 
     public static HashMap<String, Integer> getSbProgressMap(String name, int position) {
-        List<LightType> sbProgressList = LightType.find(LightType.class,
-                "name = ?", name);
+        List<LightType> sbProgressList = getLightTypeList(name);
         HashMap<String, Integer> hashMap = new HashMap<>();
         if (sbProgressList == null || sbProgressList.size() == 0) {
             hashMap = Utils.getSeekBarProgress(position);
@@ -90,5 +102,13 @@ public class LightType extends SugarRecord implements Serializable {
             hashMap.put(Utils.SEEK_BAR_PROGRESS_SPEED, sbProgressList.get(0).getSpeed());
         }
         return hashMap;
+    }
+
+    public static boolean getPulseIsOpen(String name) {
+        List<LightType> lightTypeList = getLightTypeList(name);
+        if (lightTypeList != null &&lightTypeList.size() > 0) {
+            return lightTypeList.get(0).isOpen();
+        }
+        return false;
     }
 }

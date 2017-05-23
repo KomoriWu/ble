@@ -3,20 +3,14 @@ package com.example.txtledbluetooth.utils;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.media.AudioManager;
-import android.os.Bundle;
 import android.view.inputmethod.InputMethodManager;
 
 import com.example.txtledbluetooth.R;
 import com.example.txtledbluetooth.bean.Lighting;
-import com.example.txtledbluetooth.bean.RgbColor;
 import com.inuker.bluetooth.library.connect.options.BleConnectOptions;
-import com.inuker.bluetooth.library.search.SearchRequest;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
@@ -31,10 +25,10 @@ import java.util.HashMap;
 public class Utils {
     public static final String ITEM_RIGHT_TEXT = "item_right_text";
     public static final String AUDIO_PROMPTS_DEFAULT_MODEL = "Voice and Tones";
-    public static final String BLE_NAME = "HMSoft";// 调试 HMSoft
+    public static final String BLE_NAME = "Creative Halo";// 调试 HMSoft
     public static final String BLE_ADDRESS = "ble_address";
     public static final String RECEIVE_SERVICE = "6677";
-    public static final String SEND_SERVICE = "0000";  //调试 0000
+    public static final String SEND_SERVICE = "7777";  //调试 0000
     public static final String LIGHT_MODEL_NAME = "light_model_name";
     public static final String LIGHT_MODEL_ID = "light_model_id";
     public static final String DURATION = "duration";
@@ -53,7 +47,9 @@ public class Utils {
     public static final int STREAM_TYPE = AudioManager.STREAM_MUSIC;
     public static final String SEEK_BAR_PROGRESS_BRIGHT = "bright_progress";
     public static final String SEEK_BAR_PROGRESS_SPEED = "speed_progress";
-    public static final int SEEK_BAR_MAX = 255;
+    public static final String PULSE_IS_OPEN = "pulse_is_open";
+    public static final int SEEK_BAR_BRIGHT_MAX = 255;
+    public static final int SEEK_BAR_SPEED_MAX = 10;
 
 
     public static DisplayImageOptions getImageOptions(int defaultIconId) {
@@ -193,32 +189,32 @@ public class Utils {
         int speed = 0;
         switch (position) {
             case 0:
-                bright = (int) (SEEK_BAR_MAX * 0.5);
+                bright = (int) (SEEK_BAR_BRIGHT_MAX * 0.5);
                 break;
             case 1:
-                bright = (int) (SEEK_BAR_MAX * 0.5);
-                speed = (int) (SEEK_BAR_MAX * 0.25);
+                bright = (int) (SEEK_BAR_BRIGHT_MAX * 0.5);
+                speed = (int) (SEEK_BAR_SPEED_MAX * 0.25);
                 break;
             case 2:
             case 3:
             case 4:
             case 8:
-                bright = (int) (SEEK_BAR_MAX * 0.5);
-                speed = (int) (SEEK_BAR_MAX * 0.5);
+                bright = (int) (SEEK_BAR_BRIGHT_MAX * 0.5);
+                speed = (int) (SEEK_BAR_SPEED_MAX * 0.5);
                 break;
             case 5:
-                bright = (int) (SEEK_BAR_MAX * 0.25);
-                speed = (int) (SEEK_BAR_MAX * 0.25);
+                bright = (int) (SEEK_BAR_BRIGHT_MAX * 0.25);
+                speed = (int) (SEEK_BAR_SPEED_MAX * 0.25);
                 break;
             case 6:
             case 7:
-                speed = (int) (SEEK_BAR_MAX * 0.25);
-                bright = (int) (SEEK_BAR_MAX * 0.75);
+                speed = (int) (SEEK_BAR_SPEED_MAX * 0.25);
+                bright = (int) (SEEK_BAR_BRIGHT_MAX * 0.75);
                 break;
             case 9:
             case 10:
             case 12:
-                bright = SEEK_BAR_MAX;
+                bright = SEEK_BAR_BRIGHT_MAX;
                 break;
         }
         hashMap.put(SEEK_BAR_PROGRESS_BRIGHT, bright);

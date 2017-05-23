@@ -45,7 +45,6 @@
         <item name="android:max">255</item>
         <item name="android:maxHeight">@dimen/seek_bar_height</item>
         <item name="android:minHeight">@dimen/seek_bar_height</item>
-        <item name="android:progress">150</item>
         <item name="android:progressDrawable">@drawable/seek_bar</item>
     </style>
 

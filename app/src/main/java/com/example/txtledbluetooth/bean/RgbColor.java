@@ -29,9 +29,9 @@ public class RgbColor extends SugarRecord implements Serializable {
     private int x;
     @SerializedName("y")
     private int y;
-    @SerializedName("color_int")
+    @SerializedName("colorInt")
     private int colorInt;
-    @SerializedName("color_str")
+    @SerializedName("colorStr")
     private String colorStr;
 
     public RgbColor() {

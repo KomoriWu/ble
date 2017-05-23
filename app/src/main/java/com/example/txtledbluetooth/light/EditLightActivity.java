@@ -114,6 +114,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     private String mModelTypeFlags;
     private String mLightNo;
     private int mPopupPosition = 0;
+    private String mSpecialTypeSqlName;
     private Handler mHandler = new Handler() {
         @Override
         public void dispatchMessage(Message msg) {
@@ -132,6 +133,11 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         setContentView(R.layout.activity_edit_light);
         ButterKnife.bind(this);
         initToolbar();
+        initView();
+        initListener();
+    }
+
+    private void initView() {
         mEditLightPresenter = new EditLightPresenterImpl(this, this, mColorPicker);
         mLightName = getIntent().getStringExtra(Utils.LIGHT_MODEL_NAME);
         tvTitle.setText(mLightName);
@@ -140,14 +146,22 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         mPosition = getIntent().getIntExtra(Utils.LIGHT_MODEL_ID, 0);
         mPopupPosition = mEditLightPresenter.getLightType(mLightName);
         initPopupWindow();
-        initListener();
-        setViewBoardDefaultColor();
-        rbBoard1.setChecked(true);
+
+
+        if (mPosition == 7) {
+            switchView.setChecked(true);
+            switchView.setClickable(false);
+        }
+
+        if (mPosition == 5) {
+            layoutMusicPulse.setVisibility(View.GONE);
+        } else {
+            layoutMusicPulse.setVisibility(View.VISIBLE);
+        }
     }
 
     private void initListener() {
         radioGroup.setOnCheckedChangeListener(this);
-
         onPopupWindowItemClick(mPopupPosition, tvChoseType.getText().toString());
         etColorWell.setOnEditorActionListener(this);
         etColorR.setOnEditorActionListener(this);
@@ -160,21 +174,17 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 mEditLightPresenter.operateSwitchBluetooth(mLightNo, isChecked);
+                saveSpecialType();
             }
         });
-        if (mPosition == 7) {
-            switchView.setChecked(true);
-            switchView.setClickable(false);
-        }
+        rbBoard1.setChecked(true);
 
-        if (mPosition == 5) {
-            layoutMusicPulse.setVisibility(View.GONE);
-        } else {
-            layoutMusicPulse.setVisibility(View.VISIBLE);
+        if (!(mPosition == 0 || mPosition == 9)) {
+            switchView.setChecked(LightType.getPulseIsOpen(mSpecialTypeSqlName));
+            HashMap<String, Integer> hashMap = LightType.getSbProgressMap(mSpecialTypeSqlName, mPosition);
+            seekBarBright.setProgress(hashMap.get(Utils.SEEK_BAR_PROGRESS_BRIGHT));
+            seekBarSpeed.setProgress(hashMap.get(Utils.SEEK_BAR_PROGRESS_SPEED));
         }
-        HashMap<String, Integer> hashMap = LightType.getSbProgressMap(mLightName, mPosition);
-        seekBarBright.setProgress(hashMap.get(Utils.SEEK_BAR_PROGRESS_BRIGHT));
-        seekBarSpeed.setProgress(hashMap.get(Utils.SEEK_BAR_PROGRESS_SPEED));
     }
 
 
@@ -341,16 +351,23 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
             updateTvColor(r, g, b, colorStr);
         }
 
+        if (mPosition == 0 || mPosition == 9) {
+            HashMap<String, Integer> hashMap = LightType.getSbProgressMap(mSpecialTypeSqlName, mPosition);
+            seekBarBright.setProgress(hashMap.get(Utils.SEEK_BAR_PROGRESS_BRIGHT));
+            seekBarSpeed.setProgress(hashMap.get(Utils.SEEK_BAR_PROGRESS_SPEED));
+
+            switchView.setChecked(LightType.getPulseIsOpen(mSpecialTypeSqlName));
+        }
     }
 
     @Override
     public void onPopupWindowItemClick(int position, String type) {
         mLightNo = BleCommandUtils.getLightNo(mPosition, position == 0 ? true : false);
-
         mPopupPosition = position;
         tvChoseType.setText(type);
         radioGroup.check(R.id.rb_board1);
         initEditLightUi(type);
+        mSpecialTypeSqlName = mPosition == 0 || mPosition == 9 ? mLightName + mModelTypeFlags : mLightName;
         setViewBoardDefaultColor();
         initBleLightCommand(position);
         mPopWindow.dismiss();
@@ -619,6 +636,18 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         } else if (seekBar.getId() == R.id.sb_brightness) {
             mEditLightPresenter.setLightBrightness(mLightNo, seekBar.getProgress());
         }
+        saveSpecialType();
+    }
+
+    private void saveSpecialType() {
+        if (mPosition == 0 || mPosition == 9) {
+            Bundle bundle = new Bundle();
+            bundle.putString(Utils.SQL_NAME, mLightName + mModelTypeFlags);
+            bundle.putInt(Utils.SEEK_BAR_PROGRESS_SPEED, seekBarSpeed.getProgress());
+            bundle.putInt(Utils.SEEK_BAR_PROGRESS_BRIGHT, seekBarBright.getProgress());
+            bundle.putBoolean(Utils.PULSE_IS_OPEN, switchView.isChecked());
+            mEditLightPresenter.saveLightType(bundle);
+        }
     }
 
     @Override
@@ -629,6 +658,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         bundle.putInt(Utils.POPUP_POSITION, mPopupPosition);
         bundle.putInt(Utils.SEEK_BAR_PROGRESS_SPEED, seekBarSpeed.getProgress());
         bundle.putInt(Utils.SEEK_BAR_PROGRESS_BRIGHT, seekBarBright.getProgress());
+        bundle.putBoolean(Utils.PULSE_IS_OPEN, switchView.isChecked());
         mEditLightPresenter.saveLightType(bundle);
     }
 

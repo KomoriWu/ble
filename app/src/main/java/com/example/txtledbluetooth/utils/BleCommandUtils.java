@@ -63,11 +63,17 @@ public class BleCommandUtils {
 
     //灯光速度
     public static String getLightSpeedCommand(String lightNo, String speedHex) {
+        if (speedHex.length() < 2) {
+            speedHex = "0" + speedHex;
+        }
         return HEAD + lightNo + DIVISION + MODIFY_SPEED + speedHex + DIVISION + END_MARK;
     }
 
     //灯光亮度
     public static String getLightBrightCommand(String lightNo, String brightHex) {
+        if (brightHex.length() < 2) {
+            brightHex = "0" + brightHex;
+        }
         return HEAD + lightNo + DIVISION + MODIFY_BRIGHTNESS + brightHex + DIVISION + END_MARK;
     }
 
