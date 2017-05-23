@@ -1,5 +1,10 @@
 package com.example.txtledbluetooth.setting.model;
 
+import android.content.Context;
+
+import com.example.txtledbluetooth.bean.LightType;
+import com.example.txtledbluetooth.bean.RgbColor;
+import com.example.txtledbluetooth.utils.SqlUtils;
 import com.inuker.bluetooth.library.BluetoothClient;
 import com.inuker.bluetooth.library.connect.response.BleWriteResponse;
 
@@ -22,5 +27,12 @@ public class SettingModelImpl implements SettingModel {
 
                     }
                 });
+    }
+
+    @Override
+    public void cleanSql(Context context) {
+        RgbColor.deleteAll(RgbColor.class);
+        LightType.deleteAll(LightType.class);
+        SqlUtils.saveDefaultColors(context);
     }
 }

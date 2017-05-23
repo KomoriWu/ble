@@ -66,8 +66,7 @@ public class LightPresenterImpl implements LightPresenter {
 
     @Override
     public void operateSwitchBluetooth(boolean isChecked) {
-        String command = isChecked ? BleCommandUtils.getOpenLightCommand(mContext) :
-                BleCommandUtils.CLOSE;
+        String command = isChecked ? BleCommandUtils.OPEN : BleCommandUtils.CLOSE;
         writeCommand(command);
     }
 
