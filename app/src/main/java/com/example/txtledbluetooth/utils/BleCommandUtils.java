@@ -149,6 +149,11 @@ public class BleCommandUtils {
                 popupPosition = 0;
             }
         }
+        //popup item 为 random 时，执行color-7
+        if ((position == 1 || position == 2) && popupPosition == 0) {
+            popupPosition = 3;
+        }
+
         String[] popupItems = Utils.getPopWindowItems(context, position);
         String[] colors = RgbColor.getRgbColorStr(lightName + popupItems[popupPosition]);
         switch (position) {
