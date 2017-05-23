@@ -248,7 +248,10 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
                 ViewGroup.LayoutParams.WRAP_CONTENT, true);
         mPopWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         PopupWindowAdapter windowAdapter = new PopupWindowAdapter(mPopupItems, this, this);
-        popupRecyclerView.setAdapter(windowAdapter);
+
+        if (mPopupItems.length > 1) {
+            popupRecyclerView.setAdapter(windowAdapter);
+        }
     }
 
     @Override
