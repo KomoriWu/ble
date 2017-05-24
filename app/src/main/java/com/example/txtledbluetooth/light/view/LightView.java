@@ -17,5 +17,5 @@ public interface LightView {
 
     void onWriteFailure();
 
-    void onNotify(String command);
+    void onNotify(int position);
 }

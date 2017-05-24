@@ -18,8 +18,11 @@ import com.inuker.bluetooth.library.connect.options.BleConnectOptions;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by KomoriWu
@@ -261,6 +264,17 @@ public class Utils {
         boolean gpsProvider = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         if (networkProvider || gpsProvider) return true;
         return false;
+    }
+
+    public static int getItemPosition(int position, Context context) {
+        String[] lightNames = context.getResources().getStringArray(R.array.lighting_name);
+        String[] lightNamesBle = context.getResources().getStringArray(R.array.lighting_name_ble);
+        if (position == 0) {
+            // 开关
+            return -1;
+        } else {
+            return Arrays.asList(lightNames).indexOf(lightNamesBle[position]);
+        }
     }
 
 }

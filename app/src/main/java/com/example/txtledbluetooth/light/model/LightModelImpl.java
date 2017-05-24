@@ -44,8 +44,8 @@ public class LightModelImpl implements LightModel {
                     Log.d("notify", "----" + bytes2hex03(value));
                     if (value[value.length - 1] == 10 && value[value.length - 2] == 13) {
                         Log.d("notify", "command:" + sbCommand.toString());
-//                        Log.d("notify", "length:" + sbCommand.toString().length());
-                        onInterfaceOpenNotify.onNotify(sbCommand.toString());
+
+                        onInterfaceOpenNotify.onNotify(0);
                         sbCommand.setLength(0);
                     }
                 }
@@ -124,7 +124,7 @@ public class LightModelImpl implements LightModel {
     }
 
     public interface OnInterfaceOpenNotify {
-        void onNotify(String command);
+        void onNotify(int position);
 
         void onOpenNotifySuccess();
     }

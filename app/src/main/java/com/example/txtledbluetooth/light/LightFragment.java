@@ -116,7 +116,7 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
     }
 
     @Override
-    public void onNotify(String command) {
+    public void onNotify(int position) {
 
     }
 

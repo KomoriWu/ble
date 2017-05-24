@@ -106,8 +106,8 @@ public class LightPresenterImpl implements LightPresenter {
             mLightModel.openNotify(mClient, mMacAddress, uuidService, uuidCharacter, new
                     LightModelImpl.OnInterfaceOpenNotify() {
                         @Override
-                        public void onNotify(String command) {
-                            mLightView.onNotify(command);
+                        public void onNotify(int position) {
+                            mLightView.onNotify(position);
                         }
 
                         @Override
