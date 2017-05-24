@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -36,7 +35,6 @@ import com.example.txtledbluetooth.sources.SourcesFragment;
 import com.example.txtledbluetooth.utils.AlertUtils;
 import com.example.txtledbluetooth.utils.SqlUtils;
 import com.example.txtledbluetooth.utils.Utils;
-import com.nostra13.universalimageloader.utils.L;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionNo;
 import com.yanzhenjie.permission.PermissionYes;
@@ -47,10 +45,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.example.txtledbluetooth.utils.Utils.isLocationEnable;
+
 public class MainActivity extends BaseActivity implements MainView {
     public static final int PERMISSION_REQUEST_CODE = 100;
     public static final int REQUEST_CODE_SETTING = 1;
     public static final int REQUEST_CODE_ALLOW = 2;
+    private static final int REQUEST_CODE_LOCATION_SETTINGS = 3;
     @BindView(R.id.frame_content)
     FrameLayout frameContent;
     @BindView(R.id.navigation_view)
@@ -106,7 +107,19 @@ public class MainActivity extends BaseActivity implements MainView {
         // 先判断是否有权限。
         if (AndPermission.hasPermission(this, Utils.getPermission(0),
                 Utils.getPermission(1))) {
-            mPresenter.initBle(this);
+            if (isLocationEnable(this)) {
+                mPresenter.initBle(this);
+            } else {
+                AlertUtils.showAlertDialog(this, R.string.gps_open_hint, new
+                        DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Intent locationIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivityForResult(locationIntent, REQUEST_CODE_LOCATION_SETTINGS);
+                    }
+                });
+
+            }
 
         } else {
             AndPermission.with(this)
@@ -286,6 +299,12 @@ public class MainActivity extends BaseActivity implements MainView {
         if ((requestCode == REQUEST_CODE_ALLOW && resultCode == RESULT_OK) ||
                 requestCode == REQUEST_CODE_SETTING) {
             mPresenter.initBle(this);
+        } else if (requestCode == REQUEST_CODE_LOCATION_SETTINGS) {
+            if (isLocationEnable(this)) {
+                mPresenter.initBle(this);
+            } else {
+               AlertUtils.showAlertDialog(this,R.string.gps_not_open_hint);
+            }
         }
     }
 
@@ -323,6 +342,5 @@ public class MainActivity extends BaseActivity implements MainView {
             AndPermission.defaultSettingDialog(this, REQUEST_CODE_SETTING).show();
         }
     }
-
 
 }

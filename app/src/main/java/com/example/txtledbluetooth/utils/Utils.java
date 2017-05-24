@@ -3,9 +3,13 @@ package com.example.txtledbluetooth.utils;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.location.LocationManager;
 import android.media.AudioManager;
+import android.net.Uri;
 import android.view.inputmethod.InputMethodManager;
 
 import com.example.txtledbluetooth.R;
@@ -247,4 +251,16 @@ public class Utils {
         }
         return isVisible;
     }
+
+
+    public static boolean isLocationEnable(Context context) {
+        LocationManager locationManager = (LocationManager) context.getSystemService(
+                Context.LOCATION_SERVICE);
+        boolean networkProvider = locationManager.isProviderEnabled(LocationManager.
+                NETWORK_PROVIDER);
+        boolean gpsProvider = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        if (networkProvider || gpsProvider) return true;
+        return false;
+    }
+
 }

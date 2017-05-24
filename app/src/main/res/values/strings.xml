@@ -88,4 +88,6 @@
     <string name="ble_write_failure_hint">Failure, please check the bluetooth connection
         for success !</string>
     <string name="pulse_to_music">Pulse to Music</string>
+    <string name="gps_not_open_hint">The GPS is not open and may not operate properly !</string>
+    <string name="gps_open_hint">For normal use of apps , Please open the GPS !</string>
 </resources>
