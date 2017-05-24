@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,6 +18,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.example.txtledbluetooth.R;
+import com.example.txtledbluetooth.application.MyApplication;
 import com.example.txtledbluetooth.base.BaseFragment;
 import com.example.txtledbluetooth.bean.LightType;
 import com.example.txtledbluetooth.bean.Lighting;
@@ -27,10 +30,13 @@ import com.example.txtledbluetooth.utils.AlertUtils;
 import com.example.txtledbluetooth.utils.MusicUtils;
 import com.example.txtledbluetooth.utils.SharedPreferenceUtils;
 import com.example.txtledbluetooth.utils.Utils;
+import com.inuker.bluetooth.library.Constants;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,6 +48,9 @@ import butterknife.ButterKnife;
 
 public class LightFragment extends BaseFragment implements LightView, LightAdapter.
         OnItemClickListener, LightAdapter.OnIvRightClickListener {
+    private static final int TIMER_DELAY = 1000;
+    private static final int TIMER_PERIOD = 100;
+    private static final int TIMER_MESSAGE = 1;
     @BindView(R.id.tv_switch)
     TextView tvSwitch;
     @BindView(R.id.switch_view)
@@ -53,6 +62,17 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
     private String mLightName;
     private String[] mLightNames;
     private boolean mIsReturn;
+    private Timer mTimer;
+    private TimerTask mTimerTask;
+    private Handler mTimerHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == TIMER_MESSAGE) {
+                aSwitch.setChecked(true);
+                stopTimer();
+            }
+            super.handleMessage(msg);
+        }
+    };
 
     @Override
     public View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -70,7 +90,7 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
                 mLightPresenter.operateSwitchBluetooth(isChecked);
             }
         });
-        aSwitch.setChecked(true);
+        startTimer();
         return view;
     }
 
@@ -121,6 +141,40 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
     @Override
     public void onIvRightClick(View view, int position) {
         mLightPresenter.operateTvRightBluetooth(position);
+    }
+
+    private void startTimer() {
+        if (mTimer == null) {
+            mTimer = new Timer();
+        }
+        if (mTimerTask == null) {
+            mTimerTask = new TimerTask() {
+                @Override
+                public void run() {
+                    int status = MyApplication.getBluetoothClient(getActivity()).getConnectStatus(
+                            SharedPreferenceUtils.getMacAddress(getActivity()));
+                    Message message = new Message();
+                    message.what = TIMER_MESSAGE;
+                    if (status == Constants.STATUS_DEVICE_CONNECTED) {
+                        mTimerHandler.sendMessage(message);
+                    }
+                }
+            };
+        }
+        if (mTimer != null && mTimerTask != null) {
+            mTimer.schedule(mTimerTask, TIMER_DELAY, TIMER_PERIOD);
+        }
+    }
+
+    private void stopTimer() {
+        if (mTimer != null) {
+            mTimer.cancel();
+            mTimer = null;
+        }
+        if (mTimerTask != null) {
+            mTimerTask.cancel();
+            mTimerTask = null;
+        }
     }
 
 
