@@ -34,16 +34,7 @@ public class LightAdapter extends RecyclerView.Adapter<LightAdapter.LightViewHol
     private OnItemClickListener mOnItemClickListener;
     private OnIvRightClickListener mOnIvRightClickListener;
     private List<Boolean> mList;
-    private boolean mIsChecked;
-    private OnHintDialogInterface mOnHintDialogInterface;
 
-    public interface OnHintDialogInterface {
-        void showHintDialog();
-    }
-
-    public void setIsChecked(boolean isChecked) {
-        this.mIsChecked = isChecked;
-    }
 
     public interface OnItemClickListener {
         void onItemClick(View view, int position);
@@ -54,12 +45,10 @@ public class LightAdapter extends RecyclerView.Adapter<LightAdapter.LightViewHol
     }
 
     public LightAdapter(Context mContext, OnItemClickListener
-            mOnItemClickListener, OnIvRightClickListener mOnIvRightClickListener,
-                        OnHintDialogInterface mOnHintDialogInterface) {
+            mOnItemClickListener, OnIvRightClickListener mOnIvRightClickListener) {
         this.mContext = mContext;
         this.mOnItemClickListener = mOnItemClickListener;
         this.mOnIvRightClickListener = mOnIvRightClickListener;
-        this.mOnHintDialogInterface = mOnHintDialogInterface;
     }
 
     public void setLightingList(ArrayList<Lighting> lightingList, List<Boolean> list) {
@@ -133,19 +122,15 @@ public class LightAdapter extends RecyclerView.Adapter<LightAdapter.LightViewHol
                     break;
                 default:
                     if (mOnItemClickListener != null) {
-                        if (mIsChecked) {
-                            for (int i = 0; i < getItemCount(); i++) {
-                                if (i == position) {
-                                    mList.set(position, true);
-                                } else {
-                                    mList.set(i, false);
-                                }
+                        for (int i = 0; i < getItemCount(); i++) {
+                            if (i == position) {
+                                mList.set(position, true);
+                            } else {
+                                mList.set(i, false);
                             }
-                            notifyDataSetChanged();
-                            mOnItemClickListener.onItemClick(view, position);
-                        } else {
-                            mOnHintDialogInterface.showHintDialog();
                         }
+                        notifyDataSetChanged();
+                        mOnItemClickListener.onItemClick(view, position);
                     }
                     break;
             }

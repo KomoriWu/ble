@@ -18,6 +18,7 @@ import com.example.txtledbluetooth.utils.Utils;
 import com.inuker.bluetooth.library.connect.response.BleReadResponse;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -53,10 +54,27 @@ public class LightPresenterImpl implements LightPresenter {
 
 
     @Override
-    public void operateItemBluetooth(String lightName, int id) {
-        String command = BleCommandUtils.getItemCommandByType(mContext, id, lightName);
+    public void operateItemBluetooth(String lightName, int position) {
+        String command = BleCommandUtils.getItemCommandByType(mContext, position, lightName);
         writeCommand(command);
-        SharedPreferenceUtils.saveClickPosition(mContext, id);
+        SharedPreferenceUtils.saveClickPosition(mContext, position);
+    }
+
+    @Override
+    public void operateItemSeekBar(String lightName, int position) {
+        int popupPosition = mLightModel.getLightType(lightName);
+        String sqlName = position == 0 || position == 9 ? lightName +
+                Utils.getPopWindowItems(mContext, position)[popupPosition] : lightName;
+        HashMap<String, Integer> hashMap = LightType.getSbProgressMap(sqlName, position);
+        int bright = hashMap.get(Utils.SEEK_BAR_PROGRESS_BRIGHT);
+        int speed = hashMap.get(Utils.SEEK_BAR_PROGRESS_SPEED);
+        String lightNo = BleCommandUtils.getLightNo(position, popupPosition == 0 ? true : false);
+        if (Utils.isSBarSpeedVisible(position)) {
+            writeCommand(BleCommandUtils.getLightSpeedCommand(lightNo, Integer.toHexString(speed)));
+        }
+        if (Utils.isSBarBrightVisible(position)) {
+            writeCommand(BleCommandUtils.getLightBrightCommand(lightNo, Integer.toHexString(bright)));
+        }
     }
 
     @Override

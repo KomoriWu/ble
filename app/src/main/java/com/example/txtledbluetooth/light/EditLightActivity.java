@@ -189,7 +189,8 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
             mIsReturn = true;
             switchView.setChecked(LightType.getPulseIsOpen(mSpecialTypeSqlName));
             mIsReturn = false;
-            HashMap<String, Integer> hashMap = LightType.getSbProgressMap(mSpecialTypeSqlName, mPosition);
+            HashMap<String, Integer> hashMap = LightType.getSbProgressMap(mSpecialTypeSqlName,
+                    mPosition);
             seekBarBright.setProgress(hashMap.get(Utils.SEEK_BAR_PROGRESS_BRIGHT));
             seekBarSpeed.setProgress(hashMap.get(Utils.SEEK_BAR_PROGRESS_SPEED));
         }
@@ -316,7 +317,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         setViewBoardDefaultColor();
         initSpecialView(!(mPosition == 0 || mPosition == 9));
         operateItemBluetooth(mPopupPosition);
-        operateSeekBar(true);
+        operateSeekBar();
         mEditLightPresenter.operateSwitchBluetooth(mLightNo, LightType.getPulseIsOpen(
                 mSpecialTypeSqlName));
     }
@@ -384,16 +385,13 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         mEditLightPresenter.operateItemBluetooth(mLightName, mPosition, popupPosition);
     }
 
-    private void operateSeekBar(boolean isOperate) {
-        if (isOperate) {
+    private void operateSeekBar() {
             if (layoutSpeed.getVisibility() == VIEW_VISIBLE) {
                 mEditLightPresenter.setLightSpeed(mLightNo, seekBarSpeed.getProgress());
             }
             if (layoutBrightness.getVisibility() == VIEW_VISIBLE) {
                 mEditLightPresenter.setLightBrightness(mLightNo, seekBarBright.getProgress());
             }
-        }
-
     }
 
     private void initEditLightUi(String type) {

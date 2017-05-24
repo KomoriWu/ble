@@ -7,6 +7,7 @@ package com.example.txtledbluetooth.light.presenter;
 
 public interface LightPresenter {
     void operateItemBluetooth(String lightName, int id);
+    void operateItemSeekBar(String lightName, int id);
     void operateTvRightBluetooth(int id);
     void operateSwitchBluetooth(boolean isChecked);
     void showLightData();

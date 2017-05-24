@@ -29,6 +29,7 @@ import com.example.txtledbluetooth.utils.SharedPreferenceUtils;
 import com.example.txtledbluetooth.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -40,7 +41,7 @@ import butterknife.ButterKnife;
  */
 
 public class LightFragment extends BaseFragment implements LightView, LightAdapter.
-        OnItemClickListener, LightAdapter.OnIvRightClickListener, LightAdapter.OnHintDialogInterface {
+        OnItemClickListener, LightAdapter.OnIvRightClickListener {
     @BindView(R.id.tv_switch)
     TextView tvSwitch;
     @BindView(R.id.switch_view)
@@ -49,9 +50,9 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
     RecyclerView recyclerView;
     private LightAdapter mLightAdapter;
     private LightPresenter mLightPresenter;
-    private boolean mIsChecked;
     private String mLightName;
     private String[] mLightNames;
+    private boolean mIsReturn;
 
     @Override
     public View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -63,10 +64,9 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
         aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                mIsChecked = isChecked;
-                mLightAdapter.setIsChecked(isChecked);
                 tvSwitch.setText(isChecked ? getString(R.string.on_capital) :
                         getString(R.string.off_capital));
+                if (mIsReturn) return;
                 mLightPresenter.operateSwitchBluetooth(isChecked);
             }
         });
@@ -77,7 +77,7 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
     private void initLightData() {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mLightAdapter = new LightAdapter(getActivity(), this, this, this);
+        mLightAdapter = new LightAdapter(getActivity(), this, this);
         recyclerView.setAdapter(mLightAdapter);
         mLightPresenter.showLightData();
     }
@@ -88,15 +88,12 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
 
     @Override
     public void editLight(int id) {
-        if (mIsChecked) {
-            mLightName = mLightNames[id];
-            Intent intent = new Intent(getActivity(), EditLightActivity.class);
-            intent.putExtra(Utils.LIGHT_MODEL_ID, id);
-            intent.putExtra(Utils.LIGHT_MODEL_NAME, mLightName);
-            startActivity(intent);
-        } else {
-            showHintDialog();
-        }
+        mLightName = mLightNames[id];
+        Intent intent = new Intent(getActivity(), EditLightActivity.class);
+        intent.putExtra(Utils.LIGHT_MODEL_ID, id);
+        intent.putExtra(Utils.LIGHT_MODEL_NAME, mLightName);
+        startActivity(intent);
+        setSwitchChecked();
     }
 
     @Override
@@ -104,15 +101,21 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
 //        AlertUtils.showAlertDialog(getActivity(), R.string.ble_write_failure_hint);
     }
 
-    @Override
-    public void showHintDialog() {
-        AlertUtils.showAlertDialog(getActivity(), R.string.open_switch_hint);
-    }
 
     @Override
     public void onItemClick(View view, int position) {
         mLightName = mLightNames[position];
         mLightPresenter.operateItemBluetooth(mLightName, position);
+        mLightPresenter.operateItemSeekBar(mLightName, position);
+        setSwitchChecked();
+    }
+
+    private void setSwitchChecked() {
+        if (!aSwitch.isChecked()) {
+            mIsReturn = true;
+            aSwitch.setChecked(true);
+            mIsReturn = false;
+        }
     }
 
     @Override

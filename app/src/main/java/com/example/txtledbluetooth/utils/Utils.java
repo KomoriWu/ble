@@ -222,5 +222,29 @@ public class Utils {
         return hashMap;
     }
 
+    public static boolean isSBarSpeedVisible(int position) {
+        boolean isVisible = true;
+        switch (position) {
+            case 0:
+            case 7:
+            case 8:
+            case 10:
+            case 11:
+            case 12:
+                isVisible = false;
+                break;
+        }
+        return isVisible;
+    }
 
+    public static boolean isSBarBrightVisible(int position) {
+        boolean isVisible = true;
+        switch (position) {
+            case 8:
+            case 11:
+                isVisible = false;
+                break;
+        }
+        return isVisible;
+    }
 }
