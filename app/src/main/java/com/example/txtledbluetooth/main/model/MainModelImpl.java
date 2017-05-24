@@ -108,7 +108,8 @@ public class MainModelImpl implements MainModel {
                                 client.notify(address, service.getUUID(), character.getUuid(), new
                                         BleNotifyResponse() {
                                             @Override
-                                            public void onNotify(UUID service, UUID character, byte[] value) {
+                                            public void onNotify(UUID service, UUID character,
+                                                                 byte[] value) {
                                                 Log.d("notify", new String(value));
                                             }
 

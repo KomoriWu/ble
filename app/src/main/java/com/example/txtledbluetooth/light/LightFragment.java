@@ -81,6 +81,8 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
         mLightPresenter = new LightPresenterImpl(this, getActivity());
         mLightNames = getActivity().getResources().getStringArray(R.array.lighting_name);
         initLightData();
+        tvSwitch.setText(aSwitch.isChecked() ? getString(R.string.on_capital) :
+                getString(R.string.off_capital));
         aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
