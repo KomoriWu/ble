@@ -109,7 +109,14 @@ public class LightPresenterImpl implements LightPresenter {
                         public void onNotify(String command) {
                             mLightView.onNotify(command);
                         }
+
+                        @Override
+                        public void onOpenNotifySuccess() {
+                            writeCommand(BleCommandUtils.BACK_NOTIFY);
+                        }
+
                     });
+
         }
     }
 

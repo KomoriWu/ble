@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.txtledbluetooth.R;
 import com.example.txtledbluetooth.application.MyApplication;
@@ -21,7 +20,6 @@ import com.example.txtledbluetooth.bean.Lighting;
 import com.example.txtledbluetooth.light.presenter.LightPresenter;
 import com.example.txtledbluetooth.light.presenter.LightPresenterImpl;
 import com.example.txtledbluetooth.light.view.LightView;
-import com.example.txtledbluetooth.utils.AlertUtils;
 import com.example.txtledbluetooth.utils.SharedPreferenceUtils;
 import com.example.txtledbluetooth.utils.Utils;
 import com.inuker.bluetooth.library.Constants;
@@ -119,7 +117,7 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
 
     @Override
     public void onNotify(String command) {
-        AlertUtils.showAlertDialog(getActivity(), command);
+
     }
 
 

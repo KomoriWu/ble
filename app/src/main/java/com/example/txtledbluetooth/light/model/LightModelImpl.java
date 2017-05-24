@@ -9,6 +9,7 @@ import com.example.txtledbluetooth.utils.BleCommandUtils;
 import com.example.txtledbluetooth.utils.SqlUtils;
 import com.example.txtledbluetooth.utils.Utils;
 import com.inuker.bluetooth.library.BluetoothClient;
+import com.inuker.bluetooth.library.Constants;
 import com.inuker.bluetooth.library.connect.response.BleNotifyResponse;
 
 import java.util.List;
@@ -39,19 +40,37 @@ public class LightModelImpl implements LightModel {
             @Override
             public void onNotify(UUID service, UUID character, byte[] value) {
                 sbCommand.append(new String(value));
-                if (value[value.length - 1] == 10 && value[value.length - 2] == 13) {
-                    Log.d("notify", "command:" + sbCommand.toString());
-                    Log.d("notify", "length:" + sbCommand.toString().length());
-                    onInterfaceOpenNotify.onNotify(sbCommand.toString());
-                    sbCommand.setLength(0);
+                if (value != null && value.length > 1) {
+                    Log.d("notify", "----" + bytes2hex03(value));
+                    if (value[value.length - 1] == 10 && value[value.length - 2] == 13) {
+                        Log.d("notify", "command:" + sbCommand.toString());
+//                        Log.d("notify", "length:" + sbCommand.toString().length());
+                        onInterfaceOpenNotify.onNotify(sbCommand.toString());
+                        sbCommand.setLength(0);
+                    }
                 }
             }
 
             @Override
             public void onResponse(int code) {
-
+                if (code == Constants.REQUEST_SUCCESS) {
+                    onInterfaceOpenNotify.onOpenNotifySuccess();
+                }
             }
         });
+    }
+
+    public static String bytes2hex03(byte[] bytes) {
+        final String HEX = "0123456789abcdef";
+        StringBuilder sb = new StringBuilder(bytes.length * 2);
+        for (byte b : bytes) {
+            // 取出这个字节的高4位，然后与0x0f与运算，得到一个0-15之间的数据，通过HEX.charAt(0-15)即为16进制数
+            sb.append(HEX.charAt((b >> 4) & 0x0f));
+            // 取出这个字节的低位，与0x0f与运算，得到一个0-15之间的数据，通过HEX.charAt(0-15)即为16进制数
+            sb.append(HEX.charAt(b & 0x0f));
+        }
+
+        return sb.toString();
     }
 
     @Override
@@ -106,6 +125,8 @@ public class LightModelImpl implements LightModel {
 
     public interface OnInterfaceOpenNotify {
         void onNotify(String command);
+
+        void onOpenNotifySuccess();
     }
 
 }

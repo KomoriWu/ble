@@ -59,6 +59,7 @@ public class BleCommandUtils {
     public static final String CLOSE = HEAD + CLOSE_LIGHT + DIVISION + END_MARK;
     public static final String OPEN = HEAD + OPEN_LIGHT + DIVISION + END_MARK;
     public static final String RESET = HEAD + "erst" + DIVISION + END_MARK;
+    public static final String BACK_NOTIFY = HEAD + "back" + DIVISION+ END_MARK;
     public static final String CLOSE_SOUND = HEAD + "esvt:0" + DIVISION;
     public static final String OPEN_SOUND = HEAD + "esvt:1" + DIVISION;
 
@@ -177,10 +178,10 @@ public class BleCommandUtils {
             case 4:
             case 8:
             case 9:
-                command.append(popupPosition + DIVISION + colors[0] + DIVISION);
+                isFirstItem = popupPosition == 0 ? true : false;
+                command.append(1 + DIVISION + colors[0] + DIVISION);
                 break;
             case 10:
-                isFirstItem = popupPosition == 0 ? true : false;
                 int count = popupPosition == 0 ? 1 : 0;
                 command.append(count + DIVISION + colors[0] + DIVISION);
                 break;
