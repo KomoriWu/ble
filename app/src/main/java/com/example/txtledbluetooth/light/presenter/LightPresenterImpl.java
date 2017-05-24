@@ -107,7 +107,7 @@ public class LightPresenterImpl implements LightPresenter {
                     LightModelImpl.OnInterfaceOpenNotify() {
                         @Override
                         public void onNotify(int position) {
-                            mLightView.onNotify(position);
+                            mLightView.onNotify(Utils.getItemPosition(position, mContext));
                         }
 
                         @Override

@@ -57,6 +57,17 @@ public class LightAdapter extends RecyclerView.Adapter<LightAdapter.LightViewHol
         notifyDataSetChanged();
     }
 
+    public void setSelectItem(int position) {
+        for (int i = 0; i < getItemCount(); i++) {
+            if (i == position) {
+                mList.set(position, true);
+            } else {
+                mList.set(i, false);
+            }
+        }
+        notifyDataSetChanged();
+    }
+
 
     @Override
     public LightViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

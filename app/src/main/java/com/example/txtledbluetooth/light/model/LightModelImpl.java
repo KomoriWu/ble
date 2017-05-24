@@ -15,6 +15,8 @@ import com.inuker.bluetooth.library.connect.response.BleNotifyResponse;
 import java.util.List;
 import java.util.UUID;
 
+import static com.orm.SugarRecord.save;
+
 /**
  * Created by KomoriWu
  * on 2017-04-24.
@@ -44,8 +46,8 @@ public class LightModelImpl implements LightModel {
                     Log.d("notify", "----" + bytes2hex03(value));
                     if (value[value.length - 1] == 10 && value[value.length - 2] == 13) {
                         Log.d("notify", "command:" + sbCommand.toString());
-
-                        onInterfaceOpenNotify.onNotify(0);
+                        int position = saveCommand(sbCommand.toString());
+                        onInterfaceOpenNotify.onNotify(position);
                         sbCommand.setLength(0);
                     }
                 }
@@ -58,6 +60,11 @@ public class LightModelImpl implements LightModel {
                 }
             }
         });
+    }
+
+    private int saveCommand(String command) {
+        String[] commands = command.split(BleCommandUtils.DIVISION);
+        return Integer.parseInt(commands[3]);
     }
 
     public static String bytes2hex03(byte[] bytes) {

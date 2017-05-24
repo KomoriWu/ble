@@ -49,6 +49,7 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
     private LightAdapter mLightAdapter;
+    private LinearLayoutManager mLayoutManager;
     private LightPresenter mLightPresenter;
     private String mLightName;
     private String[] mLightNames;
@@ -90,7 +91,8 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
 
     private void initLightData() {
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(mLayoutManager);
         mLightAdapter = new LightAdapter(getActivity(), this, this);
         recyclerView.setAdapter(mLightAdapter);
         mLightPresenter.showLightData();
@@ -117,7 +119,8 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
 
     @Override
     public void onNotify(int position) {
-
+        mLayoutManager.scrollToPositionWithOffset(position, 0);
+        mLightAdapter.setSelectItem(position);
     }
 
 
