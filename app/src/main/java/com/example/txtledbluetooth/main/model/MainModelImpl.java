@@ -105,19 +105,7 @@ public class MainModelImpl implements MainModel {
                                         service.getUUID().toString());
                                 SharedPreferenceUtils.saveReceiveCharacter(context,
                                         character.getUuid().toString());
-                                client.notify(address, service.getUUID(), character.getUuid(), new
-                                        BleNotifyResponse() {
-                                            @Override
-                                            public void onNotify(UUID service, UUID character,
-                                                                 byte[] value) {
-                                                Log.d("notify", new String(value));
-                                            }
 
-                                            @Override
-                                            public void onResponse(int code) {
-
-                                            }
-                                        });
                             }
                         }
 

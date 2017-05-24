@@ -1,6 +1,7 @@
 package com.example.txtledbluetooth.light.model;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.example.txtledbluetooth.bean.LightType;
 import com.example.txtledbluetooth.bean.RgbColor;
@@ -8,6 +9,7 @@ import com.example.txtledbluetooth.utils.BleCommandUtils;
 import com.example.txtledbluetooth.utils.SqlUtils;
 import com.example.txtledbluetooth.utils.Utils;
 import com.inuker.bluetooth.library.BluetoothClient;
+import com.inuker.bluetooth.library.connect.response.BleNotifyResponse;
 
 import java.util.List;
 import java.util.UUID;
@@ -27,7 +29,30 @@ public class LightModelImpl implements LightModel {
                 macAddress, serviceUUID, characterUUID, onInterfaceWriteCommand);
     }
 
+    @Override
+    public void openNotify(BluetoothClient client, String macAddress, UUID serviceUUID,
+                           UUID characterUUID, final OnInterfaceOpenNotify onInterfaceOpenNotify) {
 
+        client.notify(macAddress, serviceUUID, characterUUID, new BleNotifyResponse() {
+            StringBuffer sbCommand = new StringBuffer();
+
+            @Override
+            public void onNotify(UUID service, UUID character, byte[] value) {
+                sbCommand.append(new String(value));
+                if (value[value.length - 1] == 10 && value[value.length - 2] == 13) {
+                    Log.d("notify", "command:" + sbCommand.toString());
+                    Log.d("notify", "length:" + sbCommand.toString().length());
+                    onInterfaceOpenNotify.onNotify(sbCommand.toString());
+                    sbCommand.setLength(0);
+                }
+            }
+
+            @Override
+            public void onResponse(int code) {
+
+            }
+        });
+    }
 
     @Override
     public void saveLightColor(Bundle bundle) {
@@ -77,6 +102,10 @@ public class LightModelImpl implements LightModel {
 
     public interface OnInterfaceWriteCommand {
         void onWriteFailure();
+    }
+
+    public interface OnInterfaceOpenNotify {
+        void onNotify(String command);
     }
 
 }

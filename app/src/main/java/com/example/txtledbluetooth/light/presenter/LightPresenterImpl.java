@@ -15,6 +15,7 @@ import com.example.txtledbluetooth.light.view.LightView;
 import com.example.txtledbluetooth.utils.BleCommandUtils;
 import com.example.txtledbluetooth.utils.SharedPreferenceUtils;
 import com.example.txtledbluetooth.utils.Utils;
+import com.inuker.bluetooth.library.BluetoothClient;
 import com.inuker.bluetooth.library.connect.response.BleReadResponse;
 
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ public class LightPresenterImpl implements LightPresenter {
     private String mMacAddress;
     private UUID mServiceUUID;
     private UUID mCharacterUUID;
+    private BluetoothClient mClient;
 
     public LightPresenterImpl(LightView mLightView, Context mContext) {
         this.mLightView = mLightView;
@@ -49,6 +51,7 @@ public class LightPresenterImpl implements LightPresenter {
         if (!TextUtils.isEmpty(characterUUID)) {
             mCharacterUUID = UUID.fromString(characterUUID);
         }
+        mClient = MyApplication.getBluetoothClient(mContext);
         mMacAddress = SharedPreferenceUtils.getMacAddress(mContext);
     }
 
@@ -89,6 +92,28 @@ public class LightPresenterImpl implements LightPresenter {
     }
 
     @Override
+    public void openNotify() {
+        String serviceUUID = SharedPreferenceUtils.getReceiveService(mContext);
+        String characterUUID = SharedPreferenceUtils.getReceiveCharacter(mContext);
+        UUID uuidService = null, uuidCharacter = null;
+        if (!TextUtils.isEmpty(serviceUUID)) {
+            uuidService = UUID.fromString(serviceUUID);
+        }
+        if (!TextUtils.isEmpty(characterUUID)) {
+            uuidCharacter = UUID.fromString(characterUUID);
+        }
+        if (!TextUtils.isEmpty(mMacAddress)) {
+            mLightModel.openNotify(mClient, mMacAddress, uuidService, uuidCharacter, new
+                    LightModelImpl.OnInterfaceOpenNotify() {
+                        @Override
+                        public void onNotify(String command) {
+                            mLightView.onNotify(command);
+                        }
+                    });
+        }
+    }
+
+    @Override
     public void showLightData() {
         new initDataAsyncTask().execute();
     }
@@ -120,7 +145,7 @@ public class LightPresenterImpl implements LightPresenter {
     private void writeCommand(String command) {
         Log.d("BLE Write Command:", command);
         if (!TextUtils.isEmpty(command) && !TextUtils.isEmpty(mMacAddress)) {
-            mLightModel.WriteCommand(MyApplication.getBluetoothClient(mContext), mMacAddress,
+            mLightModel.WriteCommand(mClient, mMacAddress,
                     mServiceUUID, mCharacterUUID, command, new
                             LightModelImpl.OnInterfaceWriteCommand() {
                                 @Override

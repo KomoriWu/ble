@@ -1,39 +1,32 @@
 package com.example.txtledbluetooth.light;
 
-import android.content.ContentUris;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.txtledbluetooth.R;
 import com.example.txtledbluetooth.application.MyApplication;
 import com.example.txtledbluetooth.base.BaseFragment;
-import com.example.txtledbluetooth.bean.LightType;
 import com.example.txtledbluetooth.bean.Lighting;
-import com.example.txtledbluetooth.bean.MusicInfo;
 import com.example.txtledbluetooth.light.presenter.LightPresenter;
 import com.example.txtledbluetooth.light.presenter.LightPresenterImpl;
 import com.example.txtledbluetooth.light.view.LightView;
 import com.example.txtledbluetooth.utils.AlertUtils;
-import com.example.txtledbluetooth.utils.MusicUtils;
 import com.example.txtledbluetooth.utils.SharedPreferenceUtils;
 import com.example.txtledbluetooth.utils.Utils;
 import com.inuker.bluetooth.library.Constants;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -68,6 +61,7 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
         public void handleMessage(Message msg) {
             if (msg.what == TIMER_MESSAGE) {
                 aSwitch.setChecked(true);
+                mLightPresenter.openNotify();
                 stopTimer();
             }
             super.handleMessage(msg);
@@ -121,6 +115,11 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
     @Override
     public void onWriteFailure() {
 //        AlertUtils.showAlertDialog(getActivity(), R.string.ble_write_failure_hint);
+    }
+
+    @Override
+    public void onNotify(String command) {
+        AlertUtils.showAlertDialog(getActivity(), command);
     }
 
 

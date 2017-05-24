@@ -10,5 +10,6 @@ public interface LightPresenter {
     void operateItemSeekBar(String lightName, int id);
     void operateTvRightBluetooth(int id);
     void operateSwitchBluetooth(boolean isChecked);
+    void openNotify();
     void showLightData();
 }

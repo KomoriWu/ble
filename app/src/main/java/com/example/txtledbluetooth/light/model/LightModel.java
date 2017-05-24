@@ -17,6 +17,9 @@ public interface LightModel {
                       UUID characterUUID, String command, LightModelImpl.OnInterfaceWriteCommand
                               onInterfaceWriteCommand);
 
+    void openNotify(BluetoothClient client, String macAddress, UUID serviceUUID,
+                    UUID characterUUID,LightModelImpl.OnInterfaceOpenNotify
+                            onInterfaceOpenNotify);
 
     void saveLightColor(Bundle bundle);
 
