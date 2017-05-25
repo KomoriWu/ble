@@ -1,8 +1,11 @@
 package com.example.txtledbluetooth.light.model;
 
+import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.example.txtledbluetooth.R;
 import com.example.txtledbluetooth.bean.LightType;
 import com.example.txtledbluetooth.bean.RgbColor;
 import com.example.txtledbluetooth.utils.BleCommandUtils;
@@ -33,8 +36,9 @@ public class LightModelImpl implements LightModel {
     }
 
     @Override
-    public void openNotify(BluetoothClient client, String macAddress, UUID serviceUUID,
-                           UUID characterUUID, final OnInterfaceOpenNotify onInterfaceOpenNotify) {
+    public void openNotify(final Context context, BluetoothClient client, String macAddress,
+                           UUID serviceUUID, UUID characterUUID, final OnInterfaceOpenNotify
+                                   onInterfaceOpenNotify) {
 
         client.notify(macAddress, serviceUUID, characterUUID, new BleNotifyResponse() {
             StringBuffer sbCommand = new StringBuffer();
@@ -48,12 +52,15 @@ public class LightModelImpl implements LightModel {
                         Log.d("notify", "command:" + sbCommand.toString());
                         String[] commands = sbCommand.toString().split("\\" + BleCommandUtils.
                                 DIVISION);
-                        int position = Integer.parseInt(commands[3]);
+
+                        int position = Utils.getItemPosition(commands, context);
                         boolean switchState = Integer.parseInt(commands[1]) == 1 ? true : false;
                         Bundle bundle = new Bundle();
                         bundle.putInt(Utils.POSITION, position);
                         bundle.putBoolean(Utils.SWITCH_STATE, switchState);
                         onInterfaceOpenNotify.onNotify(bundle);
+//                        saveNotify(context, position, commands);
+
                         sbCommand.setLength(0);
                     }
                 }
@@ -68,6 +75,54 @@ public class LightModelImpl implements LightModel {
         });
     }
 
+    private void saveNotify(Context context, int position, String[] commands) {
+        String[] itemNames = context.getResources().getStringArray(R.array.lighting_name);
+        int blePosition = Integer.parseInt(commands[3]);
+        int popupPosition = Integer.parseInt(commands[4]);
+        int bright = Integer.parseInt(commands[5], 16);
+        int speed = Integer.parseInt(commands[6], 16);
+        boolean pulseState = Integer.parseInt(commands[7]) == 1 ? true : false;
+        if (blePosition == 1 || blePosition == 12) {
+            popupPosition = 1;
+        } else if (blePosition == 2 || blePosition == 13) {
+            popupPosition = 2;
+        }
+        //所有的Item
+        String lightName = itemNames[position];
+        Bundle bundle = new Bundle();
+        bundle.putString(Utils.SQL_NAME, lightName);
+        bundle.putInt(Utils.POPUP_POSITION, popupPosition);
+        bundle.putInt(Utils.SEEK_BAR_PROGRESS_BRIGHT, bright);
+        bundle.putInt(Utils.SEEK_BAR_PROGRESS_SPEED, speed);
+        bundle.putBoolean(Utils.PULSE_IS_OPEN, pulseState);
+        saveLightType(bundle);
+
+        String sqlName = itemNames[position] + Utils.getPopWindowItems(context, popupPosition);
+        if (position == 0 || position == 9) {
+            //item1 9特殊处理
+            Bundle bundle2 = new Bundle();
+            bundle2.putString(Utils.SQL_NAME, sqlName);
+            bundle2.putInt(Utils.SEEK_BAR_PROGRESS_SPEED, bright);
+            bundle2.putInt(Utils.SEEK_BAR_PROGRESS_BRIGHT, speed);
+            bundle2.putBoolean(Utils.PULSE_IS_OPEN, pulseState);
+            saveLightType(bundle2);
+        }
+
+        //颜色
+        for (int i = 0; i < 7; i++) {
+            saveLightColor(sqlName + i, commands[i + 8]);
+        }
+    }
+
+    public void saveLightColor(String name, String rgb) {
+        int color = Color.parseColor("#" + rgb);
+        int r = Color.red(color);
+        int g = Color.green(color);
+        int b = Color.blue(color);
+        RgbColor rgbColor = new RgbColor(name, r, g, b);
+        rgbColor.deleteRgbColorByName();
+        rgbColor.save();
+    }
 
     public static String bytes2hex03(byte[] bytes) {
         final String HEX = "0123456789abcdef";
@@ -105,7 +160,6 @@ public class LightModelImpl implements LightModel {
         LightType lightType = new LightType(name, speed, bright, popupPosition, isOpen);
         lightType.deleteLightTypeByName();
         lightType.save();
-
     }
 
     @Override

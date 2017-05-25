@@ -267,15 +267,12 @@ public class Utils {
         return false;
     }
 
-    public static int getItemPosition(int position, Context context) {
+    public static int getItemPosition(String[] commands, Context context) {
+        int position = Integer.parseInt(commands[3]) == 0 ? Integer.parseInt(commands[2]) :
+                Integer.parseInt(commands[3]);
         String[] lightNames = context.getResources().getStringArray(R.array.lighting_name);
         String[] lightNamesBle = context.getResources().getStringArray(R.array.lighting_name_ble);
-        if (position == 0) {
-            // 开关
-            return -1;
-        } else {
-            return Arrays.asList(lightNames).indexOf(lightNamesBle[position-1]);
-        }
+        return Arrays.asList(lightNames).indexOf(lightNamesBle[position - 1]);
     }
 
 }

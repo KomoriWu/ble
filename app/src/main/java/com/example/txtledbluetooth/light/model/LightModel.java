@@ -1,5 +1,6 @@
 package com.example.txtledbluetooth.light.model;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import com.example.txtledbluetooth.bean.RgbColor;
@@ -17,8 +18,8 @@ public interface LightModel {
                       UUID characterUUID, String command, LightModelImpl.OnInterfaceWriteCommand
                               onInterfaceWriteCommand);
 
-    void openNotify(BluetoothClient client, String macAddress, UUID serviceUUID,
-                    UUID characterUUID,LightModelImpl.OnInterfaceOpenNotify
+    void openNotify(Context context,BluetoothClient client, String macAddress, UUID serviceUUID,
+                    UUID characterUUID, LightModelImpl.OnInterfaceOpenNotify
                             onInterfaceOpenNotify);
 
     void saveLightColor(Bundle bundle);

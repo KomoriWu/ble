@@ -104,8 +104,8 @@ public class LightPresenterImpl implements LightPresenter {
             uuidCharacter = UUID.fromString(characterUUID);
         }
         if (!TextUtils.isEmpty(mMacAddress)) {
-            mLightModel.openNotify(mClient, mMacAddress, uuidService, uuidCharacter, new
-                    LightModelImpl.OnInterfaceOpenNotify() {
+            mLightModel.openNotify(mContext, mClient, mMacAddress, uuidService, uuidCharacter,
+                    new LightModelImpl.OnInterfaceOpenNotify() {
                         @Override
                         public void onNotify(Bundle bundle) {
                             mLightView.onNotify(bundle);

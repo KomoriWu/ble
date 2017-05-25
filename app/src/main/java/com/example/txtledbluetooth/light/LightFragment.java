@@ -118,7 +118,7 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
 
     @Override
     public void onNotify(Bundle bundle) {
-        int position = Utils.getItemPosition(bundle.getInt(Utils.POSITION), getActivity());
+        int position = bundle.getInt(Utils.POSITION);
         boolean switchState = bundle.getBoolean(Utils.SWITCH_STATE);
         mIsReturn = true;
         aSwitch.setChecked(switchState);
