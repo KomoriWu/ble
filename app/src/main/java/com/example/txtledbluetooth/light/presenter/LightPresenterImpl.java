@@ -2,6 +2,7 @@ package com.example.txtledbluetooth.light.presenter;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -106,8 +107,8 @@ public class LightPresenterImpl implements LightPresenter {
             mLightModel.openNotify(mClient, mMacAddress, uuidService, uuidCharacter, new
                     LightModelImpl.OnInterfaceOpenNotify() {
                         @Override
-                        public void onNotify(int position) {
-                            mLightView.onNotify(Utils.getItemPosition(position, mContext));
+                        public void onNotify(Bundle bundle) {
+                            mLightView.onNotify(bundle);
                         }
 
                         @Override

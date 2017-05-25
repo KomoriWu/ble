@@ -59,7 +59,6 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
     private Handler mTimerHandler = new Handler() {
         public void handleMessage(Message msg) {
             if (msg.what == TIMER_MESSAGE) {
-                aSwitch.setChecked(true);
                 mLightPresenter.openNotify();
                 stopTimer();
             }
@@ -118,7 +117,12 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
     }
 
     @Override
-    public void onNotify(int position) {
+    public void onNotify(Bundle bundle) {
+        int position = Utils.getItemPosition(bundle.getInt(Utils.POSITION), getActivity());
+        boolean switchState = bundle.getBoolean(Utils.SWITCH_STATE);
+        mIsReturn = true;
+        aSwitch.setChecked(switchState);
+        mIsReturn = false;
         mLayoutManager.scrollToPositionWithOffset(position, 0);
         mLightAdapter.setSelectItem(position);
     }

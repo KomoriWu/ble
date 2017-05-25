@@ -55,6 +55,7 @@ public class Utils {
     public static final String SEEK_BAR_PROGRESS_BRIGHT = "bright_progress";
     public static final String SEEK_BAR_PROGRESS_SPEED = "speed_progress";
     public static final String PULSE_IS_OPEN = "pulse_is_open";
+    public static final String SWITCH_STATE = "switch_state";
     public static final int SEEK_BAR_BRIGHT_MAX = 255;
     public static final int SEEK_BAR_SPEED_MAX = 10;
 
@@ -273,7 +274,7 @@ public class Utils {
             // 开关
             return -1;
         } else {
-            return Arrays.asList(lightNames).indexOf(lightNamesBle[position]);
+            return Arrays.asList(lightNames).indexOf(lightNamesBle[position-1]);
         }
     }
 

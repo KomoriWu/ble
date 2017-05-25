@@ -46,8 +46,14 @@ public class LightModelImpl implements LightModel {
                     Log.d("notify", "----" + bytes2hex03(value));
                     if (value[value.length - 1] == 10 && value[value.length - 2] == 13) {
                         Log.d("notify", "command:" + sbCommand.toString());
-                        int position = saveCommand(sbCommand.toString());
-                        onInterfaceOpenNotify.onNotify(position);
+                        String[] commands = sbCommand.toString().split("\\" + BleCommandUtils.
+                                DIVISION);
+                        int position = Integer.parseInt(commands[3]);
+                        boolean switchState = Integer.parseInt(commands[1]) == 1 ? true : false;
+                        Bundle bundle = new Bundle();
+                        bundle.putInt(Utils.POSITION, position);
+                        bundle.putBoolean(Utils.SWITCH_STATE, switchState);
+                        onInterfaceOpenNotify.onNotify(bundle);
                         sbCommand.setLength(0);
                     }
                 }
@@ -62,10 +68,6 @@ public class LightModelImpl implements LightModel {
         });
     }
 
-    private int saveCommand(String command) {
-        String[] commands = command.split(BleCommandUtils.DIVISION);
-        return Integer.parseInt(commands[3]);
-    }
 
     public static String bytes2hex03(byte[] bytes) {
         final String HEX = "0123456789abcdef";
@@ -131,7 +133,7 @@ public class LightModelImpl implements LightModel {
     }
 
     public interface OnInterfaceOpenNotify {
-        void onNotify(int position);
+        void onNotify(Bundle bundle);
 
         void onOpenNotifySuccess();
     }

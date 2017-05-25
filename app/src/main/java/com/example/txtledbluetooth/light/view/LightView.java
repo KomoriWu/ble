@@ -1,5 +1,7 @@
 package com.example.txtledbluetooth.light.view;
 
+import android.os.Bundle;
+
 import com.example.txtledbluetooth.bean.Lighting;
 
 import java.util.ArrayList;
@@ -17,5 +19,5 @@ public interface LightView {
 
     void onWriteFailure();
 
-    void onNotify(int position);
+    void onNotify(Bundle bundle);
 }
