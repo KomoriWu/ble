@@ -65,7 +65,7 @@ public class LightModelImpl implements LightModel {
                                 Integer.parseInt(commands[3]) == 0 &&
                                 Integer.parseInt(commands[4]) == 0)) {
                             //非模式为关状态
-                            saveNotify(context, position, commands);
+                            saveNotify(context, position, commands,sbCommand);
                         }
 
                         sbCommand.setLength(0);
@@ -82,7 +82,7 @@ public class LightModelImpl implements LightModel {
         });
     }
 
-    private void saveNotify(Context context, int position, String[] commands) {
+    private void saveNotify(Context context, int position, String[] commands, StringBuffer sbCommand) {
         String[] itemNames = context.getResources().getStringArray(R.array.lighting_name);
         int blePosition = Integer.parseInt(commands[3]);
         int popupPosition = Integer.parseInt(commands[4]);
@@ -96,7 +96,8 @@ public class LightModelImpl implements LightModel {
         }
         //所有的Item
         String[] popupItems = Utils.getPopWindowItems(context, position);
-        if (popupPosition > popupItems.length || position > itemNames.length) {
+        if (popupPosition >= popupItems.length || position >= itemNames.length) {
+            sbCommand.setLength(0);
             throw new ArrayIndexOutOfBoundsException("popupPosition :" + popupPosition +
                     ",length :" + popupItems.length);
         } else {
