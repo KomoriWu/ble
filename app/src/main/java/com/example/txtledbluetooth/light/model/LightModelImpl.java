@@ -48,7 +48,8 @@ public class LightModelImpl implements LightModel {
                 sbCommand.append(new String(value));
                 if (value != null && value.length > 1) {
                     Log.d("notify", "----" + bytes2hex03(value));
-                    if (value[value.length - 1] == 10 && value[value.length - 2] == 13) {
+                    if ((value[value.length - 1] == 10 && value[value.length - 2] == 13)||
+                            value[value.length - 1] == 13 ) {
                         Log.d("notify", "command:" + sbCommand.toString());
                         String[] commands = sbCommand.toString().split("\\" + BleCommandUtils.
                                 DIVISION);
@@ -59,7 +60,7 @@ public class LightModelImpl implements LightModel {
                         bundle.putInt(Utils.POSITION, position);
                         bundle.putBoolean(Utils.SWITCH_STATE, switchState);
                         onInterfaceOpenNotify.onNotify(bundle);
-//                        saveNotify(context, position, commands);
+                        saveNotify(context, position, commands);
 
                         sbCommand.setLength(0);
                     }
@@ -83,9 +84,9 @@ public class LightModelImpl implements LightModel {
         int speed = Integer.parseInt(commands[6], 16);
         boolean pulseState = Integer.parseInt(commands[7]) == 1 ? true : false;
         if (blePosition == 1 || blePosition == 12) {
-            popupPosition = 1;
+            popupPosition = 0;
         } else if (blePosition == 2 || blePosition == 13) {
-            popupPosition = 2;
+            popupPosition = 1;
         }
         //所有的Item
         String lightName = itemNames[position];
@@ -97,20 +98,21 @@ public class LightModelImpl implements LightModel {
         bundle.putBoolean(Utils.PULSE_IS_OPEN, pulseState);
         saveLightType(bundle);
 
-        String sqlName = itemNames[position] + Utils.getPopWindowItems(context, popupPosition);
         if (position == 0 || position == 9) {
+        String sqlName = itemNames[position] + Utils.getPopWindowItems(context, position)[
+                popupPosition];
             //item1 9特殊处理
             Bundle bundle2 = new Bundle();
             bundle2.putString(Utils.SQL_NAME, sqlName);
-            bundle2.putInt(Utils.SEEK_BAR_PROGRESS_SPEED, bright);
-            bundle2.putInt(Utils.SEEK_BAR_PROGRESS_BRIGHT, speed);
+            bundle2.putInt(Utils.SEEK_BAR_PROGRESS_SPEED, speed);
+            bundle2.putInt(Utils.SEEK_BAR_PROGRESS_BRIGHT, bright);
             bundle2.putBoolean(Utils.PULSE_IS_OPEN, pulseState);
             saveLightType(bundle2);
         }
 
         //颜色
         for (int i = 0; i < 7; i++) {
-            saveLightColor(sqlName + i, commands[i + 8]);
+//            saveLightColor(sqlName + i, commands[i + 8]);
         }
     }
 
