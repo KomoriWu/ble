@@ -48,8 +48,8 @@ public class LightModelImpl implements LightModel {
                 sbCommand.append(new String(value));
                 if (value != null && value.length > 1) {
                     Log.d("notify", "----" + bytes2hex03(value));
-                    if ((value[value.length - 1] == 10 && value[value.length - 2] == 13)||
-                            value[value.length - 1] == 13 ) {
+                    if ((value[value.length - 1] == 10 && value[value.length - 2] == 13) ||
+                            value[value.length - 1] == 13) {
                         Log.d("notify", "command:" + sbCommand.toString());
                         String[] commands = sbCommand.toString().split("\\" + BleCommandUtils.
                                 DIVISION);
@@ -60,7 +60,12 @@ public class LightModelImpl implements LightModel {
                         bundle.putInt(Utils.POSITION, position);
                         bundle.putBoolean(Utils.SWITCH_STATE, switchState);
                         onInterfaceOpenNotify.onNotify(bundle);
-                        saveNotify(context, position, commands);
+                        if (!(!switchState && Integer.parseInt(commands[2]) == 0 &&
+                                Integer.parseInt(commands[3]) == 0 &&
+                                Integer.parseInt(commands[4]) == 0)) {
+                            //非模式为关状态
+                            saveNotify(context, position, commands);
+                        }
 
                         sbCommand.setLength(0);
                     }
@@ -78,14 +83,14 @@ public class LightModelImpl implements LightModel {
 
     private void saveNotify(Context context, int position, String[] commands) {
         String[] itemNames = context.getResources().getStringArray(R.array.lighting_name);
-        int blePosition = Utils.switchBlePosition(Integer.parseInt(commands[3]));
+        int blePosition = Integer.parseInt(commands[3]);
         int popupPosition = Integer.parseInt(commands[4]);
         int bright = Integer.parseInt(commands[5], 16);
         int speed = Integer.parseInt(commands[6], 16);
         boolean pulseState = Integer.parseInt(commands[7]) == 1 ? true : false;
-        if (blePosition == 1 || blePosition == 12) {
+        if (blePosition == 1 || blePosition == 13) {
             popupPosition = 0;
-        } else if (blePosition == 2 || blePosition == 13) {
+        } else if (blePosition == 2 || blePosition == 14) {
             popupPosition = 1;
         }
         //所有的Item
@@ -98,9 +103,9 @@ public class LightModelImpl implements LightModel {
         bundle.putBoolean(Utils.PULSE_IS_OPEN, pulseState);
         saveLightType(bundle);
 
-        if (position == 0 || position == 9) {
         String sqlName = itemNames[position] + Utils.getPopWindowItems(context, position)[
                 popupPosition];
+        if (position == 0 || position == 9) {
             //item1 9特殊处理
             Bundle bundle2 = new Bundle();
             bundle2.putString(Utils.SQL_NAME, sqlName);
@@ -109,10 +114,13 @@ public class LightModelImpl implements LightModel {
             bundle2.putBoolean(Utils.PULSE_IS_OPEN, pulseState);
             saveLightType(bundle2);
         }
-
         //颜色
         for (int i = 0; i < 7; i++) {
-//            saveLightColor(sqlName + i, commands[i + 8]);
+            if (commands.length > i + 9) {
+                saveLightColor(sqlName + i, commands[i + 8]);
+            } else {
+                break;
+            }
         }
     }
 
