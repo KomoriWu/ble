@@ -3,6 +3,7 @@ package com.example.txtledbluetooth.light.model;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.example.txtledbluetooth.R;
@@ -94,32 +95,38 @@ public class LightModelImpl implements LightModel {
             popupPosition = 1;
         }
         //所有的Item
-        String lightName = itemNames[position];
-        Bundle bundle = new Bundle();
-        bundle.putString(Utils.SQL_NAME, lightName);
-        bundle.putInt(Utils.POPUP_POSITION, popupPosition);
-        bundle.putInt(Utils.SEEK_BAR_PROGRESS_BRIGHT, bright);
-        bundle.putInt(Utils.SEEK_BAR_PROGRESS_SPEED, speed);
-        bundle.putBoolean(Utils.PULSE_IS_OPEN, pulseState);
-        saveLightType(bundle);
+        String[] popupItems = Utils.getPopWindowItems(context, position);
+        if (popupPosition > popupItems.length || position > itemNames.length) {
+            throw new ArrayIndexOutOfBoundsException("popupPosition :" + popupPosition +
+                    ",length :" + popupItems.length);
+        } else {
+            String lightName = itemNames[position];
+            String sqlName = lightName + popupItems[popupPosition];
 
-        String sqlName = itemNames[position] + Utils.getPopWindowItems(context, position)[
-                popupPosition];
-        if (position == 0 || position == 9) {
-            //item1 9特殊处理
-            Bundle bundle2 = new Bundle();
-            bundle2.putString(Utils.SQL_NAME, sqlName);
-            bundle2.putInt(Utils.SEEK_BAR_PROGRESS_SPEED, speed);
-            bundle2.putInt(Utils.SEEK_BAR_PROGRESS_BRIGHT, bright);
-            bundle2.putBoolean(Utils.PULSE_IS_OPEN, pulseState);
-            saveLightType(bundle2);
-        }
-        //颜色
-        for (int i = 0; i < 7; i++) {
-            if (commands.length > i + 9) {
-                saveLightColor(sqlName + i, commands[i + 8]);
-            } else {
-                break;
+            Bundle bundle = new Bundle();
+            bundle.putString(Utils.SQL_NAME, lightName);
+            bundle.putInt(Utils.POPUP_POSITION, popupPosition);
+            bundle.putInt(Utils.SEEK_BAR_PROGRESS_BRIGHT, bright);
+            bundle.putInt(Utils.SEEK_BAR_PROGRESS_SPEED, speed);
+            bundle.putBoolean(Utils.PULSE_IS_OPEN, pulseState);
+            saveLightType(bundle);
+
+            if (position == 0 || position == 9) {
+                //item1 9特殊处理
+                Bundle bundle2 = new Bundle();
+                bundle2.putString(Utils.SQL_NAME, sqlName);
+                bundle2.putInt(Utils.SEEK_BAR_PROGRESS_SPEED, speed);
+                bundle2.putInt(Utils.SEEK_BAR_PROGRESS_BRIGHT, bright);
+                bundle2.putBoolean(Utils.PULSE_IS_OPEN, pulseState);
+                saveLightType(bundle2);
+            }
+            //颜色
+            for (int i = 0; i < 7; i++) {
+                if (commands.length > i + 9) {
+                    saveLightColor(sqlName + i, commands[i + 8]);
+                } else {
+                    break;
+                }
             }
         }
     }
