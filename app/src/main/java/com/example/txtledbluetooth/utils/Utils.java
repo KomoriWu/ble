@@ -268,11 +268,22 @@ public class Utils {
     }
 
     public static int getItemPosition(String[] commands, Context context) {
-        int position = Integer.parseInt(commands[3]) == 0 ? Integer.parseInt(commands[2]) :
-                Integer.parseInt(commands[3]);
+        int position = Integer.parseInt(commands[3]) == 0 ? switchBlePosition(
+                Integer.parseInt(commands[2])) : switchBlePosition(Integer.parseInt(commands[3]));
         String[] lightNames = context.getResources().getStringArray(R.array.lighting_name);
         String[] lightNamesBle = context.getResources().getStringArray(R.array.lighting_name_ble);
-        return Arrays.asList(lightNames).indexOf(lightNamesBle[position - 1]);
+        return Arrays.asList(lightNames).indexOf(lightNamesBle[position]);
+    }
+
+    public static int switchBlePosition(int blePosition) {
+        int[] blePositions = {1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15,16};
+        for (int i = 0; i < blePositions.length; i++) {
+            if (blePosition == blePositions[i]) {
+                return i;
+            }
+        }
+        //默认停留在moonlight
+        return 0;
     }
 
 }

@@ -78,7 +78,7 @@ public class LightModelImpl implements LightModel {
 
     private void saveNotify(Context context, int position, String[] commands) {
         String[] itemNames = context.getResources().getStringArray(R.array.lighting_name);
-        int blePosition = Integer.parseInt(commands[3]);
+        int blePosition = Utils.switchBlePosition(Integer.parseInt(commands[3]));
         int popupPosition = Integer.parseInt(commands[4]);
         int bright = Integer.parseInt(commands[5], 16);
         int speed = Integer.parseInt(commands[6], 16);
