@@ -99,14 +99,8 @@ public class Utils {
                 R.mipmap.icon_cycle, R.mipmap.icon_wave,
                 R.mipmap.icon_solo, R.mipmap.icon_mood, R.mipmap.icon_aurora};
         ArrayList<Lighting> lightingList = new ArrayList<>();
-        boolean isEdit;
         for (int i = 0; i < lightIcons.length; i++) {
-            if (i == 8) {
-                isEdit = false;
-            } else {
-                isEdit = true;
-            }
-            lightingList.add(i, new Lighting(lightNames[i], lightIcons[i], isEdit));
+            lightingList.add(i, new Lighting(lightNames[i], lightIcons[i], true));
         }
         return lightingList;
     }
@@ -206,7 +200,6 @@ public class Utils {
             case 2:
             case 3:
             case 4:
-            case 8:
                 bright = (int) (SEEK_BAR_BRIGHT_MAX * 0.5);
                 speed = (int) (SEEK_BAR_SPEED_MAX * 0.5);
                 break;
@@ -219,10 +212,14 @@ public class Utils {
                 speed = (int) (SEEK_BAR_SPEED_MAX * 0.25);
                 bright = (int) (SEEK_BAR_BRIGHT_MAX * 0.75);
                 break;
-            case 9:
+            case 8:
             case 10:
             case 12:
                 bright = SEEK_BAR_BRIGHT_MAX;
+                break;
+            case 9:
+                bright = SEEK_BAR_BRIGHT_MAX;
+                speed = (int) (SEEK_BAR_SPEED_MAX * 0.5);
                 break;
         }
         hashMap.put(SEEK_BAR_PROGRESS_BRIGHT, bright);

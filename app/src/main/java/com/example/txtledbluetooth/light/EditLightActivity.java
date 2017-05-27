@@ -156,9 +156,8 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         }
 
         if (mPosition == 5) {
-            layoutMusicPulse.setVisibility(View.GONE);
-        } else {
-            layoutMusicPulse.setVisibility(View.VISIBLE);
+            switchView.setChecked(false);
+            switchView.setClickable(false);
         }
     }
 
@@ -463,7 +462,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
                 viewBoard7.setVisibility(View.GONE);
             }
             if (mPosition == 0 || mPosition == 1 || mPosition == 2 || mPosition == 3 ||
-                    mPosition == 4 || mPosition == 5 || mPosition == 9 ||
+                    mPosition == 4 || mPosition == 5 || mPosition == 8|| mPosition == 9 ||
                     mPosition == 12) {
 //                tvRevert.setClickable(false);
                 setEtNoData();

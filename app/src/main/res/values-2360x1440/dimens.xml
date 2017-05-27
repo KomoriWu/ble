@@ -12,7 +12,7 @@
     <dimen name="board_height">35dp</dimen>
     <dimen name="min_margin">0dp</dimen>
     <dimen name="seek_bar_height">2.0dip</dimen>
-    <dimen name="progress_bar_height">4.0dip</dimen>
+    <dimen name="progress_bar_height">2.0dip</dimen>
     <dimen name="color_board">1dp</dimen>
     <dimen name="et_color_board">60dp</dimen>
     <dimen name="et_well_color_board">85dp</dimen>

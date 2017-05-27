@@ -43,9 +43,9 @@ public class MainPresenterImpl implements MainPresenter, MainModelImpl.OnInitBle
             case R.id.nav_item_sources:
                 mMainView.switchSources();
                 break;
-//            case R.id.nav_item_music:
-//                mMainView.switchMusic();
-//                break;
+            case R.id.nav_item_music:
+                mMainView.switchMusic();
+                break;
             case R.id.nav_item_lighting:
                 mMainView.switchLighting();
                 break;

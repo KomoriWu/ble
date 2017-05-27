@@ -22,6 +22,8 @@ public class SqlUtils {
 
         new RgbColor(DEFAULT_COLORS + itemNames[0] + Utils.getPopWindowItems(context, 0)[0] + 0,
                 255, 255, 255).save();
+        new RgbColor(DEFAULT_COLORS + itemNames[0] + Utils.getPopWindowItems(context, 0)[1] + 0,
+                19, 248, 255).save();
 
         new RgbColor(DEFAULT_COLORS + itemNames[5] + Utils.getPopWindowItems(context, 5)[1] + 0,
                 255, 255, 255).save();
