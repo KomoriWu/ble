@@ -148,17 +148,6 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         mPosition = getIntent().getIntExtra(Utils.LIGHT_MODEL_ID, 0);
         mPopupPosition = mEditLightPresenter.getLightType(mLightName);
         initPopupWindow();
-
-
-        if (mPosition == 7) {
-            switchView.setChecked(true);
-            switchView.setClickable(false);
-        }
-
-        if (mPosition == 5) {
-            switchView.setChecked(false);
-            switchView.setClickable(false);
-        }
     }
 
     private void initListener() {
@@ -181,6 +170,20 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         });
         rbBoard1.setChecked(true);
         initSpecialView(!(mPosition == 0 || mPosition == 9));
+
+        if (mPosition == 7) {
+            mIsReturn=true;
+            switchView.setChecked(true);
+            mIsReturn=false;
+            switchView.setClickable(false);
+        }
+
+        if (mPosition == 5) {
+            mIsReturn=true;
+            switchView.setChecked(false);
+            mIsReturn=false;
+            switchView.setClickable(false);
+        }
     }
 
     public void initSpecialView(boolean isInit) {

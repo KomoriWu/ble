@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -31,8 +30,7 @@ import com.example.txtledbluetooth.utils.MusicUtils;
 import com.example.txtledbluetooth.utils.SharedPreferenceUtils;
 import com.example.txtledbluetooth.utils.Utils;
 import com.yanzhenjie.permission.AndPermission;
-import com.yanzhenjie.permission.PermissionNo;
-import com.yanzhenjie.permission.PermissionYes;
+import com.yanzhenjie.permission.PermissionListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,10 +40,10 @@ import java.util.Observer;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 
+import static android.app.Activity.RESULT_OK;
 import static android.content.Context.BIND_AUTO_CREATE;
-import static com.example.txtledbluetooth.main.MainActivity.REQUEST_CODE_SETTING;
+import static com.example.txtledbluetooth.main.MainActivity.REQUEST_CODE_SETTING_MUSIC;
 
 /**
  * Created by KomoriWu
@@ -55,7 +53,7 @@ import static com.example.txtledbluetooth.main.MainActivity.REQUEST_CODE_SETTING
 public class MusicFragment extends BaseFragment implements MusicAdapter.OnIvRightClickListener,
         MusicAdapter.OnItemClickListener, MusicView, Observer {
     public static final String TAG = MusicFragment.class.getSimpleName();
-    public static final int PERMISSION_REQUEST_CODE = 100;
+    private static final int PERMISSION_REQUEST_CODE = 100;
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
     @BindView(R.id.progress_bar)
@@ -87,17 +85,18 @@ public class MusicFragment extends BaseFragment implements MusicAdapter.OnIvRigh
     public View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_music, null);
         ButterKnife.bind(this, view);
-        initRecycleView();
         mMusicPresenter = new MusicPresenterImpl(this);
         // 先判断是否有权限。
-        if (AndPermission.hasPermission(getActivity(), Utils.getPermission(2),
-                Utils.getPermission(3))) {
+        initRecycleView();
+        if (AndPermission.hasPermission(getActivity(), Utils.getPermission(2))) {
+            new loadSqlAsyncTask().execute();
             mMusicPresenter.scanMusic(getActivity());
         } else {
             AndPermission.with(this)
                     .requestCode(PERMISSION_REQUEST_CODE)
-                    .permission(Utils.getPermission(2), Utils.getPermission(3))
-                    .send();
+                    .permission(Utils.getPermission(2))
+                    .callback(permissionListener)
+                    .start();
         }
         initService();
         return view;
@@ -109,7 +108,6 @@ public class MusicFragment extends BaseFragment implements MusicAdapter.OnIvRigh
         mMusicAdapter = new MusicAdapter(getActivity(), this, this);
         recyclerView.setAdapter(mMusicAdapter);
         mMusicInfoList = new ArrayList<>();
-        new loadSqlAsyncTask().execute();
     }
 
     private class loadSqlAsyncTask extends AsyncTask<Void, Void, ArrayList<MusicInfo>> {
@@ -181,7 +179,7 @@ public class MusicFragment extends BaseFragment implements MusicAdapter.OnIvRigh
         mMusicAdapter.setMusicList(musicInfoList);
         //获取上次播放的position
         mCurrentPosition = SharedPreferenceUtils.getLastPlayPosition(getActivity());
-        if (mCurrentPosition < mMusicInfoList.size() && mCurrentPosition >=0) {
+        if (mCurrentPosition < mMusicInfoList.size() && mCurrentPosition >= 0) {
             updateTextView(mMusicInfoList.get(mCurrentPosition).getUrl());
             if (mMusicInterface.isPlaying()) {
                 ivMusicControl.setImageResource(R.mipmap.icon_play);
@@ -211,25 +209,6 @@ public class MusicFragment extends BaseFragment implements MusicAdapter.OnIvRigh
     @Override
     public void hideProgress() {
         hideProgressDialog();
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        AndPermission.onRequestPermissionsResult(this, requestCode, permissions, grantResults);
-    }
-
-    @PermissionYes(PERMISSION_REQUEST_CODE)
-    private void getLocationYes(List<String> grantedPermissions) {
-        // TODO 申请权限成功。
-        mMusicPresenter.scanMusic(getActivity());
-    }
-
-    @PermissionNo(PERMISSION_REQUEST_CODE)
-    private void getLocationNo(List<String> deniedPermissions) {
-        if (AndPermission.hasAlwaysDeniedPermission(this, deniedPermissions)) {
-            AndPermission.defaultSettingDialog(this, REQUEST_CODE_SETTING).show();
-        }
     }
 
 
@@ -355,5 +334,40 @@ public class MusicFragment extends BaseFragment implements MusicAdapter.OnIvRigh
     public void onDestroy() {
         super.onDestroy();
         getActivity().unbindService(mServiceConn);
+    }
+
+    private PermissionListener permissionListener = new PermissionListener() {
+        @Override
+        public void onSucceed(int requestCode, List<String> grantPermissions) {
+            switch (requestCode) {
+                case PERMISSION_REQUEST_CODE: {
+                    mMusicPresenter.scanMusic(getActivity());
+                    break;
+                }
+            }
+        }
+
+        @Override
+        public void onFailed(int requestCode, List<String> deniedPermissions) {
+            switch (requestCode) {
+                case PERMISSION_REQUEST_CODE: {
+                    if (AndPermission.hasAlwaysDeniedPermission(getActivity(), deniedPermissions)) {
+                        AndPermission.defaultSettingDialog(getActivity(),
+                                REQUEST_CODE_SETTING_MUSIC).show();
+                    }
+                    break;
+                }
+            }
+
+        }
+    };
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_SETTING_MUSIC && AndPermission.hasPermission(getActivity(),
+                Utils.getPermission(2))) {
+            mMusicPresenter.scanMusic(getActivity());
+        }
     }
 }

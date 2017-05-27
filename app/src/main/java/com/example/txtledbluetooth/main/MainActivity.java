@@ -39,6 +39,7 @@ import com.example.txtledbluetooth.utils.AlertUtils;
 import com.example.txtledbluetooth.utils.SqlUtils;
 import com.example.txtledbluetooth.utils.Utils;
 import com.yanzhenjie.permission.AndPermission;
+import com.yanzhenjie.permission.PermissionListener;
 import com.yanzhenjie.permission.PermissionNo;
 import com.yanzhenjie.permission.PermissionYes;
 
@@ -52,10 +53,11 @@ import butterknife.OnClick;
 import static com.example.txtledbluetooth.utils.Utils.isLocationEnable;
 
 public class MainActivity extends BaseActivity implements MainView {
-    public static final int PERMISSION_REQUEST_CODE = 100;
-    public static final int REQUEST_CODE_SETTING = 1;
-    public static final int REQUEST_CODE_ALLOW = 2;
+    private static final int PERMISSION_REQUEST_CODE = 100;
+    private static final int REQUEST_CODE_SETTING = 1;
+    private static final int REQUEST_CODE_ALLOW = 2;
     private static final int REQUEST_CODE_LOCATION_SETTINGS = 3;
+    public static final int REQUEST_CODE_SETTING_MUSIC = 4;
     @BindView(R.id.frame_content)
     FrameLayout frameContent;
     @BindView(R.id.navigation_view)
@@ -117,12 +119,12 @@ public class MainActivity extends BaseActivity implements MainView {
             } else {
                 AlertUtils.showAlertDialog(this, R.string.gps_open_hint, new
                         DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        Intent locationIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                        startActivityForResult(locationIntent, REQUEST_CODE_LOCATION_SETTINGS);
-                    }
-                });
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Intent locationIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                startActivityForResult(locationIntent, REQUEST_CODE_LOCATION_SETTINGS);
+                            }
+                        });
 
             }
 
@@ -130,7 +132,8 @@ public class MainActivity extends BaseActivity implements MainView {
             AndPermission.with(this)
                     .requestCode(PERMISSION_REQUEST_CODE)
                     .permission(Utils.getPermission(0), Utils.getPermission(1))
-                    .send();
+                    .callback(permissionListener)
+                    .start();
         }
     }
 
@@ -302,14 +305,19 @@ public class MainActivity extends BaseActivity implements MainView {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if ((requestCode == REQUEST_CODE_ALLOW && resultCode == RESULT_OK) ||
-                requestCode == REQUEST_CODE_SETTING) {
+                requestCode == REQUEST_CODE_SETTING && AndPermission.hasPermission(this,
+                        Utils.getPermission(0), Utils.getPermission(1))) {
             mPresenter.initBle(this);
         } else if (requestCode == REQUEST_CODE_LOCATION_SETTINGS) {
             if (isLocationEnable(this)) {
                 mPresenter.initBle(this);
             } else {
-               AlertUtils.showAlertDialog(this,R.string.gps_not_open_hint);
+                AlertUtils.showAlertDialog(this, R.string.gps_not_open_hint);
             }
+        }
+
+        if (requestCode == REQUEST_CODE_SETTING_MUSIC) {
+            mMusicFragment.onActivityResult(requestCode, resultCode, data);
         }
     }
 
@@ -329,23 +337,29 @@ public class MainActivity extends BaseActivity implements MainView {
         return super.onKeyDown(keyCode, event);
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        AndPermission.onRequestPermissionsResult(this, requestCode, permissions, grantResults);
-    }
 
-    @PermissionYes(PERMISSION_REQUEST_CODE)
-    private void getLocationYes(List<String> grantedPermissions) {
-        // TODO 申请权限成功。
-        mPresenter.initBle(this);
-    }
-
-    @PermissionNo(PERMISSION_REQUEST_CODE)
-    private void getLocationNo(List<String> deniedPermissions) {
-        if (AndPermission.hasAlwaysDeniedPermission(this, deniedPermissions)) {
-            AndPermission.defaultSettingDialog(this, REQUEST_CODE_SETTING).show();
+    private PermissionListener permissionListener = new PermissionListener() {
+        @Override
+        public void onSucceed(int requestCode, List<String> grantPermissions) {
+            switch (requestCode) {
+                case PERMISSION_REQUEST_CODE: {
+                    mPresenter.initBle(MainActivity.this);
+                    break;
+                }
+            }
         }
-    }
 
+        @Override
+        public void onFailed(int requestCode, List<String> deniedPermissions) {
+            switch (requestCode) {
+                case PERMISSION_REQUEST_CODE: {
+                    if (AndPermission.hasAlwaysDeniedPermission(MainActivity.this, deniedPermissions)) {
+                        AndPermission.defaultSettingDialog(MainActivity.this, REQUEST_CODE_SETTING).show();
+                    }
+                    break;
+                }
+            }
+
+        }
+    };
 }

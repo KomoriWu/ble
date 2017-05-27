@@ -38,7 +38,7 @@ dependencies {
     /*蓝牙框架*/
     compile 'com.inuker.bluetooth:library:1.4.0'
     /*权限申请*/
-    compile 'com.yanzhenjie:permission:1.0.5'
+    compile 'com.yanzhenjie:permission:1.0.7'
     compile 'com.github.satyan:sugar:1.4'
     compile 'com.google.code.gson:gson:2.7'
     compile 'com.qiushui:blurredview:0.8.1'

@@ -19,6 +19,7 @@ import java.util.ArrayList;
 
 public class MusicModelImpl implements MusicModel {
     private ArrayList<MusicInfo> mMusicInfoList;
+    public static final int LIMIT_DURATION = 10 * 1000;
 
     public ArrayList<MusicInfo> scanMusic(final Context context, final Cursor cursor) {
         mMusicInfoList = new ArrayList<MusicInfo>();
@@ -41,12 +42,13 @@ public class MusicModelImpl implements MusicModel {
                         musicMedias[6]));
                 Uri albumUri = ContentUris.withAppendedId(Uri.parse(
                         MusicUtils.MUSIC_ALBUM_URI), albumId);
-
-                mMusicInfoList.add(new MusicInfo(id, title, album, artist, url, duration,
-                        MusicUtils.createThumbFromUir(context, albumUri),albumUri + ""));
-                MusicInfo musicInfo = new MusicInfo(id, title, album, artist, url, duration,
-                        albumId, albumUri + "");
-                musicInfo.save();
+                if (duration > LIMIT_DURATION) {
+                    mMusicInfoList.add(new MusicInfo(id, title, album, artist, url, duration,
+                            MusicUtils.createThumbFromUir(context, albumUri), albumUri + ""));
+                    MusicInfo musicInfo = new MusicInfo(id, title, album, artist, url, duration,
+                            albumId, albumUri + "");
+                    musicInfo.save();
+                }
             }
         }
         cursor.close();
