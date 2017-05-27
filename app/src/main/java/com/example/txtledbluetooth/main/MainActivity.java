@@ -3,6 +3,9 @@ package com.example.txtledbluetooth.main;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.provider.Settings;
@@ -40,6 +43,7 @@ import com.yanzhenjie.permission.PermissionNo;
 import com.yanzhenjie.permission.PermissionYes;
 
 import java.util.List;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -101,6 +105,7 @@ public class MainActivity extends BaseActivity implements MainView {
         if (rgbColorList == null || rgbColorList.size() == 0) {
             SqlUtils.saveDefaultColors(this);
         }
+
     }
 
     private void initPermission() {

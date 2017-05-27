@@ -32,10 +32,10 @@ import java.util.List;
 public class Utils {
     public static final String ITEM_RIGHT_TEXT = "item_right_text";
     public static final String AUDIO_PROMPTS_DEFAULT_MODEL = "Voice and Tones";
-    public static final String BLE_NAME = "Creative Halo";// 调试 HMSoft
+    public static final String BLE_NAME = "Creative HALO";
     public static final String BLE_ADDRESS = "ble_address";
     public static final String RECEIVE_SERVICE = "6677";
-    public static final String SEND_SERVICE = "7777";  //调试 0000
+    public static final String SEND_SERVICE = "7777";  //调试 ffe0
     public static final String LIGHT_MODEL_NAME = "light_model_name";
     public static final String LIGHT_MODEL_ID = "light_model_id";
     public static final String DURATION = "duration";
@@ -276,7 +276,7 @@ public class Utils {
     }
 
     public static int switchBlePosition(int blePosition) {
-        int[] blePositions = {1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15,16};
+        int[] blePositions = {1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15};
         for (int i = 0; i < blePositions.length; i++) {
             if (blePosition == blePositions[i]) {
                 return i;

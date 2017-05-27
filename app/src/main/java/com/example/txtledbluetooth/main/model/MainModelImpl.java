@@ -1,5 +1,8 @@
 package com.example.txtledbluetooth.main.model;
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
@@ -19,7 +22,9 @@ import com.inuker.bluetooth.library.search.SearchRequest;
 import com.inuker.bluetooth.library.search.SearchResult;
 import com.inuker.bluetooth.library.search.response.SearchResponse;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import static com.inuker.bluetooth.library.Constants.REQUEST_SUCCESS;
@@ -39,36 +44,51 @@ public class MainModelImpl implements MainModel {
                                 onInitBleListener) {
         if (client.isBleSupported()) {
             if (client.isBluetoothOpened()) {
-                SearchRequest request = new SearchRequest.Builder()
-                        .searchBluetoothLeDevice(SEARCH_TIMEOUT, SEARCH_TIMEOUT_NUMBER).build();
-                client.search(request, new SearchResponse() {
-                    @Override
-                    public void onSearchStarted() {
-
-                    }
-
-                    @Override
-                    public void onDeviceFounded(SearchResult device) {
+                BluetoothManager bluetoothManager = (BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
+                Set<BluetoothDevice> devices = bluetoothManager.getAdapter().getBondedDevices();
+                for (int i = 0; i < devices.size(); i++) {
+                    for (Iterator<BluetoothDevice> it = devices.iterator(); it.hasNext(); ) {
+                        BluetoothDevice device = it.next();
+                        Log.d("bluename", "111---" + device.getName());
+                        Log.d("bluename", "111---" + device.getAddress());
                         if (device.getName().contains(Utils.BLE_NAME)) {
+                            final String traditionAddress = device.getAddress();
+
+                            SearchRequest request = new SearchRequest.Builder()
+                                    .searchBluetoothLeDevice(SEARCH_TIMEOUT, SEARCH_TIMEOUT_NUMBER).build();
+                            client.search(request, new SearchResponse() {
+                                @Override
+                                public void onSearchStarted() {
+
+                                }
+
+                                @Override
+                                public void onDeviceFounded(SearchResult device) {
+                                    Log.d("bluename---", "222---" + device.getName());
+                                    Log.d("bluename", "222---" + device.getAddress());
+
+                                    if (traditionAddress.substring(3).equals(device.getAddress().
+                                            substring(3))) {
 //                            if (device.getAddress().contains("6A")) {  //调试
-                            client.stopSearch();
-                            connBle(context, client, bleConnectOptions, device.getAddress(),
-                                    device.getName(), onInitBleListener);
+                                        client.stopSearch();
+                                        connBle(context, client, bleConnectOptions, device.getAddress(),
+                                                device.getName(), onInitBleListener);
 //                            }
+                                    }
+                                }
+
+                                @Override
+                                public void onSearchStopped() {
+                                    onInitBleListener.OnException(context.getString(R.string.search_stop));
+                                }
+
+                                @Override
+                                public void onSearchCanceled() {
+                                }
+                            });
                         }
                     }
-
-                    @Override
-                    public void onSearchStopped() {
-                        onInitBleListener.OnException(context.getString(R.string.search_stop));
-                    }
-
-                    @Override
-                    public void onSearchCanceled() {
-                    }
-                });
-
-
+                }
             } else {
                 onInitBleListener.onFailure(context.getString(R.string.open_ble));
             }
