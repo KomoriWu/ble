@@ -1,5 +1,6 @@
 package com.example.txtledbluetooth.main;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
