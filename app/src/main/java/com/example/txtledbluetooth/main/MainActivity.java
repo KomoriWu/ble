@@ -79,6 +79,7 @@ public class MainActivity extends BaseActivity implements MainView {
     private Fragment mCurrentFragment;
     private ProgressDialog mProgressDialog;
 
+    @SuppressLint("ResourceType")
     @Override
     public void init() {
         setContentView(R.layout.activity_main);
@@ -194,6 +195,7 @@ public class MainActivity extends BaseActivity implements MainView {
     public void switchMusic() {
         tvScan.setVisibility(View.GONE);
         tvTitle.setText(R.string.music);
+
         if (mMusicFragment == null) {
             mMusicFragment = new MusicFragment();
         }
@@ -236,7 +238,7 @@ public class MainActivity extends BaseActivity implements MainView {
 
     @Override
     public void hideProgress() {
-        mProgressDialog.hide();
+        mProgressDialog.dismiss();
     }
 
     @Override

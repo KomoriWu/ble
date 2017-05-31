@@ -1,5 +1,6 @@
 package com.example.txtledbluetooth.music;
 
+import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -7,6 +8,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -264,6 +266,7 @@ public class MusicFragment extends BaseFragment implements MusicAdapter.OnIvRigh
     }
 
     //观察者模式更新ui
+    @SuppressLint("StaticFieldLeak")
     @Override
     public void update(Observable observable, final Object object) {
         new AsyncTask<Void, Void, Bundle>() {
@@ -277,8 +280,7 @@ public class MusicFragment extends BaseFragment implements MusicAdapter.OnIvRigh
                 super.onPostExecute(bundle);
                 int duration = bundle.getInt(Utils.DURATION);
                 int currentProgress = bundle.getInt(Utils.CURRENT_PROGRESS);
-                int currentPlayPosition = bundle.getInt(Utils.CURRENT_PLAY_POSITION);
-                mCurrentPosition = currentPlayPosition;
+                mCurrentPosition = bundle.getInt(Utils.CURRENT_PLAY_POSITION);
                 progressBar.setMax(duration);
                 progressBar.setProgress(currentProgress);
 
@@ -338,7 +340,7 @@ public class MusicFragment extends BaseFragment implements MusicAdapter.OnIvRigh
 
     private PermissionListener permissionListener = new PermissionListener() {
         @Override
-        public void onSucceed(int requestCode, List<String> grantPermissions) {
+        public void onSucceed(int requestCode, @NonNull List<String> grantPermissions) {
             switch (requestCode) {
                 case PERMISSION_REQUEST_CODE: {
                     mMusicPresenter.scanMusic(getActivity());
@@ -348,7 +350,7 @@ public class MusicFragment extends BaseFragment implements MusicAdapter.OnIvRigh
         }
 
         @Override
-        public void onFailed(int requestCode, List<String> deniedPermissions) {
+        public void onFailed(int requestCode, @NonNull List<String> deniedPermissions) {
             switch (requestCode) {
                 case PERMISSION_REQUEST_CODE: {
                     if (AndPermission.hasAlwaysDeniedPermission(getActivity(), deniedPermissions)) {

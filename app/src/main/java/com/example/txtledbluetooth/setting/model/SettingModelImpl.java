@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.example.txtledbluetooth.bean.LightType;
 import com.example.txtledbluetooth.bean.RgbColor;
+import com.example.txtledbluetooth.utils.BleCommandUtils;
 import com.example.txtledbluetooth.utils.SqlUtils;
 import com.inuker.bluetooth.library.BluetoothClient;
 import com.inuker.bluetooth.library.connect.response.BleWriteResponse;
@@ -19,14 +20,8 @@ public class SettingModelImpl implements SettingModel {
     @Override
     public void WriteCommand(BluetoothClient client, String macAddress,
                              UUID serviceUUID, UUID characterUUID, String command) {
-        client.write(macAddress, serviceUUID,
-                characterUUID, command.getBytes(),
-                new BleWriteResponse() {
-                    @Override
-                    public void onResponse(int code) {
-
-                    }
-                });
+        BleCommandUtils.divideFrameBleSendData(command.getBytes(), client,
+                macAddress, serviceUUID, characterUUID, null);
     }
 
     @Override
