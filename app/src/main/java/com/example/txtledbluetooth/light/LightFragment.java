@@ -1,5 +1,6 @@
 package com.example.txtledbluetooth.light;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -56,6 +57,7 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
     private boolean mIsReturn;
     private Timer mTimer;
     private TimerTask mTimerTask;
+    @SuppressLint("HandlerLeak")
     private Handler mTimerHandler = new Handler() {
         public void handleMessage(Message msg) {
             if (msg.what == TIMER_MESSAGE) {
