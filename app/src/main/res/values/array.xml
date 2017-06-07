@@ -6,31 +6,27 @@
         <item>@string/hot_wheels</item>
         <item>@string/spectrum</item>
         <item>@string/full_spectrum</item>
-        <item>@string/pulsate</item>
+        <item>@string/glow</item>
         <item>@string/morph</item>
         <item>@string/beat_meter</item>
-        <item>@string/cycle</item>
-        <item>@string/wave</item>
-
         <item>@string/solo</item>
+        <item>@string/wave</item>
         <item>@string/mood</item>
+
         <item>@string/aurora</item>
     </string-array>
 
     <string-array name="lighting_name_ble">
         <item>@string/moon_light</item>
-        <item>@string/moon_light</item>
         <item>@string/fireworks</item>
         <item>@string/hot_wheels</item>
         <item>@string/spectrum</item>
-        <item>@string/pulsate</item>
+        <item>@string/glow</item>
         <item>@string/full_spectrum</item>
         <item>@string/morph</item>
-        <item>@string/cycle</item>
         <item>@string/mood</item>
 
         <item>@string/beat_meter</item>
-        <item>@string/wave</item>
         <item>@string/wave</item>
         <item>@string/aurora</item>
         <item>@string/solo</item>
@@ -66,8 +62,8 @@
         <item>@string/default_</item>
     </string-array>
     <string-array name="wave_color_type">
-        <item>@string/single_color</item>
-        <item>@string/rainbow</item>
+        <item>@string/color1</item>
+        <item>@string/color7</item>
     </string-array>
     <string-array name="solo_color_type">
         <item>@string/default_</item>

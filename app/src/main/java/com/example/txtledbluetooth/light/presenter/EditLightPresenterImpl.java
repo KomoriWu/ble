@@ -98,7 +98,7 @@ public class EditLightPresenterImpl implements EditLightPresenter,
     @Override
     public void operateSwitchBluetooth(String lightNo, boolean isChecked) {
         String command = BleCommandUtils.musicPulseSwitch(lightNo, isChecked);
-//        writeCommand(command);
+        writeCommand(command);
     }
 
     @Override

@@ -36,7 +36,6 @@ public class BleCommandUtils {
     private static final String PULSATE = "clg";
     private static final String MORPH = "mop";
     private static final String BEAT_METER = "hst";
-    private static final String CYCLE = "clr";
     private static final String WAVE = "wav";
     private static final String SOLO = "sol";
     private static final String MOOD = "mod";
@@ -47,6 +46,7 @@ public class BleCommandUtils {
     private static final String MODIFY_COLOR = ",s,";
     private static final String LIGHT_SPEED = "espd,";
     private static final String LIGHT_BRIGHT = "elux,";
+    private static final String PULSE_MUSIC = "ebtm,";
 
     //其他设置
 
@@ -104,18 +104,15 @@ public class BleCommandUtils {
                 lightNo = BEAT_METER;
                 break;
             case 8:
-                lightNo = CYCLE;
+                lightNo = SOLO;
                 break;
             case 9:
                 lightNo = WAVE;
                 break;
             case 10:
-                lightNo = SOLO;
-                break;
-            case 11:
                 lightNo = MOOD;
                 break;
-            case 12:
+            case 11:
                 lightNo = AURORA;
                 break;
         }
@@ -220,7 +217,7 @@ public class BleCommandUtils {
     }
 
     public static String musicPulseSwitch(String lightNo, boolean isChecked) {
-        String command = isChecked ? "0001" : "0000";
-        return HEAD + lightNo + DIVISION + command + DIVISION + END_MARK;
+        String command = isChecked ? "1" : "0";
+        return HEAD + PULSE_MUSIC + lightNo + ":" + command + END_MARK;
     }
 }

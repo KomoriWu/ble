@@ -126,7 +126,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
             if (msg.what == START_SORT) {
                 if ((System.currentTimeMillis() - mFirstDrag) >= SORT_DELAY_MILLISECONDS) {
                     mEditLightPresenter.updateLightColor(mLightNo, (int) radioGroup.getTag()
-                           , msg.obj.toString(), msg.getData());
+                            , msg.obj.toString(), msg.getData());
                 }
             }
         }
@@ -174,16 +174,16 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         initSpecialView(!(mPosition == 0 || mPosition == 9));
 
         if (mPosition == 7) {
-            mIsReturn=true;
+            mIsReturn = true;
             switchView.setChecked(true);
-            mIsReturn=false;
+            mIsReturn = false;
             switchView.setClickable(false);
         }
 
         if (mPosition == 5) {
-            mIsReturn=true;
+            mIsReturn = true;
             switchView.setChecked(false);
-            mIsReturn=false;
+            mIsReturn = false;
             switchView.setClickable(false);
         }
     }
@@ -391,21 +391,21 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
 
     @SuppressLint("WrongConstant")
     private void operateSeekBar() {
-            if (layoutSpeed.getVisibility() == VIEW_VISIBLE) {
-                mEditLightPresenter.setLightSpeed(mLightNo, seekBarSpeed.getProgress());
-            }
-            if (layoutBrightness.getVisibility() == VIEW_VISIBLE) {
-                mEditLightPresenter.setLightBrightness(mLightNo, seekBarBright.getProgress());
-            }
+        if (layoutSpeed.getVisibility() == VIEW_VISIBLE) {
+            mEditLightPresenter.setLightSpeed(mLightNo, seekBarSpeed.getProgress());
+        }
+        if (layoutBrightness.getVisibility() == VIEW_VISIBLE) {
+            mEditLightPresenter.setLightBrightness(mLightNo, seekBarBright.getProgress());
+        }
     }
 
     private void initEditLightUi(String type) {
         mModelTypeFlags = type;
         setPaintPixel(mEditLightPresenter.getLightColor(mLightName + mModelTypeFlags,
                 (Integer) radioGroup.getTag()));
-        if (type.equals(getString(R.string.random)) || type.contains(getString(R.string.white)) || type.contains(getString(R.string.default_)) ||
-                type.contains(getString(R.string.moon_light)) || type.contains(getString(
-                R.string.full)) || type.contains(getString(R.string.rainbow))) {
+        if (type.equals(getString(R.string.random)) || type.contains(getString(R.string.white)) ||
+                type.contains(getString(R.string.default_)) || type.contains(getString(R.string.
+                moon_light)) || type.contains(getString(R.string.full))) {
             mEditLightPresenter.setIsSetOnColorSelectListener(false);
             setEtEnable(false);
             //fireworks
@@ -432,7 +432,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
                 viewBoard5.setVisibility(View.VISIBLE);
                 viewBoard6.setVisibility(View.GONE);
                 viewBoard7.setVisibility(View.GONE);
-            } else if (mPosition == 10) {
+            } else if (mPosition == 8) {
                 mEditLightPresenter.setIsSetOnColorSelectListener(true);
                 setEtEnable(true);
                 rbBoard1.setVisibility(View.VISIBLE);
@@ -468,8 +468,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
                 viewBoard7.setVisibility(View.GONE);
             }
             if (mPosition == 0 || mPosition == 1 || mPosition == 2 || mPosition == 3 ||
-                    mPosition == 4 || mPosition == 5 || mPosition == 8|| mPosition == 9 ||
-                    mPosition == 12) {
+                    mPosition == 4 || mPosition == 5 || mPosition == 11) {
 //                tvRevert.setClickable(false);
                 setEtNoData();
             }

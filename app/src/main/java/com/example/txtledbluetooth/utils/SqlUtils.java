@@ -66,25 +66,39 @@ public class SqlUtils {
         new RgbColor(DEFAULT_COLORS + itemNames[7] + Utils.getPopWindowItems(context, 7)[0] + 4,
                 255, 0, 0).save();
 
-        new RgbColor(DEFAULT_COLORS + itemNames[9] + Utils.getPopWindowItems(context, 9)[0] + 0,
-                0, 0, 255).save();
-
-        new RgbColor(DEFAULT_COLORS + itemNames[10] + Utils.getPopWindowItems(context, 10)[0] + 0,
+        new RgbColor(DEFAULT_COLORS + itemNames[8] + Utils.getPopWindowItems(context, 8)[0] + 0,
                 255, 125, 0).save();
 
-        new RgbColor(DEFAULT_COLORS + itemNames[11] + Utils.getPopWindowItems(context, 11)[0] + 0,
+        new RgbColor(DEFAULT_COLORS + itemNames[9] + Utils.getPopWindowItems(context, 9)[0] + 0,
+                255, 0, 0).save();
+        new RgbColor(DEFAULT_COLORS + itemNames[9] + Utils.getPopWindowItems(context, 9)[1] + 0,
+                255, 0, 157).save();
+        new RgbColor(DEFAULT_COLORS + itemNames[9] + Utils.getPopWindowItems(context, 9)[1] + 1,
+                0, 255, 255).save();
+        new RgbColor(DEFAULT_COLORS + itemNames[9] + Utils.getPopWindowItems(context, 9)[1] + 2,
+                0, 0, 255).save();
+        new RgbColor(DEFAULT_COLORS + itemNames[9] + Utils.getPopWindowItems(context, 9)[1] + 3,
+                255, 0, 255).save();
+        new RgbColor(DEFAULT_COLORS + itemNames[9] + Utils.getPopWindowItems(context, 9)[1] + 4,
+                255, 0, 0).save();
+        new RgbColor(DEFAULT_COLORS + itemNames[9] + Utils.getPopWindowItems(context, 9)[1] + 5,
+                255, 255, 0).save();
+        new RgbColor(DEFAULT_COLORS + itemNames[9] + Utils.getPopWindowItems(context, 9)[1] + 6,
+                0, 255, 0).save();
+
+        new RgbColor(DEFAULT_COLORS + itemNames[10] + Utils.getPopWindowItems(context, 10)[0] + 0,
                 245, 208, 20).save();
-        new RgbColor(DEFAULT_COLORS + itemNames[11] + Utils.getPopWindowItems(context, 11)[0] + 1,
+        new RgbColor(DEFAULT_COLORS + itemNames[10] + Utils.getPopWindowItems(context, 10)[0] + 1,
                 245, 208, 20).save();
-        new RgbColor(DEFAULT_COLORS + itemNames[11] + Utils.getPopWindowItems(context, 11)[0] + 2,
+        new RgbColor(DEFAULT_COLORS + itemNames[10] + Utils.getPopWindowItems(context, 10)[0] + 2,
                 245, 122, 20).save();
-        new RgbColor(DEFAULT_COLORS + itemNames[11] + Utils.getPopWindowItems(context, 11)[0] + 3,
+        new RgbColor(DEFAULT_COLORS + itemNames[10] + Utils.getPopWindowItems(context, 10)[0] + 3,
                 245, 122, 20).save();
-        new RgbColor(DEFAULT_COLORS + itemNames[11] + Utils.getPopWindowItems(context, 11)[0] + 4,
+        new RgbColor(DEFAULT_COLORS + itemNames[10] + Utils.getPopWindowItems(context, 10)[0] + 4,
                 245, 122, 20).save();
-        new RgbColor(DEFAULT_COLORS + itemNames[11] + Utils.getPopWindowItems(context, 11)[0] + 5,
+        new RgbColor(DEFAULT_COLORS + itemNames[10] + Utils.getPopWindowItems(context, 10)[0] + 5,
                 245, 208, 20).save();
-        new RgbColor(DEFAULT_COLORS + itemNames[11] + Utils.getPopWindowItems(context, 11)[0] + 6,
+        new RgbColor(DEFAULT_COLORS + itemNames[10] + Utils.getPopWindowItems(context, 10)[0] + 6,
                 245, 208, 20).save();
 
 
