@@ -98,7 +98,7 @@ public class EditLightPresenterImpl implements EditLightPresenter,
     @Override
     public void operateSwitchBluetooth(String lightNo, boolean isChecked) {
         String command = BleCommandUtils.musicPulseSwitch(lightNo, isChecked);
-        writeCommand(command);
+//        writeCommand(command);
     }
 
     @Override
@@ -134,7 +134,6 @@ public class EditLightPresenterImpl implements EditLightPresenter,
     }
 
     private void writeCommand(String command) {
-        Log.d("BLE Write Command:", command);
         if (!TextUtils.isEmpty(command) && !TextUtils.isEmpty(mMacAddress)) {
             mLightModel.WriteCommand(MyApplication.getBluetoothClient(mContext), mMacAddress,
                     mServiceUUID, mCharacterUUID, command,

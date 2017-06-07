@@ -66,7 +66,6 @@ public class SettingPresenterImp implements SettingPresenter {
     }
 
     private void writeCommand(String command) {
-        Log.d("BLE Write Command:", command);
         if (!TextUtils.isEmpty(command) && !TextUtils.isEmpty(mMacAddress)) {
             mSettingModel.WriteCommand(MyApplication.getBluetoothClient(mContext), mMacAddress,
                     mServiceUUID, mCharacterUUID, command);

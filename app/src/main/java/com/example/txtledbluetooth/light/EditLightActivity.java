@@ -1,5 +1,6 @@
 package com.example.txtledbluetooth.light;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -117,6 +118,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     private int mPopupPosition = 0;
     private String mSpecialTypeSqlName;
     private boolean mIsReturn;
+    @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
         @Override
         public void dispatchMessage(Message msg) {
@@ -124,7 +126,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
             if (msg.what == START_SORT) {
                 if ((System.currentTimeMillis() - mFirstDrag) >= SORT_DELAY_MILLISECONDS) {
                     mEditLightPresenter.updateLightColor(mLightNo, (int) radioGroup.getTag()
-                            + 1, msg.obj.toString(), msg.getData());
+                           , msg.obj.toString(), msg.getData());
                 }
             }
         }
@@ -387,6 +389,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         mEditLightPresenter.operateItemBluetooth(mLightName, mPosition, popupPosition);
     }
 
+    @SuppressLint("WrongConstant")
     private void operateSeekBar() {
             if (layoutSpeed.getVisibility() == VIEW_VISIBLE) {
                 mEditLightPresenter.setLightSpeed(mLightNo, seekBarSpeed.getProgress());

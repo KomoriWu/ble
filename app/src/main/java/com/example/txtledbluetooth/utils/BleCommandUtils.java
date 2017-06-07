@@ -153,7 +153,10 @@ public class BleCommandUtils {
         String[] colors = RgbColor.getRgbColorStr(lightName + popupItems[popupPosition]);
         int count = getColorCount(popupItems[popupPosition], position);
         for (int i = 0; i < count; i++) {
-            command.append("#" + colors[i] + " ");
+            command.append("#" + colors[i]);
+            if (i < count - 1) {
+                command.append(" ");
+            }
         }
         return HEAD + LIGHT + getLightNo(position) + COLOR_DATA + popupPosition + COLON +
                 command.toString() + END_MARK;
@@ -161,7 +164,7 @@ public class BleCommandUtils {
 
     private static int getColorCount(String popupItem, int position) {
         int count = 0;
-        if (popupItem.contains("1") || position == 0|| position == 10) {
+        if (popupItem.contains("1") || position == 0 || position == 10) {
             count = 1;
         } else if (popupItem.contains("2")) {
             count = 2;
@@ -176,8 +179,8 @@ public class BleCommandUtils {
     }
 
     public static String updateLightColor(String lightNo, int position, String color) {
-        String command = "010" + position + DIVISION;
-        return HEAD + lightNo + DIVISION + MODIFY_COLOR + command + color + DIVISION + END_MARK;
+        return HEAD + LIGHT + lightNo + MODIFY_COLOR + position + COLON +
+                "#" + color + END_MARK;
     }
 
     //分包
@@ -185,6 +188,7 @@ public class BleCommandUtils {
                                               String macAddress, UUID serviceUUID,
                                               UUID characterUUID, final LightModelImpl.
             OnInterfaceWriteCommand onInterfaceWriteCommand) {
+        Log.d("BLE Write Command:", new String(data));
         int tmpLen = data.length;
         int start = 0;
         int end = 0;

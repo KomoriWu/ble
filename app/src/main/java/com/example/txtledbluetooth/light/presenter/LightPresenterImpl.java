@@ -151,7 +151,6 @@ public class LightPresenterImpl implements LightPresenter {
     }
 
     private void writeCommand(String command) {
-        Log.d("BLE Write Command:", command);
         if (!TextUtils.isEmpty(command) && !TextUtils.isEmpty(mMacAddress)) {
             mLightModel.WriteCommand(mClient, mMacAddress,
                     mServiceUUID, mCharacterUUID, command, new
