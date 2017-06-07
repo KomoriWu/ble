@@ -72,7 +72,7 @@ public class LightPresenterImpl implements LightPresenter {
         HashMap<String, Integer> hashMap = LightType.getSbProgressMap(sqlName, position);
         int bright = hashMap.get(Utils.SEEK_BAR_PROGRESS_BRIGHT);
         int speed = hashMap.get(Utils.SEEK_BAR_PROGRESS_SPEED);
-        String lightNo = BleCommandUtils.getLightNo(position, popupPosition == 0 ? true : false);
+        String lightNo = BleCommandUtils.getLightNo(position);
         if (Utils.isSBarSpeedVisible(position)) {
             writeCommand(BleCommandUtils.getLightSpeedCommand(lightNo, Integer.toHexString(speed)));
         }
@@ -88,7 +88,7 @@ public class LightPresenterImpl implements LightPresenter {
 
     @Override
     public void operateSwitchBluetooth(boolean isChecked) {
-        String command = isChecked ? BleCommandUtils.OPEN : BleCommandUtils.CLOSE;
+        String command = isChecked ? BleCommandUtils.OPEN_LIGHT : BleCommandUtils.CLOSE_LIGHT;
         writeCommand(command);
     }
 

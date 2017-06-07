@@ -371,7 +371,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
 
     @Override
     public void onPopupWindowItemClick(int position, String type) {
-        mLightNo = BleCommandUtils.getLightNo(mPosition, position == 0 ? true : false);
+        mLightNo = BleCommandUtils.getLightNo(mPosition);
         mPopupPosition = position;
         tvChoseType.setText(type);
         radioGroup.check(R.id.rb_board1);

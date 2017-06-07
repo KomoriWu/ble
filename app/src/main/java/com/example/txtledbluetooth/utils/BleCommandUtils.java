@@ -2,7 +2,6 @@ package com.example.txtledbluetooth.utils;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.example.txtledbluetooth.R;
 import com.example.txtledbluetooth.bean.LightType;
@@ -11,7 +10,6 @@ import com.example.txtledbluetooth.light.model.LightModelImpl;
 import com.inuker.bluetooth.library.BluetoothClient;
 import com.inuker.bluetooth.library.connect.response.BleWriteResponse;
 
-import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -23,53 +21,51 @@ import java.util.UUID;
 
 public class BleCommandUtils {
     public static final String DIVISION = "$";
-    public static final String HEAD = "GP" + DIVISION;
-    public static final String END_MARK = "\r\n";
+    private static final String SINGLE_COMMAND = "1$";
+    private static final String HEAD = "GP" + DIVISION + SINGLE_COMMAND;
+    private static final String END_MARK = "$";
+    private static final String COLON = ":";
 
-    //模式指令
-    public static final String MOON_LIGHT1 = "lmol";
-    public static final String MOON_LIGHT2 = "lmpl";
-    public static final String FIREWORKS = "lfwk";
-    public static final String HOT_WHEELS = "lhwl";
-    public static final String SPECTRUM = "lrbw";
-    public static final String FULL_SPECTRUM = "lfrb";
-    public static final String PULSATE = "lclg";
-    public static final String MORPH = "lmop";
-    public static final String BEAT_METER = "lhst";
-    public static final String CYCLE = "lclr";
-    public static final String WAVE1 = "lwav";
-    public static final String WAVE2 = "lwbv";
-    public static final String SOLO = "lsol";
-    public static final String MOOD = "lmod";
-    public static final String AURORA = "laur";
-
-    public static final String CLOSE_LIGHT = "etof";
-    public static final String OPEN_LIGHT = "eton";
+    //灯光模式指令
+    private static final String LIGHT = "l";
+    private static final String MOON_LIGHT = "mol";
+    private static final String FIREWORKS = "fwk";
+    private static final String HOT_WHEELS = "hwl";
+    private static final String SPECTRUM = "rbw";
+    private static final String FULL_SPECTRUM = "frb";
+    private static final String PULSATE = "clg";
+    private static final String MORPH = "mop";
+    private static final String BEAT_METER = "hst";
+    private static final String CYCLE = "clr";
+    private static final String WAVE = "wav";
+    private static final String SOLO = "sol";
+    private static final String MOOD = "mod";
+    private static final String AURORA = "aur";
 
     //指令类型
-    public static final String COLOR_DATA = "YSD" + DIVISION;
-    public static final String MODIFY_COLOR = "DYS" + DIVISION;
-    public static final String MODIFY_BRIGHTNESS = "LDD" + DIVISION + "00";
-    public static final String MODIFY_SPEED = "SDD" + DIVISION + "00";
-    public static final String CONTROL_DATA = "KZD" + DIVISION;
+    private static final String COLOR_DATA = ",a,";
+    private static final String MODIFY_COLOR = ",s,";
+    private static final String LIGHT_SPEED = "espd,";
+    private static final String LIGHT_BRIGHT = "elux,";
 
     //其他设置
-    public static final String LIGHT_SPEED = "espd,";
-    public static final String LIGHT_BRIGHT = "elux,";
-    public static final String CLOSE = HEAD + CLOSE_LIGHT + DIVISION + END_MARK;
-    public static final String OPEN = HEAD + OPEN_LIGHT + DIVISION + END_MARK;
-    public static final String RESET = HEAD + "erst" + DIVISION + END_MARK;
-    public static final String BACK_NOTIFY = HEAD + "back" + DIVISION+ END_MARK;
-    public static final String CLOSE_SOUND = HEAD + "esvt:0" + DIVISION;
-    public static final String OPEN_SOUND = HEAD + "esvt:1" + DIVISION;
 
+    public static final String RESET = HEAD + "erst" + END_MARK;
+    public static final String CLOSE_SOUND = HEAD + "esvt:0" + END_MARK;
+    public static final String OPEN_SOUND = HEAD + "esvt:1" + END_MARK;
+    public static final String BACK_NOTIFY = HEAD + "back" + DIVISION + END_MARK;
+
+    //开关指令
+    private static final String SWITCH = "etof,all:";
+    public static final String CLOSE_LIGHT = HEAD + SWITCH + "0" + END_MARK;
+    public static final String OPEN_LIGHT = HEAD + SWITCH + "1" + END_MARK;
 
     //灯光速度
     public static String getLightSpeedCommand(String lightNo, String speedHex) {
         if (speedHex.length() < 2) {
             speedHex = "0" + speedHex;
         }
-        return HEAD + lightNo + DIVISION + MODIFY_SPEED + speedHex + DIVISION + END_MARK;
+        return HEAD + LIGHT_SPEED + lightNo + COLON + speedHex + END_MARK;
     }
 
     //灯光亮度
@@ -77,19 +73,14 @@ public class BleCommandUtils {
         if (brightHex.length() < 2) {
             brightHex = "0" + brightHex;
         }
-        return HEAD + lightNo + DIVISION + MODIFY_BRIGHTNESS + brightHex + DIVISION + END_MARK;
+        return HEAD + LIGHT_BRIGHT + lightNo + COLON + brightHex + END_MARK;
     }
 
-    public static String getLightNo(int position, boolean isFirstItem) {
+    public static String getLightNo(int position) {
         String lightNo = "";
         switch (position) {
             case 0:
-                if (isFirstItem) {
-                    lightNo = MOON_LIGHT1;
-                } else {
-                    lightNo = MOON_LIGHT2;
-                }
-
+                lightNo = MOON_LIGHT;
                 break;
             case 1:
                 lightNo = FIREWORKS;
@@ -116,11 +107,7 @@ public class BleCommandUtils {
                 lightNo = CYCLE;
                 break;
             case 9:
-                if (isFirstItem) {
-                    lightNo = WAVE1;
-                } else {
-                    lightNo = WAVE2;
-                }
+                lightNo = WAVE;
                 break;
             case 10:
                 lightNo = SOLO;
@@ -147,8 +134,7 @@ public class BleCommandUtils {
 
     public static String getItemCommandByType(Context context, int position, int popupPosition,
                                               String lightName) {
-        boolean isFirstItem = false;
-        StringBuffer command = new StringBuffer("FF0");
+        StringBuffer command = new StringBuffer();
         if (popupPosition == -1) {
             List<LightType> lightTypeList = LightType.getLightTypeList(lightName);
             if (lightTypeList != null && lightTypeList.size() > 0) {
@@ -165,47 +151,17 @@ public class BleCommandUtils {
 
         String[] popupItems = Utils.getPopWindowItems(context, position);
         String[] colors = RgbColor.getRgbColorStr(lightName + popupItems[popupPosition]);
-        switch (position) {
-            case 0:
-                isFirstItem = popupPosition == 0 ? true : false;
-                if (isFirstItem) {
-                    command.append(1 + DIVISION + "ffffff" + DIVISION);
-                } else {
-                    command.append(1 + DIVISION + colors[0] + DIVISION);
-                }
-                break;
-            case 3:
-            case 4:
-            case 8:
-            case 9:
-                isFirstItem = popupPosition == 0 ? true : false;
-                command.append(1 + DIVISION + colors[0] + DIVISION);
-                break;
-            case 10:
-                int count = popupPosition == 0 ? 1 : 0;
-                command.append(count + DIVISION + colors[0] + DIVISION);
-                break;
-            case 1:
-            case 2:
-            case 5:
-            case 6:
-            case 7:
-            case 11:
-            case 12:
-                int count2 = getColorCount(popupItems[popupPosition], position);
-                command.append(count2 + DIVISION);
-                for (int i = 0; i < count2; i++) {
-                    command.append(colors[i] + DIVISION);
-                }
-                break;
+        int count = getColorCount(popupItems[popupPosition], position);
+        for (int i = 0; i < count; i++) {
+            command.append("#" + colors[i] + " ");
         }
-        return HEAD + getLightNo(position, isFirstItem) + DIVISION + COLOR_DATA + command.toString() +
-                END_MARK;
+        return HEAD + LIGHT + getLightNo(position) + COLOR_DATA + popupPosition + COLON +
+                command.toString() + END_MARK;
     }
 
     private static int getColorCount(String popupItem, int position) {
         int count = 0;
-        if (popupItem.contains("1") || position == 10) {
+        if (popupItem.contains("1") || position == 0|| position == 10) {
             count = 1;
         } else if (popupItem.contains("2")) {
             count = 2;
@@ -261,6 +217,6 @@ public class BleCommandUtils {
 
     public static String musicPulseSwitch(String lightNo, boolean isChecked) {
         String command = isChecked ? "0001" : "0000";
-        return HEAD + lightNo + DIVISION + CONTROL_DATA + command + DIVISION + END_MARK;
+        return HEAD + lightNo + DIVISION + command + DIVISION + END_MARK;
     }
 }
