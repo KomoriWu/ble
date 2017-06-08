@@ -134,7 +134,7 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
     public void onItemClick(View view, int position) {
         mLightName = mLightNames[position];
         mLightPresenter.operateItemBluetooth(mLightName, position);
-        mLightPresenter.operateItemSeekBar(mLightName, position);
+//        mLightPresenter.operateItemSeekBar(mLightName, position);
         setSwitchChecked();
     }
 

@@ -151,9 +151,6 @@ public class BleCommandUtils {
         int count = getColorCount(popupItems[popupPosition], position);
         for (int i = 0; i < count; i++) {
             command.append("#" + colors[i]);
-            if (i < count - 1) {
-                command.append(" ");
-            }
         }
         return HEAD + LIGHT + getLightNo(position) + COLOR_DATA + popupPosition + COLON +
                 command.toString() + END_MARK;
@@ -202,17 +199,22 @@ public class BleCommandUtils {
                 sendData = Arrays.copyOfRange(data, start, end);
                 tmpLen = 0;
             }
-            client.write(macAddress, serviceUUID, characterUUID, sendData,
-                    new BleWriteResponse() {
-                        @Override
-                        public void onResponse(int code) {
-                            if (code == -1 && isShowDialog[0]) {
-                                Log.d("tag", code + "");
-                                onInterfaceWriteCommand.onWriteFailure();
-                                isShowDialog[0] = false;
+            try {
+                Thread.sleep(50);
+                client.write(macAddress, serviceUUID, characterUUID, sendData,
+                        new BleWriteResponse() {
+                            @Override
+                            public void onResponse(int code) {
+                                if (code == -1 && isShowDialog[0]) {
+                                    Log.d("tag", code + "");
+                                    onInterfaceWriteCommand.onWriteFailure();
+                                    isShowDialog[0] = false;
+                                }
                             }
-                        }
-                    });
+                        });
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 

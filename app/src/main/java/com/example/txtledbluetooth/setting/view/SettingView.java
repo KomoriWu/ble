@@ -8,7 +8,5 @@ package com.example.txtledbluetooth.setting.view;
 public interface SettingView {
     void setAudioPrompts();
 
-    void setAutoStandby();
-
     void showResetDialog();
 }

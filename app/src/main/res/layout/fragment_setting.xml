@@ -24,19 +24,12 @@
         custom:text_left_top="@string/audio_prompts"
         custom:text_right="@string/voice_and_tones" />
 
-    <com.example.txtledbluetooth.widget.ItemLayout
-        android:id="@+id/item_auto_standby"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/item_audio_prompts"
-        custom:text_left_bottom="@string/auto_standby_hint"
-        custom:text_left_top="@string/auto_standby" />
 
     <com.example.txtledbluetooth.widget.ItemLayout
         android:id="@+id/item_reset"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/item_auto_standby"
+        android:layout_below="@id/item_audio_prompts"
         custom:text_left_bottom="@string/reset_to_default_hint"
         custom:text_left_top="@string/reset_to_default" />
 </RelativeLayout>

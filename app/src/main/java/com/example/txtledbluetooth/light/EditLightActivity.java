@@ -320,10 +320,10 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         radioGroup.check(R.id.rb_board1);
         setViewBoardDefaultColor();
         initSpecialView(!(mPosition == 0 || mPosition == 9));
-        operateItemBluetooth(mPopupPosition);
         operateSeekBar();
         mEditLightPresenter.operateSwitchBluetooth(mLightNo, LightType.getPulseIsOpen(
                 mSpecialTypeSqlName));
+        operateItemBluetooth(mPopupPosition);
     }
 
 

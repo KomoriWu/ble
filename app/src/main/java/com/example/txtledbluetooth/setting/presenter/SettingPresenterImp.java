@@ -49,9 +49,6 @@ public class SettingPresenterImp implements SettingPresenter {
             case R.id.item_audio_prompts:
                 mSettingView.setAudioPrompts();
                 break;
-            case R.id.item_auto_standby:
-                mSettingView.setAutoStandby();
-                break;
             case R.id.item_reset:
                 mSettingView.showResetDialog();
                 break;

@@ -33,8 +33,6 @@ public class SettingFragment extends BaseFragment implements SettingView {
     public static final int REQUEST_SETTING = 1;
     @BindView(R.id.item_audio_prompts)
     ItemLayout itemAudioPrompts;
-    @BindView(R.id.item_auto_standby)
-    ItemLayout itemAutoStandby;
     @BindView(R.id.item_reset)
     ItemLayout itemReset;
     private SettingPresenter mSettingPresenter;
@@ -57,13 +55,6 @@ public class SettingFragment extends BaseFragment implements SettingView {
                 mSettingPresenter.settings(v.getId());
             }
         });
-        itemAutoStandby.setOnItemListener(new ItemLayout.OnItemListener() {
-            @Override
-            public void onClickItemListener(View v) {
-                v.setId(R.id.item_auto_standby);
-                mSettingPresenter.settings(v.getId());
-            }
-        });
         itemReset.setOnItemListener(new ItemLayout.OnItemListener() {
             @Override
             public void onClickItemListener(View v) {
@@ -80,10 +71,6 @@ public class SettingFragment extends BaseFragment implements SettingView {
         startActivityForResult(intent, REQUEST_SETTING);
     }
 
-    @Override
-    public void setAutoStandby() {
-        Toast.makeText(getActivity(), "AutoStandby", Toast.LENGTH_SHORT).show();
-    }
 
     @Override
     public void showResetDialog() {
