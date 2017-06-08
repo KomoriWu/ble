@@ -199,8 +199,8 @@ public class BleCommandUtils {
                 sendData = Arrays.copyOfRange(data, start, end);
                 tmpLen = 0;
             }
-            try {
-                Thread.sleep(50);
+//            try {
+//                Thread.sleep(10);
                 client.write(macAddress, serviceUUID, characterUUID, sendData,
                         new BleWriteResponse() {
                             @Override
@@ -212,9 +212,9 @@ public class BleCommandUtils {
                                 }
                             }
                         });
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
         }
     }
 
