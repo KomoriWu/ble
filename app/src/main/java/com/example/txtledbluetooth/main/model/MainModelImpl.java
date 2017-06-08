@@ -12,6 +12,7 @@ import com.example.txtledbluetooth.R;
 import com.example.txtledbluetooth.utils.SharedPreferenceUtils;
 import com.example.txtledbluetooth.utils.Utils;
 import com.inuker.bluetooth.library.BluetoothClient;
+import com.inuker.bluetooth.library.connect.listener.BleConnectStatusListener;
 import com.inuker.bluetooth.library.connect.options.BleConnectOptions;
 import com.inuker.bluetooth.library.connect.response.BleConnectResponse;
 import com.inuker.bluetooth.library.connect.response.BleNotifyResponse;
@@ -44,7 +45,8 @@ public class MainModelImpl implements MainModel {
                                 onInitBleListener) {
         if (client.isBleSupported()) {
             if (client.isBluetoothOpened()) {
-                BluetoothManager bluetoothManager = (BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
+                BluetoothManager bluetoothManager = (BluetoothManager) context.getSystemService(
+                        Context.BLUETOOTH_SERVICE);
                 Set<BluetoothDevice> devices = bluetoothManager.getAdapter().getBondedDevices();
                 for (int i = 0; i < devices.size(); i++) {
                     for (Iterator<BluetoothDevice> it = devices.iterator(); it.hasNext(); ) {
@@ -71,6 +73,10 @@ public class MainModelImpl implements MainModel {
                                             substring(3))) {
 //                            if (device.getAddress().contains("6A")) {  //调试
                                         client.stopSearch();
+
+                                        //监听连接状态
+                                        connStatus(client, device.getAddress(), onInitBleListener);
+
                                         connBle(context, client, bleConnectOptions, device.getAddress(),
                                                 device.getName(), onInitBleListener);
 //                            }
@@ -96,6 +102,17 @@ public class MainModelImpl implements MainModel {
             onInitBleListener.OnException(context.getString(R.string.no_support_ble));
         }
 
+    }
+
+    private void connStatus(BluetoothClient client, String address, final OnInitBleListener
+            onInitBleListener) {
+        client.registerConnectStatusListener(address, new
+                BleConnectStatusListener() {
+                    @Override
+                    public void onConnectStatusChanged(String mac, int status) {
+                        onInitBleListener.onConnStatus(mac, status);
+                    }
+                });
     }
 
     private void connBle(final Context context, final BluetoothClient client, BleConnectOptions
@@ -142,6 +159,8 @@ public class MainModelImpl implements MainModel {
         void onSuccess(String name);
 
         void onFailure(String message);
+
+        void onConnStatus(String mac, int status);
 
         void OnException(String exception);
 

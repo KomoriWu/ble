@@ -71,6 +71,11 @@ public class MainPresenterImpl implements MainPresenter, MainModelImpl.OnInitBle
     }
 
     @Override
+    public void onConnStatus(String mac, int status) {
+        mMainView.onConnStatus(mac, status);
+    }
+
+    @Override
     public void OnException(String exception) {
         mMainView.hideProgress();
         mMainView.showLoadExceptionMsg(exception);

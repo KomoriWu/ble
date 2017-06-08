@@ -28,4 +28,6 @@ public interface MainView {
 
     void showLoadExceptionMsg(String exception);
 
+    void onConnStatus(String mac, int status);
+
 }

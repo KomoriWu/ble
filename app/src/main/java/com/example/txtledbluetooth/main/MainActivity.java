@@ -20,6 +20,7 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +40,7 @@ import com.example.txtledbluetooth.sources.SourcesFragment;
 import com.example.txtledbluetooth.utils.AlertUtils;
 import com.example.txtledbluetooth.utils.SqlUtils;
 import com.example.txtledbluetooth.utils.Utils;
+import com.inuker.bluetooth.library.Constants;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
 import com.yanzhenjie.permission.PermissionNo;
@@ -65,6 +67,8 @@ public class MainActivity extends BaseActivity implements MainView {
     NavigationView navigationView;
     @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
+    @BindView(R.id.main_content)
+    RelativeLayout mainContent;
     @BindView(R.id.tv_toolbar_right)
     TextView tvScan;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -159,6 +163,7 @@ public class MainActivity extends BaseActivity implements MainView {
 
     @Override
     public void showProgress() {
+        showSnackBar(mainContent, getString(R.string.dis_conn));
         mProgressDialog = ProgressDialog.show(this, "", getString(R.string.init_the_bluetooth),
                 true, true, new DialogInterface.OnCancelListener() {
                     @Override
@@ -276,6 +281,15 @@ public class MainActivity extends BaseActivity implements MainView {
     @Override
     public void showLoadExceptionMsg(String exception) {
         AlertUtils.showAlertDialog(this, exception);
+    }
+
+    @Override
+    public void onConnStatus(String mac, int status) {
+        if (status == Constants.STATUS_CONNECTED) {
+            hideSnackBar();
+        } else if (status == Constants.STATUS_DISCONNECTED) {
+            showSnackBar(mainContent, getString(R.string.dis_conn));
+        }
     }
 
 

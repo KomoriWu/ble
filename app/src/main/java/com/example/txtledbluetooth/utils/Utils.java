@@ -10,6 +10,8 @@ import android.content.Intent;
 import android.location.LocationManager;
 import android.media.AudioManager;
 import android.net.Uri;
+import android.support.design.widget.Snackbar;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import com.example.txtledbluetooth.R;
@@ -278,5 +280,13 @@ public class Utils {
         //默认停留在moonlight
         return 0;
     }
+    public static void showSnackBar(View view, String str) {
+        Snackbar.make(view, str, Snackbar.LENGTH_INDEFINITE).setAction(R.string.ok,
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
 
+                    }
+                }).show();
+    }
 }

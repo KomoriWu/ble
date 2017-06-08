@@ -1,8 +1,10 @@
 package com.example.txtledbluetooth.base;
 
 import android.app.ProgressDialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -19,6 +21,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     public Toolbar toolbar;
     public TextView tvTitle;
     public ProgressDialog progressDialog;
+    public Snackbar snackbar;
 
     public abstract void init();
 
@@ -40,6 +43,20 @@ public abstract class BaseActivity extends AppCompatActivity {
     public void hideProgressDialog() {
         if (progressDialog != null) {
             progressDialog.hide();
+        }
+    }
+
+    public void showSnackBar(View view, String str) {
+        if (snackbar == null) {
+            snackbar = Snackbar.make(view, str, Snackbar.LENGTH_INDEFINITE);
+            snackbar.getView().setBackgroundColor(getResources().getColor(R.color.colorAccent));
+        }
+        snackbar.show();
+    }
+
+    public void hideSnackBar() {
+        if (snackbar != null) {
+            snackbar.dismiss();
         }
     }
 
