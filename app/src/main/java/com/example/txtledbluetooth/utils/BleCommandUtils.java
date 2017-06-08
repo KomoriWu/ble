@@ -199,22 +199,18 @@ public class BleCommandUtils {
                 sendData = Arrays.copyOfRange(data, start, end);
                 tmpLen = 0;
             }
-//            try {
-//                Thread.sleep(10);
-                client.write(macAddress, serviceUUID, characterUUID, sendData,
-                        new BleWriteResponse() {
-                            @Override
-                            public void onResponse(int code) {
-                                if (code == -1 && isShowDialog[0]) {
-                                    Log.d("tag", code + "");
-                                    onInterfaceWriteCommand.onWriteFailure();
-                                    isShowDialog[0] = false;
-                                }
+            client.write(macAddress, serviceUUID, characterUUID, sendData,
+                    new BleWriteResponse() {
+                        @Override
+                        public void onResponse(int code) {
+                            if (code == -1 && isShowDialog[0]) {
+                                Log.d("tag", code + "");
+                                onInterfaceWriteCommand.onWriteFailure();
+                                isShowDialog[0] = false;
                             }
-                        });
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
+                        }
+                    });
+
         }
     }
 

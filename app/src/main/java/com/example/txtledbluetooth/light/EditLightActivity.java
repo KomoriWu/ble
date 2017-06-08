@@ -46,7 +46,12 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
                 OnCheckedChangeListener, TextView.OnEditorActionListener,
         SeekBar.OnSeekBarChangeListener {
     private static final int START_SORT = 1;
+    private static final int OPERATE_ITEM = 2;
+    private static final int OPERATE_SB_SPEED = 3;
+    private static final int OPERATE_SB_BRIGHT = 4;
+    private static final int OPERATE_MUSIC_PULSE = 5;
     private static final int SORT_DELAY_MILLISECONDS = 300;
+    private static final int WRITER_COMMAND_SLEEP = 100;
     public static final int VIEW_VISIBLE = 0;
     @BindView(R.id.tv_toolbar_right)
     TextView tvRevert;
@@ -125,14 +130,30 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         @Override
         public void dispatchMessage(Message msg) {
             super.dispatchMessage(msg);
-            if (msg.what == START_SORT) {
-                if ((System.currentTimeMillis() - mFirstDrag) >= SORT_DELAY_MILLISECONDS) {
-                    mEditLightPresenter.updateLightColor(mLightNo, (int) radioGroup.getTag()
-                            , msg.obj.toString(), msg.getData());
-                }
+            switch (msg.what) {
+                case START_SORT:
+                    if ((System.currentTimeMillis() - mFirstDrag) >= SORT_DELAY_MILLISECONDS) {
+                        mEditLightPresenter.updateLightColor(mLightNo, (int) radioGroup.getTag()
+                                , msg.obj.toString(), msg.getData());
+                    }
+                    break;
+                case OPERATE_ITEM:
+                    operateItemBluetooth(mPopupPosition);
+                    break;
+                case OPERATE_SB_SPEED:
+                    mEditLightPresenter.setLightSpeed(mLightNo, mInitSBarSpeed);
+                    break;
+                case OPERATE_SB_BRIGHT:
+                    mEditLightPresenter.setLightBrightness(mLightNo, mInitSBarBright);
+                    break;
+                case OPERATE_MUSIC_PULSE:
+                    mEditLightPresenter.operateSwitchBluetooth(mLightNo, LightType.getPulseIsOpen(
+                            mSpecialTypeSqlName));
+                    break;
             }
         }
     };
+
 
     @Override
     public void init() {
@@ -324,13 +345,15 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         RgbColor.deleteRgbColors(mLightName + mModelTypeFlags);
         LightType.deleteLightTypeByName(mSpecialTypeSqlName);
         radioGroup.check(R.id.rb_board1);
+
         if (switchView.isChecked() != LightType.getPulseIsOpen(mSpecialTypeSqlName)) {
-            mEditLightPresenter.operateSwitchBluetooth(mLightNo, LightType.getPulseIsOpen(
-                    mSpecialTypeSqlName));
+            mHandler.sendEmptyMessageDelayed(OPERATE_MUSIC_PULSE,WRITER_COMMAND_SLEEP);
+
         }
+
         setViewBoardDefaultColor();
         operateSeekBar();
-        operateItemBluetooth(mPopupPosition);
+        mHandler.sendEmptyMessageDelayed(OPERATE_ITEM, WRITER_COMMAND_SLEEP * 4);
     }
 
 
@@ -399,11 +422,11 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     private void operateSeekBar() {
         if (layoutSpeed.getVisibility() == VIEW_VISIBLE && seekBarSpeed.getProgress() !=
                 mInitSBarSpeed) {
-            mEditLightPresenter.setLightSpeed(mLightNo, mInitSBarSpeed);
+            mHandler.sendEmptyMessageDelayed(OPERATE_SB_SPEED, WRITER_COMMAND_SLEEP * 2);
         }
         if (layoutBrightness.getVisibility() == VIEW_VISIBLE && seekBarBright.getProgress() !=
                 mInitSBarBright) {
-            mEditLightPresenter.setLightBrightness(mLightNo, mInitSBarBright);
+            mHandler.sendEmptyMessageDelayed(OPERATE_SB_BRIGHT, WRITER_COMMAND_SLEEP * 3);
         }
         initSpecialView(true);
     }

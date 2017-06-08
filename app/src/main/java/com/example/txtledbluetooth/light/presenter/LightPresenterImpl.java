@@ -152,14 +152,14 @@ public class LightPresenterImpl implements LightPresenter {
 
     private void writeCommand(String command) {
         if (!TextUtils.isEmpty(command) && !TextUtils.isEmpty(mMacAddress)) {
-            mLightModel.WriteCommand(mClient, mMacAddress,
-                    mServiceUUID, mCharacterUUID, command, new
-                            LightModelImpl.OnInterfaceWriteCommand() {
-                                @Override
-                                public void onWriteFailure() {
-                                    mLightView.onWriteFailure();
-                                }
-                            });
+                mLightModel.WriteCommand(mClient, mMacAddress,
+                        mServiceUUID, mCharacterUUID, command, new
+                                LightModelImpl.OnInterfaceWriteCommand() {
+                                    @Override
+                                    public void onWriteFailure() {
+                                        mLightView.onWriteFailure();
+                                    }
+                                });
         }
 
     }
