@@ -49,8 +49,8 @@ public class MainModelImpl implements MainModel {
                 for (int i = 0; i < devices.size(); i++) {
                     for (Iterator<BluetoothDevice> it = devices.iterator(); it.hasNext(); ) {
                         BluetoothDevice device = it.next();
-                        Log.d("bluename", "111---" + device.getName());
-                        Log.d("bluename", "111---" + device.getAddress());
+                        Log.d("bluename", "本机---" + device.getName());
+                        Log.d("bluename", "本机---" + device.getAddress());
                         if (device.getName().contains(Utils.BLE_NAME)) {
                             final String traditionAddress = device.getAddress();
 
@@ -64,8 +64,8 @@ public class MainModelImpl implements MainModel {
 
                                 @Override
                                 public void onDeviceFounded(SearchResult device) {
-                                    Log.d("bluename---", "222---" + device.getName());
-                                    Log.d("bluename", "222---" + device.getAddress());
+                                    Log.d("bluename", "BLE---" + device.getName());
+                                    Log.d("bluename", "BLE---" + device.getAddress());
 
                                     if (traditionAddress.substring(3).equals(device.getAddress().
                                             substring(3))) {

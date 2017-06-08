@@ -152,13 +152,17 @@ public class BleCommandUtils {
         for (int i = 0; i < count; i++) {
             command.append("#" + colors[i]);
         }
+        if (count==0){
+            command.append("*");
+        }
         return HEAD + LIGHT + getLightNo(position) + COLOR_DATA + popupPosition + COLON +
                 command.toString() + END_MARK;
     }
 
     private static int getColorCount(String popupItem, int position) {
         int count = 0;
-        if (popupItem.contains("1") || position == 0 || position == 10) {
+        if (popupItem.contains("1") || position == 0 ||position == 8||popupItem.contains(
+                "Moonlight")) {
             count = 1;
         } else if (popupItem.contains("2")) {
             count = 2;
@@ -168,6 +172,8 @@ public class BleCommandUtils {
             count = 7;
         } else if (position == 7) {
             count = 5;
+        } else if (position == 10) {
+            count = 4;
         }
         return count;
     }

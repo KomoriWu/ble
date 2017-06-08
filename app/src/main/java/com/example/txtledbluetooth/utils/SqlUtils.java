@@ -25,17 +25,53 @@ public class SqlUtils {
         new RgbColor(DEFAULT_COLORS + itemNames[0] + Utils.getPopWindowItems(context, 0)[1] + 0,
                 19, 248, 255).save();
 
+        new RgbColor(DEFAULT_COLORS + itemNames[1] + Utils.getPopWindowItems(context, 1)[1] + 0,
+                185, 77, 255).save();
+        new RgbColor(DEFAULT_COLORS + itemNames[1] + Utils.getPopWindowItems(context, 1)[2] + 0,
+                255, 0, 0).save();
+        new RgbColor(DEFAULT_COLORS + itemNames[1] + Utils.getPopWindowItems(context, 1)[2] + 1,
+                0, 255, 0).save();
+        new RgbColor(DEFAULT_COLORS + itemNames[1] + Utils.getPopWindowItems(context, 1)[2] + 2,
+                0, 0, 255).save();
+
+        new RgbColor(DEFAULT_COLORS + itemNames[2] + Utils.getPopWindowItems(context, 2)[1] + 0,
+                255, 0, 173).save();
+        new RgbColor(DEFAULT_COLORS + itemNames[2] + Utils.getPopWindowItems(context, 2)[2] + 0,
+                255, 0, 0).save();
+        new RgbColor(DEFAULT_COLORS + itemNames[2] + Utils.getPopWindowItems(context, 2)[2] + 1,
+                0, 255, 0).save();
+        new RgbColor(DEFAULT_COLORS + itemNames[2] + Utils.getPopWindowItems(context, 2)[2] + 2,
+                0, 0, 255).save();
+
         new RgbColor(DEFAULT_COLORS + itemNames[5] + Utils.getPopWindowItems(context, 5)[1] + 0,
-                255, 255, 255).save();
+                255, 0, 0).save();
+        new RgbColor(DEFAULT_COLORS + itemNames[5] + Utils.getPopWindowItems(context, 5)[2] + 0,
+                255, 0, 0).save();
         new RgbColor(DEFAULT_COLORS + itemNames[5] + Utils.getPopWindowItems(context, 5)[2] + 1,
                 0, 255, 0).save();
         new RgbColor(DEFAULT_COLORS + itemNames[5] + Utils.getPopWindowItems(context, 5)[2] + 2,
                 0, 0, 255).save();
+        new RgbColor(DEFAULT_COLORS + itemNames[5] + Utils.getPopWindowItems(context, 5)[3] + 0,
+                255, 0, 0).save();
+        new RgbColor(DEFAULT_COLORS + itemNames[5] + Utils.getPopWindowItems(context, 5)[3] + 1,
+                255, 255, 0).save();
+        new RgbColor(DEFAULT_COLORS + itemNames[5] + Utils.getPopWindowItems(context, 5)[3] + 2,
+                0, 255, 0).save();
+        new RgbColor(DEFAULT_COLORS + itemNames[5] + Utils.getPopWindowItems(context, 5)[3] + 3,
+                0, 255, 255).save();
+        new RgbColor(DEFAULT_COLORS + itemNames[5] + Utils.getPopWindowItems(context, 5)[3] + 4,
+                0, 0, 255).save();
+        new RgbColor(DEFAULT_COLORS + itemNames[5] + Utils.getPopWindowItems(context, 5)[3] + 5,
+                255, 0, 255).save();
+        new RgbColor(DEFAULT_COLORS + itemNames[5] + Utils.getPopWindowItems(context, 5)[3] + 6,
+                255, 255, 255).save();
 
         new RgbColor(DEFAULT_COLORS + itemNames[6] + Utils.getPopWindowItems(context, 6)[0] + 0,
-                255, 255, 255).save();
+                0, 255, 255).save();
         new RgbColor(DEFAULT_COLORS + itemNames[6] + Utils.getPopWindowItems(context, 6)[0] + 1,
                 0, 0, 255).save();
+        new RgbColor(DEFAULT_COLORS + itemNames[6] + Utils.getPopWindowItems(context, 6)[1] + 0,
+                255, 0, 0).save();
         new RgbColor(DEFAULT_COLORS + itemNames[6] + Utils.getPopWindowItems(context, 6)[1] + 1,
                 0, 0, 255).save();
         new RgbColor(DEFAULT_COLORS + itemNames[6] + Utils.getPopWindowItems(context, 6)[1] + 2,
@@ -70,45 +106,25 @@ public class SqlUtils {
                 255, 125, 0).save();
 
         new RgbColor(DEFAULT_COLORS + itemNames[9] + Utils.getPopWindowItems(context, 9)[0] + 0,
-                255, 0, 0).save();
-        new RgbColor(DEFAULT_COLORS + itemNames[9] + Utils.getPopWindowItems(context, 9)[1] + 0,
-                255, 0, 157).save();
-        new RgbColor(DEFAULT_COLORS + itemNames[9] + Utils.getPopWindowItems(context, 9)[1] + 1,
-                0, 255, 255).save();
-        new RgbColor(DEFAULT_COLORS + itemNames[9] + Utils.getPopWindowItems(context, 9)[1] + 2,
                 0, 0, 255).save();
-        new RgbColor(DEFAULT_COLORS + itemNames[9] + Utils.getPopWindowItems(context, 9)[1] + 3,
-                255, 0, 255).save();
-        new RgbColor(DEFAULT_COLORS + itemNames[9] + Utils.getPopWindowItems(context, 9)[1] + 4,
-                255, 0, 0).save();
-        new RgbColor(DEFAULT_COLORS + itemNames[9] + Utils.getPopWindowItems(context, 9)[1] + 5,
-                255, 255, 0).save();
-        new RgbColor(DEFAULT_COLORS + itemNames[9] + Utils.getPopWindowItems(context, 9)[1] + 6,
-                0, 255, 0).save();
 
         new RgbColor(DEFAULT_COLORS + itemNames[10] + Utils.getPopWindowItems(context, 10)[0] + 0,
                 245, 208, 20).save();
         new RgbColor(DEFAULT_COLORS + itemNames[10] + Utils.getPopWindowItems(context, 10)[0] + 1,
-                245, 208, 20).save();
-        new RgbColor(DEFAULT_COLORS + itemNames[10] + Utils.getPopWindowItems(context, 10)[0] + 2,
                 245, 122, 20).save();
+        new RgbColor(DEFAULT_COLORS + itemNames[10] + Utils.getPopWindowItems(context, 10)[0] + 2,
+                245, 208, 20).save();
         new RgbColor(DEFAULT_COLORS + itemNames[10] + Utils.getPopWindowItems(context, 10)[0] + 3,
                 245, 122, 20).save();
-        new RgbColor(DEFAULT_COLORS + itemNames[10] + Utils.getPopWindowItems(context, 10)[0] + 4,
-                245, 122, 20).save();
-        new RgbColor(DEFAULT_COLORS + itemNames[10] + Utils.getPopWindowItems(context, 10)[0] + 5,
-                245, 208, 20).save();
-        new RgbColor(DEFAULT_COLORS + itemNames[10] + Utils.getPopWindowItems(context, 10)[0] + 6,
-                245, 208, 20).save();
 
 
-        new RgbColor(DEFAULT_COLORS + 0, 255, 0, 0).save(); //view 1 红色
-        new RgbColor(DEFAULT_COLORS + 1, 255, 255, 0).save();//view 2 黄色
-        new RgbColor(DEFAULT_COLORS + 2, 0, 255, 0).save();//view 3 绿色
-        new RgbColor(DEFAULT_COLORS + 3, 0, 255, 255).save();//view 4 浅绿
-        new RgbColor(DEFAULT_COLORS + 4, 0, 0, 255).save();//view 5 蓝色
-        new RgbColor(DEFAULT_COLORS + 5, 255, 0, 255).save();//view 6 紫色
-        new RgbColor(DEFAULT_COLORS + 6, 255, 255, 255).save();//view 7 白色
+        new RgbColor(DEFAULT_COLORS + 0, 255, 255, 255).save(); //view 1
+        new RgbColor(DEFAULT_COLORS + 1, 0, 255, 255).save();//view 2
+        new RgbColor(DEFAULT_COLORS + 2, 0, 0, 255).save();//view 3
+        new RgbColor(DEFAULT_COLORS + 3, 255, 0, 255).save();//view 4
+        new RgbColor(DEFAULT_COLORS + 4, 255, 0, 0).save();//view 5
+        new RgbColor(DEFAULT_COLORS + 5, 255, 255, 0).save();//view 6
+        new RgbColor(DEFAULT_COLORS + 6, 0, 255, 0).save();//view 7
     }
 
     public static List<RgbColor> getDefaultColors(String name, int position) {

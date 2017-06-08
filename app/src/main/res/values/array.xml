@@ -11,8 +11,8 @@
         <item>@string/beat_meter</item>
         <item>@string/solo</item>
         <item>@string/wave</item>
-        <item>@string/mood</item>
 
+        <item>@string/mood</item>
         <item>@string/aurora</item>
     </string-array>
 

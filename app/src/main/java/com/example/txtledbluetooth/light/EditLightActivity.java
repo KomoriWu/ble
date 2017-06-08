@@ -121,7 +121,6 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     private String mModelTypeFlags;
     private String mLightNo;
     private int mPopupPosition = 0;
-    private String mSpecialTypeSqlName;
     private boolean mIsReturn;
     private int mInitSBarSpeed;
     private int mInitSBarBright;
@@ -148,7 +147,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
                     break;
                 case OPERATE_MUSIC_PULSE:
                     mEditLightPresenter.operateSwitchBluetooth(mLightNo, LightType.getPulseIsOpen(
-                            mSpecialTypeSqlName));
+                            mLightName));
                     break;
             }
         }
@@ -198,7 +197,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
             }
         });
         rbBoard1.setChecked(true);
-        initSpecialView(!(mPosition == 0 || mPosition == 9));
+        initSpecialView();
 
         if (mPosition == 7) {
             mIsReturn = true;
@@ -215,16 +214,14 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         }
     }
 
-    public void initSpecialView(boolean isInit) {
-        if (isInit) {
+    public void initSpecialView() {
             mIsReturn = true;
-            switchView.setChecked(LightType.getPulseIsOpen(mSpecialTypeSqlName));
+            switchView.setChecked(LightType.getPulseIsOpen(mLightName));
             mIsReturn = false;
-            HashMap<String, Integer> hashMap = LightType.getSbProgressMap(mSpecialTypeSqlName,
+            HashMap<String, Integer> hashMap = LightType.getSbProgressMap(mLightName,
                     mPosition);
             seekBarBright.setProgress(hashMap.get(Utils.SEEK_BAR_PROGRESS_BRIGHT));
             seekBarSpeed.setProgress(hashMap.get(Utils.SEEK_BAR_PROGRESS_SPEED));
-        }
     }
 
     @OnClick({R.id.tv_toolbar_right, R.id.tv_chose_color_type})
@@ -343,12 +340,11 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     @Override
     public void revert() {
         RgbColor.deleteRgbColors(mLightName + mModelTypeFlags);
-        LightType.deleteLightTypeByName(mSpecialTypeSqlName);
+        LightType.deleteLightTypeByName(mLightName);
         radioGroup.check(R.id.rb_board1);
 
-        if (switchView.isChecked() != LightType.getPulseIsOpen(mSpecialTypeSqlName)) {
+        if (switchView.isChecked() != LightType.getPulseIsOpen(mLightName)) {
             mHandler.sendEmptyMessageDelayed(OPERATE_MUSIC_PULSE,WRITER_COMMAND_SLEEP);
-
         }
 
         setViewBoardDefaultColor();
@@ -406,10 +402,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         tvChoseType.setText(type);
         radioGroup.check(R.id.rb_board1);
         initEditLightUi(type);
-        mSpecialTypeSqlName = mPosition == 0 || mPosition == 9 ? mLightName +
-                mModelTypeFlags : mLightName;
         setViewBoardDefaultColor();
-        initSpecialView(mPosition == 0 || mPosition == 9);
         operateItemBluetooth(position);
         mPopWindow.dismiss();
     }
@@ -428,21 +421,21 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
                 mInitSBarBright) {
             mHandler.sendEmptyMessageDelayed(OPERATE_SB_BRIGHT, WRITER_COMMAND_SLEEP * 3);
         }
-        initSpecialView(true);
+        initSpecialView();
     }
 
     private void initEditLightUi(String type) {
         mModelTypeFlags = type;
         setPaintPixel(mEditLightPresenter.getLightColor(mLightName + mModelTypeFlags,
                 (Integer) radioGroup.getTag()));
-        if (type.equals(getString(R.string.random)) || type.contains(getString(R.string.white)) ||
-                type.contains(getString(R.string.default_)) || type.contains(getString(R.string.
+        if (type.equals(getString(R.string.random)) || type.contains(getString(R.string.white)) || type.contains(getString(R.string.default_)) ||
+                type.contains(getString(R.string.
                 moon_light)) || type.contains(getString(R.string.full))) {
             mEditLightPresenter.setIsSetOnColorSelectListener(false);
             setEtEnable(false);
             //fireworks
             if (mPosition == 1 || mPosition == 2 || mPosition == 3 || mPosition == 4 ||
-                    mPosition == 5 || mPosition == 9) {
+                    mPosition == 5 || mPosition == 9 || mPosition == 11) {
                 layoutSpeed.setVisibility(View.VISIBLE);
             } else {
                 layoutSpeed.setVisibility(View.GONE);
@@ -504,8 +497,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
 //                tvRevert.setClickable(false);
                 setEtNoData();
             }
-        } else if (type.contains("1") || type.contains(getString(R.string.colored)) || type.
-                contains(getString(R.string.single_color))) {
+        } else if (type.contains("1") || type.contains(getString(R.string.colored))) {
             mEditLightPresenter.setIsSetOnColorSelectListener(true);
             setEtEnable(true);
             //moonlight
@@ -564,7 +556,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
             viewBoard5.setVisibility(View.GONE);
             viewBoard6.setVisibility(View.GONE);
             viewBoard7.setVisibility(View.GONE);
-        } else if (type.contains("7") || type.contains(getString(R.string.mood))) {
+        } else if (type.contains("7") ) {
             mEditLightPresenter.setIsSetOnColorSelectListener(true);
             setEtEnable(true);
             layoutSpeed.setVisibility(View.VISIBLE);
@@ -582,10 +574,24 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
             viewBoard5.setVisibility(View.VISIBLE);
             viewBoard6.setVisibility(View.VISIBLE);
             viewBoard7.setVisibility(View.VISIBLE);
-            if (type.contains(getString(R.string.mood))) {
-                layoutSpeed.setVisibility(View.GONE);
-                layoutBrightness.setVisibility(View.GONE);
-            }
+        }else if (mPosition==10){
+            layoutSpeed.setVisibility(View.GONE);
+            mEditLightPresenter.setIsSetOnColorSelectListener(true);
+            setEtEnable(true);
+            rbBoard1.setVisibility(View.VISIBLE);
+            rbBoard2.setVisibility(View.VISIBLE);
+            rbBoard3.setVisibility(View.VISIBLE);
+            rbBoard4.setVisibility(View.VISIBLE);
+            rbBoard5.setVisibility(View.GONE);
+            rbBoard6.setVisibility(View.GONE);
+            rbBoard7.setVisibility(View.GONE);
+            viewBoard1.setVisibility(View.VISIBLE);
+            viewBoard2.setVisibility(View.VISIBLE);
+            viewBoard3.setVisibility(View.VISIBLE);
+            viewBoard4.setVisibility(View.VISIBLE);
+            viewBoard5.setVisibility(View.GONE);
+            viewBoard6.setVisibility(View.GONE);
+            viewBoard7.setVisibility(View.GONE);
         }
     }
 
@@ -693,14 +699,14 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void saveSpecialType() {
-        if (mPosition == 0 || mPosition == 9) {
-            Bundle bundle = new Bundle();
-            bundle.putString(Utils.SQL_NAME, mLightName + mModelTypeFlags);
-            bundle.putInt(Utils.SEEK_BAR_PROGRESS_SPEED, seekBarSpeed.getProgress());
-            bundle.putInt(Utils.SEEK_BAR_PROGRESS_BRIGHT, seekBarBright.getProgress());
-            bundle.putBoolean(Utils.PULSE_IS_OPEN, switchView.isChecked());
-            mEditLightPresenter.saveLightType(bundle);
-        }
+//        if (mPosition == 0 || mPosition == 9) {
+//            Bundle bundle = new Bundle();
+//            bundle.putString(Utils.SQL_NAME, mLightName + mModelTypeFlags);
+//            bundle.putInt(Utils.SEEK_BAR_PROGRESS_SPEED, seekBarSpeed.getProgress());
+//            bundle.putInt(Utils.SEEK_BAR_PROGRESS_BRIGHT, seekBarBright.getProgress());
+//            bundle.putBoolean(Utils.PULSE_IS_OPEN, switchView.isChecked());
+//            mEditLightPresenter.saveLightType(bundle);
+//        }
     }
 
     @Override
