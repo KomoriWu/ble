@@ -2,7 +2,6 @@ package com.example.txtledbluetooth.main.model;
 
 import android.content.Context;
 
-import com.example.txtledbluetooth.main.presenter.MainPresenter;
 import com.inuker.bluetooth.library.BluetoothClient;
 import com.inuker.bluetooth.library.connect.options.BleConnectOptions;
 
