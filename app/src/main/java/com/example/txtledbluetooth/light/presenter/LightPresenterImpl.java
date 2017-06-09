@@ -44,6 +44,11 @@ public class LightPresenterImpl implements LightPresenter {
         this.mLightView = mLightView;
         this.mContext = mContext;
         mLightModel = new LightModelImpl();
+        mClient = MyApplication.getBluetoothClient(mContext);
+        initConnData();
+    }
+
+    private void initConnData() {
         String serviceUUID = SharedPreferenceUtils.getSendService(mContext);
         String characterUUID = SharedPreferenceUtils.getSendCharacter(mContext);
         if (!TextUtils.isEmpty(serviceUUID)) {
@@ -52,7 +57,6 @@ public class LightPresenterImpl implements LightPresenter {
         if (!TextUtils.isEmpty(characterUUID)) {
             mCharacterUUID = UUID.fromString(characterUUID);
         }
-        mClient = MyApplication.getBluetoothClient(mContext);
         mMacAddress = SharedPreferenceUtils.getMacAddress(mContext);
     }
 
@@ -113,7 +117,7 @@ public class LightPresenterImpl implements LightPresenter {
 
                         @Override
                         public void onOpenNotifySuccess() {
-                            writeCommand(BleCommandUtils.BACK_NOTIFY);
+//                            writeCommand(BleCommandUtils.BACK_NOTIFY);
                         }
 
                     });
@@ -151,15 +155,18 @@ public class LightPresenterImpl implements LightPresenter {
     }
 
     private void writeCommand(String command) {
+        if (!mMacAddress.equals(SharedPreferenceUtils.getMacAddress(mContext))) {
+            initConnData();
+        }
         if (!TextUtils.isEmpty(command) && !TextUtils.isEmpty(mMacAddress)) {
-                mLightModel.WriteCommand(mClient, mMacAddress,
-                        mServiceUUID, mCharacterUUID, command, new
-                                LightModelImpl.OnInterfaceWriteCommand() {
-                                    @Override
-                                    public void onWriteFailure() {
-                                        mLightView.onWriteFailure();
-                                    }
-                                });
+            mLightModel.WriteCommand(mClient, mMacAddress,
+                    mServiceUUID, mCharacterUUID, command, new
+                            LightModelImpl.OnInterfaceWriteCommand() {
+                                @Override
+                                public void onWriteFailure() {
+                                    mLightView.onWriteFailure();
+                                }
+                            });
         }
 
     }

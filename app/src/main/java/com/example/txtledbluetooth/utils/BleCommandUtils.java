@@ -152,7 +152,7 @@ public class BleCommandUtils {
         for (int i = 0; i < count; i++) {
             command.append("#" + colors[i]);
         }
-        if (count==0){
+        if (count == 0) {
             command.append("*");
         }
         return HEAD + LIGHT + getLightNo(position) + COLOR_DATA + popupPosition + COLON +
@@ -161,14 +161,14 @@ public class BleCommandUtils {
 
     private static int getColorCount(String popupItem, int position) {
         int count = 0;
-        if (popupItem.contains("1") || position == 0 ||position == 8||popupItem.contains(
+        if (popupItem.contains("1") || position == 0 || position == 8 || popupItem.contains(
                 "Moonlight")) {
             count = 1;
         } else if (popupItem.contains("2")) {
             count = 2;
         } else if (popupItem.contains("3")) {
             count = 3;
-        } else if (popupItem.contains("7") ) {
+        } else if (popupItem.contains("7")) {
             count = 7;
         } else if (position == 7) {
             count = 5;
@@ -185,8 +185,8 @@ public class BleCommandUtils {
 
     //分包
     public static void divideFrameBleSendData(byte[] data, BluetoothClient client,
-                                              String macAddress, UUID serviceUUID,
-                                              UUID characterUUID, final LightModelImpl.
+                                              final String macAddress, final UUID serviceUUID,
+                                              final UUID characterUUID, final LightModelImpl.
             OnInterfaceWriteCommand onInterfaceWriteCommand) {
         Log.d("BLE Write Command:", new String(data));
         int tmpLen = data.length;
@@ -210,7 +210,10 @@ public class BleCommandUtils {
                         @Override
                         public void onResponse(int code) {
                             if (code == -1 && isShowDialog[0]) {
-                                Log.d("tag", code + "");
+                                Log.d("tag", "code:" + code);
+                                Log.d("tag", "macAddress:" + macAddress);
+                                Log.d("tag", "serviceUUID:" + serviceUUID);
+                                Log.d("tag", "characterUUID:" + characterUUID);
                                 onInterfaceWriteCommand.onWriteFailure();
                                 isShowDialog[0] = false;
                             }

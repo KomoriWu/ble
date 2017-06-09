@@ -23,6 +23,8 @@ import com.inuker.bluetooth.library.search.SearchRequest;
 import com.inuker.bluetooth.library.search.SearchResult;
 import com.inuker.bluetooth.library.search.response.SearchResponse;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -40,60 +42,43 @@ public class MainModelImpl implements MainModel {
     private static final int SEARCH_TIMEOUT_NUMBER = 3;
 
     @Override
-    public void initBle(final Context context, final BluetoothClient client, final BleConnectOptions
-            bleConnectOptions, final OnInitBleListener
-                                onInitBleListener) {
+    public void initBle(Context context, BluetoothClient client, BleConnectOptions
+            bleConnectOptions, OnInitBleListener onInitBleListener) {
         if (client.isBleSupported()) {
             if (client.isBluetoothOpened()) {
-                BluetoothManager bluetoothManager = (BluetoothManager) context.getSystemService(
-                        Context.BLUETOOTH_SERVICE);
-                Set<BluetoothDevice> devices = bluetoothManager.getAdapter().getBondedDevices();
-                for (int i = 0; i < devices.size(); i++) {
-                    for (Iterator<BluetoothDevice> it = devices.iterator(); it.hasNext(); ) {
-                        BluetoothDevice device = it.next();
-                        Log.d("bluename", "本机---" + device.getName());
-                        Log.d("bluename", "本机---" + device.getAddress());
-                        if (device.getName().contains(Utils.BLE_NAME)) {
-                            final String traditionAddress = device.getAddress();
+                try {
+                    BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+                    Class<BluetoothAdapter> bluetoothAdapterClass = BluetoothAdapter.class;//得到BluetoothAdapter的Class对象
+                    Method method = null;
+                    method = bluetoothAdapterClass.getDeclaredMethod("getConnectionState", (Class[]) null);
+                    //打开权限
+                    method.setAccessible(true);
+                    int state = (int) method.invoke(adapter, (Object[]) null);
+                    if (state == BluetoothAdapter.STATE_CONNECTED) {
+                        Set<BluetoothDevice> devices = adapter.getBondedDevices();
 
-                            SearchRequest request = new SearchRequest.Builder()
-                                    .searchBluetoothLeDevice(SEARCH_TIMEOUT, SEARCH_TIMEOUT_NUMBER).build();
-                            client.search(request, new SearchResponse() {
-                                @Override
-                                public void onSearchStarted() {
-
+                        for (BluetoothDevice device : devices) {
+                            Log.d("bluename", "本机---" + device.getName());
+                            Log.d("bluename", "本机---" + device.getAddress());
+                            if (device.getName().contains(Utils.BLE_NAME)) {
+                                Method isConnectedMethod = BluetoothDevice.class.getDeclaredMethod("isConnected", (Class[]) null);
+                                method.setAccessible(true);
+                                boolean isConnected = (boolean) isConnectedMethod.invoke(device, (Object[]) null);
+                                if (isConnected) {
+                                    Log.d("bluename", "connected:" + device.getAddress());
+                                    connBle(client, device.getAddress(), context, onInitBleListener,
+                                            bleConnectOptions);
+                                    break;
                                 }
-
-                                @Override
-                                public void onDeviceFounded(SearchResult device) {
-                                    Log.d("bluename", "BLE---" + device.getName());
-                                    Log.d("bluename", "BLE---" + device.getAddress());
-
-                                    if (traditionAddress.substring(3).equals(device.getAddress().
-                                            substring(3))) {
-//                            if (device.getAddress().contains("6A")) {  //调试
-                                        client.stopSearch();
-
-                                        //监听连接状态
-                                        connStatus(client, device.getAddress(), onInitBleListener);
-
-                                        connBle(context, client, bleConnectOptions, device.getAddress(),
-                                                device.getName(), onInitBleListener);
-//                            }
-                                    }
-                                }
-
-                                @Override
-                                public void onSearchStopped() {
-                                    onInitBleListener.OnException(context.getString(R.string.search_stop));
-                                }
-
-                                @Override
-                                public void onSearchCanceled() {
-                                }
-                            });
+                            }
                         }
                     }
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
                 }
             } else {
                 onInitBleListener.onFailure(context.getString(R.string.open_ble));
@@ -103,6 +88,45 @@ public class MainModelImpl implements MainModel {
         }
 
     }
+
+    private void connBle(final BluetoothClient client, final String traditionAddress,
+                         final Context context, final OnInitBleListener onInitBleListener,
+                         final BleConnectOptions bleConnectOptions) {
+        SearchRequest request = new SearchRequest.Builder()
+                .searchBluetoothLeDevice(SEARCH_TIMEOUT, SEARCH_TIMEOUT_NUMBER).build();
+        client.search(request, new SearchResponse() {
+            @Override
+            public void onSearchStarted() {
+
+            }
+
+            @Override
+            public void onDeviceFounded(SearchResult device) {
+                Log.d("bluename", "BLE---" + device.getName());
+                Log.d("bluename", "BLE---" + device.getAddress());
+
+                if (traditionAddress.substring(3).equals(device.getAddress().
+                        substring(3))) {
+                    client.stopSearch();
+                    //监听连接状态
+                    connStatus(client, device.getAddress(), onInitBleListener);
+
+                    connBle(context, client, bleConnectOptions, device.getAddress(),
+                            device.getName(), onInitBleListener);
+                }
+            }
+
+            @Override
+            public void onSearchStopped() {
+                onInitBleListener.OnException(context.getString(R.string.search_stop));
+            }
+
+            @Override
+            public void onSearchCanceled() {
+            }
+        });
+    }
+
 
     private void connStatus(BluetoothClient client, String address, final OnInitBleListener
             onInitBleListener) {
