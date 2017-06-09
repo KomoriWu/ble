@@ -28,12 +28,14 @@ public class SettingPresenterImp implements SettingPresenter {
     private UUID mServiceUUID;
     private UUID mCharacterUUID;
     private BluetoothClient mClient;
+
     public SettingPresenterImp(SettingView mSettingView, Context mContext) {
         this.mSettingView = mSettingView;
         this.mContext = mContext;
         mSettingModel = new SettingModelImpl();
         mClient = MyApplication.getBluetoothClient(mContext);
     }
+
     private void initConnData() {
         String serviceUUID = SharedPreferenceUtils.getSendService(mContext);
         String characterUUID = SharedPreferenceUtils.getSendCharacter(mContext);
@@ -45,6 +47,7 @@ public class SettingPresenterImp implements SettingPresenter {
         }
         mMacAddress = SharedPreferenceUtils.getMacAddress(mContext);
     }
+
     @Override
     public void settings(int id) {
         switch (id) {
@@ -65,9 +68,7 @@ public class SettingPresenterImp implements SettingPresenter {
     }
 
     private void writeCommand(String command) {
-        if (!mMacAddress.equals(SharedPreferenceUtils.getMacAddress(mContext))) {
-            initConnData();
-        }
+        initConnData();
         if (!TextUtils.isEmpty(command) && !TextUtils.isEmpty(mMacAddress)) {
             mSettingModel.WriteCommand(mClient, mMacAddress,
                     mServiceUUID, mCharacterUUID, command);

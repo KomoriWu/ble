@@ -45,7 +45,6 @@ public class LightPresenterImpl implements LightPresenter {
         this.mContext = mContext;
         mLightModel = new LightModelImpl();
         mClient = MyApplication.getBluetoothClient(mContext);
-        initConnData();
     }
 
     private void initConnData() {
@@ -107,6 +106,7 @@ public class LightPresenterImpl implements LightPresenter {
         if (!TextUtils.isEmpty(characterUUID)) {
             uuidCharacter = UUID.fromString(characterUUID);
         }
+        mMacAddress = SharedPreferenceUtils.getMacAddress(mContext);
         if (!TextUtils.isEmpty(mMacAddress)) {
             mLightModel.openNotify(mContext, mClient, mMacAddress, uuidService, uuidCharacter,
                     new LightModelImpl.OnInterfaceOpenNotify() {
@@ -155,9 +155,7 @@ public class LightPresenterImpl implements LightPresenter {
     }
 
     private void writeCommand(String command) {
-        if (!mMacAddress.equals(SharedPreferenceUtils.getMacAddress(mContext))) {
-            initConnData();
-        }
+        initConnData();
         if (!TextUtils.isEmpty(command) && !TextUtils.isEmpty(mMacAddress)) {
             mLightModel.WriteCommand(mClient, mMacAddress,
                     mServiceUUID, mCharacterUUID, command, new

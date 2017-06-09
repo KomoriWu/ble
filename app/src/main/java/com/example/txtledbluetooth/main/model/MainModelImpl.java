@@ -1,5 +1,6 @@
 package com.example.txtledbluetooth.main.model;
 
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
@@ -50,7 +51,8 @@ public class MainModelImpl implements MainModel {
                     BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
                     Class<BluetoothAdapter> bluetoothAdapterClass = BluetoothAdapter.class;//得到BluetoothAdapter的Class对象
                     Method method = null;
-                    method = bluetoothAdapterClass.getDeclaredMethod("getConnectionState", (Class[]) null);
+                    method = bluetoothAdapterClass.getDeclaredMethod("getConnectionState",
+                            (Class[]) null);
                     //打开权限
                     method.setAccessible(true);
                     int state = (int) method.invoke(adapter, (Object[]) null);
@@ -61,9 +63,12 @@ public class MainModelImpl implements MainModel {
                             Log.d("bluename", "本机---" + device.getName());
                             Log.d("bluename", "本机---" + device.getAddress());
                             if (device.getName().contains(Utils.BLE_NAME)) {
-                                Method isConnectedMethod = BluetoothDevice.class.getDeclaredMethod("isConnected", (Class[]) null);
+                                @SuppressLint("PrivateApi")
+                                Method isConnectedMethod = BluetoothDevice.class.getDeclaredMethod(
+                                        "isConnected", (Class[]) null);
                                 method.setAccessible(true);
-                                boolean isConnected = (boolean) isConnectedMethod.invoke(device, (Object[]) null);
+                                boolean isConnected = (boolean) isConnectedMethod.invoke(device, (
+                                        Object[]) null);
                                 if (isConnected) {
                                     Log.d("bluename", "connected:" + device.getAddress());
                                     connBle(client, device.getAddress(), context, onInitBleListener,
@@ -73,11 +78,8 @@ public class MainModelImpl implements MainModel {
                             }
                         }
                     }
-                } catch (NoSuchMethodException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
+                } catch (NoSuchMethodException | IllegalAccessException |
+                        InvocationTargetException e) {
                     e.printStackTrace();
                 }
             } else {
