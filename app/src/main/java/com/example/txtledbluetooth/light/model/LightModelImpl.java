@@ -49,25 +49,16 @@ public class LightModelImpl implements LightModel {
                 sbCommand.append(new String(value));
                 if (value != null && value.length > 1) {
                     Log.d("notify", "----" + bytes2hex03(value));
-                    if ((value[value.length - 1] == 10 && value[value.length - 2] == 13) ||
-                            value[value.length - 1] == 13) {
+                    if ((value[value.length - 1] == 10 && value[value.length - 2] == 13)) {
                         Log.d("notify", "command:" + sbCommand.toString());
                         String[] commands = sbCommand.toString().split("\\" + BleCommandUtils.
                                 DIVISION);
-
-                        int position = Utils.getItemPosition(commands, context);
-                        boolean switchState = Integer.parseInt(commands[1]) == 1 ? true : false;
+                        int position = Utils.getItemPosition(Integer.parseInt(commands[2]), context);
+                        boolean switchState = position == 0 ? false : true;
                         Bundle bundle = new Bundle();
                         bundle.putInt(Utils.POSITION, position);
                         bundle.putBoolean(Utils.SWITCH_STATE, switchState);
                         onInterfaceOpenNotify.onNotify(bundle);
-                        if (!(!switchState && Integer.parseInt(commands[2]) == 0 &&
-                                Integer.parseInt(commands[3]) == 0 &&
-                                Integer.parseInt(commands[4]) == 0)) {
-                            //非模式为关状态
-                            saveNotify(context, position, commands,sbCommand);
-                        }
-
                         sbCommand.setLength(0);
                     }
                 }

@@ -194,7 +194,6 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (mIsReturn) return;
                 mEditLightPresenter.operateSwitchBluetooth(mLightNo, isChecked);
-                saveSpecialType();
             }
         });
         rbBoard1.setChecked(true);
@@ -702,19 +701,8 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         } else if (seekBar.getId() == R.id.sb_brightness) {
             mEditLightPresenter.setLightBrightness(mLightNo, seekBar.getProgress());
         }
-        saveSpecialType();
     }
 
-    private void saveSpecialType() {
-//        if (mPosition == 0 || mPosition == 9) {
-//            Bundle bundle = new Bundle();
-//            bundle.putString(Utils.SQL_NAME, mLightName + mModelTypeFlags);
-//            bundle.putInt(Utils.SEEK_BAR_PROGRESS_SPEED, seekBarSpeed.getProgress());
-//            bundle.putInt(Utils.SEEK_BAR_PROGRESS_BRIGHT, seekBarBright.getProgress());
-//            bundle.putBoolean(Utils.PULSE_IS_OPEN, switchView.isChecked());
-//            mEditLightPresenter.saveLightType(bundle);
-//        }
-    }
 
     @Override
     protected void onPause() {

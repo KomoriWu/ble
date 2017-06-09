@@ -257,6 +257,7 @@ public class MainActivity extends BaseActivity implements MainView {
     public void showLoadSuccessMsg(String name) {
         AlertUtils.showAlertDialog(this, String.format(getString(R.string.conn_ble_success),
                 name));
+        hideSnackBar();
     }
 
     @Override
@@ -292,9 +293,7 @@ public class MainActivity extends BaseActivity implements MainView {
 
     @Override
     public void onConnStatus(String mac, int status) {
-        if (status == Constants.STATUS_CONNECTED) {
-            hideSnackBar();
-        } else if (status == Constants.STATUS_DISCONNECTED) {
+        if (status == Constants.STATUS_DISCONNECTED) {
             showSnackBar(mainContent, getString(R.string.dis_conn));
         }
     }

@@ -55,7 +55,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public void hideSnackBar() {
-        if (snackbar != null) {
+        if (snackbar != null&&snackbar.isShown()) {
             snackbar.dismiss();
         }
     }

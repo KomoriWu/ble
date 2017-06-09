@@ -98,7 +98,7 @@ public class Utils {
         int[] lightIcons = {R.mipmap.icon_moon_light, R.mipmap.icon_fireworks,
                 R.mipmap.icon_hot_wheels, R.mipmap.icon_spectrum, R.mipmap.icon_full_spectrum,
                 R.mipmap.icon_pulsate, R.mipmap.icon_morph, R.mipmap.icon_beat_meter,
-               R.mipmap.icon_solo, R.mipmap.icon_wave, R.mipmap.icon_mood, R.mipmap.icon_aurora};
+                R.mipmap.icon_solo, R.mipmap.icon_wave, R.mipmap.icon_mood, R.mipmap.icon_aurora};
         ArrayList<Lighting> lightingList = new ArrayList<>();
         for (int i = 0; i < lightIcons.length; i++) {
             lightingList.add(i, new Lighting(lightNames[i], lightIcons[i], true));
@@ -270,8 +270,14 @@ public class Utils {
         return Arrays.asList(lightNames).indexOf(lightNamesBle[position]);
     }
 
-    public static int switchBlePosition(int blePosition) {
-        int[] blePositions = {1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15};
+    public static int getItemPosition(int position, Context context) {
+        String[] lightNames = context.getResources().getStringArray(R.array.lighting_name);
+        String[] lightNamesBle = context.getResources().getStringArray(R.array.lighting_name_ble);
+        return Arrays.asList(lightNames).indexOf(lightNamesBle[switchBlePosition(position)]);
+    }
+
+    private static int switchBlePosition(int blePosition) {
+        int[] blePositions = {1, 3, 4, 5, 7, 6, 9, 12, 2, 13, 14, 16, 15};
         for (int i = 0; i < blePositions.length; i++) {
             if (blePosition == blePositions[i]) {
                 return i;
@@ -279,14 +285,5 @@ public class Utils {
         }
         //默认停留在moonlight
         return 0;
-    }
-    public static void showSnackBar(View view, String str) {
-        Snackbar.make(view, str, Snackbar.LENGTH_INDEFINITE).setAction(R.string.ok,
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                    }
-                }).show();
     }
 }

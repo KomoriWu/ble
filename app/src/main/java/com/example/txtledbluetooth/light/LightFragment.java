@@ -89,7 +89,7 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
                 mLightPresenter.operateSwitchBluetooth(isChecked);
             }
         });
-//        startTimer();
+        startTimer();
         return view;
     }
 
