@@ -47,14 +47,15 @@ public class LightModelImpl implements LightModel {
             @Override
             public void onNotify(UUID service, UUID character, byte[] value) {
                 sbCommand.append(new String(value));
-                if (value != null && value.length > 1) {
+                if (value.length > 1) {
                     Log.d("notify", "----" + bytes2hex03(value));
                     if ((value[value.length - 1] == 10 && value[value.length - 2] == 13)) {
                         Log.d("notify", "command:" + sbCommand.toString());
                         String[] commands = sbCommand.toString().split("\\" + BleCommandUtils.
                                 DIVISION);
+                        int blePosition = Integer.parseInt(commands[2]);
                         int position = Utils.getItemPosition(Integer.parseInt(commands[2]), context);
-                        boolean switchState = position == 0 ? false : true;
+                        boolean switchState = blePosition != 0;
                         Bundle bundle = new Bundle();
                         bundle.putInt(Utils.POSITION, position);
                         bundle.putBoolean(Utils.SWITCH_STATE, switchState);

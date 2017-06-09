@@ -205,6 +205,7 @@ public class BleCommandUtils {
                 sendData = Arrays.copyOfRange(data, start, end);
                 tmpLen = 0;
             }
+
             client.write(macAddress, serviceUUID, characterUUID, sendData,
                     new BleWriteResponse() {
                         @Override
