@@ -168,7 +168,7 @@ public class BleCommandUtils {
             count = 2;
         } else if (popupItem.contains("3")) {
             count = 3;
-        } else if (popupItem.contains("7") || position == 11) {
+        } else if (popupItem.contains("7") ) {
             count = 7;
         } else if (position == 7) {
             count = 5;

@@ -60,11 +60,14 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
     @SuppressLint("HandlerLeak")
     private Handler mTimerHandler = new Handler() {
         public void handleMessage(Message msg) {
-            if (msg.what == TIMER_MESSAGE) {
-                mLightPresenter.openNotify();
-                stopTimer();
-            }
             super.handleMessage(msg);
+            switch (msg.what){
+                case TIMER_MESSAGE:
+                    mLightPresenter.openNotify();
+                    stopTimer();
+                    break;
+            }
+
         }
     };
 

@@ -122,6 +122,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     private String mLightNo;
     private int mPopupPosition = 0;
     private boolean mIsReturn;
+    private boolean mIsFirst;
     private int mInitSBarSpeed;
     private int mInitSBarBright;
     @SuppressLint("HandlerLeak")
@@ -215,13 +216,15 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     }
 
     public void initSpecialView() {
+        if (switchView.isClickable()) {
             mIsReturn = true;
             switchView.setChecked(LightType.getPulseIsOpen(mLightName));
             mIsReturn = false;
-            HashMap<String, Integer> hashMap = LightType.getSbProgressMap(mLightName,
-                    mPosition);
-            seekBarBright.setProgress(hashMap.get(Utils.SEEK_BAR_PROGRESS_BRIGHT));
-            seekBarSpeed.setProgress(hashMap.get(Utils.SEEK_BAR_PROGRESS_SPEED));
+        }
+        HashMap<String, Integer> hashMap = LightType.getSbProgressMap(mLightName,
+                mPosition);
+        seekBarBright.setProgress(hashMap.get(Utils.SEEK_BAR_PROGRESS_BRIGHT));
+        seekBarSpeed.setProgress(hashMap.get(Utils.SEEK_BAR_PROGRESS_SPEED));
     }
 
     @OnClick({R.id.tv_toolbar_right, R.id.tv_chose_color_type})
@@ -293,7 +296,8 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         mPopWindow = new PopupWindow(popWindowView, ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT, true);
         mPopWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        PopupWindowAdapter windowAdapter = new PopupWindowAdapter(mPopupItems, this, this);
+        PopupWindowAdapter windowAdapter = new PopupWindowAdapter(mPopupItems, this,
+                this);
 
         if (mPopupItems.length > 1) {
             popupRecyclerView.setAdapter(windowAdapter);
@@ -343,8 +347,8 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         LightType.deleteLightTypeByName(mLightName);
         radioGroup.check(R.id.rb_board1);
 
-        if (switchView.isChecked() != LightType.getPulseIsOpen(mLightName)) {
-            mHandler.sendEmptyMessageDelayed(OPERATE_MUSIC_PULSE,WRITER_COMMAND_SLEEP);
+        if (switchView.isChecked() != LightType.getPulseIsOpen(mLightName) && switchView.isClickable()) {
+            mHandler.sendEmptyMessageDelayed(OPERATE_MUSIC_PULSE, WRITER_COMMAND_SLEEP);
         }
 
         setViewBoardDefaultColor();
@@ -403,7 +407,10 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         radioGroup.check(R.id.rb_board1);
         initEditLightUi(type);
         setViewBoardDefaultColor();
-        operateItemBluetooth(position);
+        if (mIsFirst) {
+            operateItemBluetooth(position);
+        }
+        mIsFirst = true;
         mPopWindow.dismiss();
     }
 
@@ -430,7 +437,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
                 (Integer) radioGroup.getTag()));
         if (type.equals(getString(R.string.random)) || type.contains(getString(R.string.white)) || type.contains(getString(R.string.default_)) ||
                 type.contains(getString(R.string.
-                moon_light)) || type.contains(getString(R.string.full))) {
+                        moon_light)) || type.contains(getString(R.string.full))) {
             mEditLightPresenter.setIsSetOnColorSelectListener(false);
             setEtEnable(false);
             //fireworks
@@ -556,7 +563,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
             viewBoard5.setVisibility(View.GONE);
             viewBoard6.setVisibility(View.GONE);
             viewBoard7.setVisibility(View.GONE);
-        } else if (type.contains("7") ) {
+        } else if (type.contains("7")) {
             mEditLightPresenter.setIsSetOnColorSelectListener(true);
             setEtEnable(true);
             layoutSpeed.setVisibility(View.VISIBLE);
@@ -574,7 +581,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
             viewBoard5.setVisibility(View.VISIBLE);
             viewBoard6.setVisibility(View.VISIBLE);
             viewBoard7.setVisibility(View.VISIBLE);
-        }else if (mPosition==10){
+        } else if (mPosition == 10) {
             layoutSpeed.setVisibility(View.GONE);
             mEditLightPresenter.setIsSetOnColorSelectListener(true);
             setEtEnable(true);
