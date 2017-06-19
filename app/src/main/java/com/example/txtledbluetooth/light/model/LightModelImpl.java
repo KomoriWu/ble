@@ -54,7 +54,7 @@ public class LightModelImpl implements LightModel {
                         String[] commands = sbCommand.toString().split("\\" + BleCommandUtils.
                                 DIVISION);
                         int blePosition = Integer.parseInt(commands[2]);
-                        int position = Utils.getItemPosition(Integer.parseInt(commands[2]), context);
+                        int position = Utils.getItemPosition(Integer.parseInt(commands[2]));
                         boolean switchState = blePosition != 0;
                         Bundle bundle = new Bundle();
                         bundle.putInt(Utils.POSITION, position);

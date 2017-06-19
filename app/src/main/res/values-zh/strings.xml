@@ -51,6 +51,7 @@
     <string name="color2">2色</string>
     <string name="color3">3色</string>
     <string name="color7">7色</string>
+    <string name="color8">8色</string>
     <string name="white">白色</string>
     <string name="colored">彩色</string>
     <string name="default_">默认</string>
@@ -66,6 +67,7 @@
     <string name="cycle_all">Cycle All</string>
     <string name="cycle">Cycle</string>
     <string name="wave">波形</string>
+    <string name="full_wave">全波形</string>
     <string name="solo">Solo</string>
     <string name="aurora">极光</string>
     <string name="well">#</string>

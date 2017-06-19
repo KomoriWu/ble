@@ -36,7 +36,8 @@ public class BleCommandUtils {
     private static final String PULSATE = "clg";
     private static final String MORPH = "mop";
     private static final String BEAT_METER = "hst";
-    private static final String WAVE = "wav";
+    private static final String WAVE = "ibw";
+    private static final String FULL_WAVE = "crw";
     private static final String SOLO = "sol";
     private static final String MOOD = "mod";
     private static final String AURORA = "aur";
@@ -104,10 +105,10 @@ public class BleCommandUtils {
                 lightNo = BEAT_METER;
                 break;
             case 8:
-                lightNo = SOLO;
+                lightNo = WAVE;
                 break;
             case 9:
-                lightNo = WAVE;
+                lightNo = FULL_WAVE;
                 break;
             case 10:
                 lightNo = MOOD;
@@ -170,6 +171,8 @@ public class BleCommandUtils {
             count = 3;
         } else if (popupItem.contains("7")) {
             count = 7;
+        } else if (popupItem.contains("8")) {
+            count = 8;
         } else if (position == 7) {
             count = 5;
         } else if (position == 10) {

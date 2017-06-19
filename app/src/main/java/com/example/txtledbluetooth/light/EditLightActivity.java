@@ -71,6 +71,8 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     View viewBoard6;
     @BindView(R.id.view_board7)
     View viewBoard7;
+    @BindView(R.id.view_board8)
+    View viewBoard8;
     private PopupWindow mPopWindow;
     private String[] mPopupItems;
     @BindView(R.id.color_picker)
@@ -91,6 +93,8 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     RadioButton rbBoard6;
     @BindView(R.id.rb_board7)
     RadioButton rbBoard7;
+    @BindView(R.id.rb_board8)
+    RadioButton rbBoard8;
     @BindView(R.id.layout_color_rgb)
     LinearLayout layoutColorRgb;
     @BindView(R.id.layout_speed)
@@ -265,6 +269,10 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
                 radioGroup.setTag(6);
                 mBgView = viewBoard7;
                 break;
+            case R.id.rb_board8:
+                radioGroup.setTag(7);
+                mBgView = viewBoard8;
+                break;
         }
         mEditLightPresenter.viewOnclick(radioGroup, mBgView, mLightName + mModelTypeFlags,
                 (Integer) radioGroup.getTag());
@@ -359,8 +367,8 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     private void setViewBoardDefaultColor() {
         int[] colors = RgbColor.getRgbColors(mLightName + mModelTypeFlags);
         View view = viewBoard1;
-        if (colors != null && colors.length == 7) {
-            for (int i = 0; i < 7; i++) {
+        if (colors != null && colors.length == 8) {
+            for (int i = 0; i < 8; i++) {
                 switch (i) {
                     case 0:
                         view = viewBoard1;
@@ -382,6 +390,9 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
                         break;
                     case 6:
                         view = viewBoard7;
+                        break;
+                    case 7:
+                        view = viewBoard8;
                         break;
                 }
                 view.setBackgroundColor(colors[i]);
@@ -456,6 +467,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
                 rbBoard5.setVisibility(View.VISIBLE);
                 rbBoard6.setVisibility(View.GONE);
                 rbBoard7.setVisibility(View.GONE);
+                rbBoard8.setVisibility(View.GONE);
                 viewBoard1.setVisibility(View.VISIBLE);
                 viewBoard2.setVisibility(View.VISIBLE);
                 viewBoard3.setVisibility(View.VISIBLE);
@@ -463,6 +475,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
                 viewBoard5.setVisibility(View.VISIBLE);
                 viewBoard6.setVisibility(View.GONE);
                 viewBoard7.setVisibility(View.GONE);
+                viewBoard8.setVisibility(View.GONE);
             } else if (mPosition == 8) {
                 mEditLightPresenter.setIsSetOnColorSelectListener(true);
                 setEtEnable(true);
@@ -473,6 +486,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
                 rbBoard5.setVisibility(View.GONE);
                 rbBoard6.setVisibility(View.GONE);
                 rbBoard7.setVisibility(View.GONE);
+                rbBoard8.setVisibility(View.GONE);
                 viewBoard1.setVisibility(View.VISIBLE);
                 viewBoard2.setVisibility(View.GONE);
                 viewBoard3.setVisibility(View.GONE);
@@ -480,6 +494,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
                 viewBoard5.setVisibility(View.GONE);
                 viewBoard6.setVisibility(View.GONE);
                 viewBoard7.setVisibility(View.GONE);
+                viewBoard8.setVisibility(View.GONE);
             } else {
                 mEditLightPresenter.setIsSetOnColorSelectListener(false);
                 setEtEnable(false);
@@ -490,6 +505,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
                 rbBoard5.setVisibility(View.GONE);
                 rbBoard6.setVisibility(View.GONE);
                 rbBoard7.setVisibility(View.GONE);
+                rbBoard8.setVisibility(View.GONE);
                 viewBoard1.setVisibility(View.GONE);
                 viewBoard2.setVisibility(View.GONE);
                 viewBoard3.setVisibility(View.GONE);
@@ -497,6 +513,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
                 viewBoard5.setVisibility(View.GONE);
                 viewBoard6.setVisibility(View.GONE);
                 viewBoard7.setVisibility(View.GONE);
+                viewBoard8.setVisibility(View.GONE);
             }
             if (mPosition == 0 || mPosition == 1 || mPosition == 2 || mPosition == 3 ||
                     mPosition == 4 || mPosition == 5 || mPosition == 11) {
@@ -519,6 +536,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
             rbBoard5.setVisibility(View.GONE);
             rbBoard6.setVisibility(View.GONE);
             rbBoard7.setVisibility(View.GONE);
+            rbBoard8.setVisibility(View.GONE);
             viewBoard1.setVisibility(View.VISIBLE);
             viewBoard2.setVisibility(View.GONE);
             viewBoard3.setVisibility(View.GONE);
@@ -526,6 +544,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
             viewBoard5.setVisibility(View.GONE);
             viewBoard6.setVisibility(View.GONE);
             viewBoard7.setVisibility(View.GONE);
+            viewBoard8.setVisibility(View.GONE);
         } else if (type.contains("2")) {
             mEditLightPresenter.setIsSetOnColorSelectListener(true);
             setEtEnable(true);
@@ -537,6 +556,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
             rbBoard5.setVisibility(View.GONE);
             rbBoard6.setVisibility(View.GONE);
             rbBoard7.setVisibility(View.GONE);
+            rbBoard8.setVisibility(View.GONE);
             viewBoard1.setVisibility(View.VISIBLE);
             viewBoard2.setVisibility(View.VISIBLE);
             viewBoard3.setVisibility(View.GONE);
@@ -544,6 +564,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
             viewBoard5.setVisibility(View.GONE);
             viewBoard6.setVisibility(View.GONE);
             viewBoard7.setVisibility(View.GONE);
+            viewBoard8.setVisibility(View.GONE);
         } else if (type.contains("3")) {
             mEditLightPresenter.setIsSetOnColorSelectListener(true);
             setEtEnable(true);
@@ -555,6 +576,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
             rbBoard5.setVisibility(View.GONE);
             rbBoard6.setVisibility(View.GONE);
             rbBoard7.setVisibility(View.GONE);
+            rbBoard8.setVisibility(View.GONE);
             viewBoard1.setVisibility(View.VISIBLE);
             viewBoard2.setVisibility(View.VISIBLE);
             viewBoard3.setVisibility(View.VISIBLE);
@@ -562,6 +584,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
             viewBoard5.setVisibility(View.GONE);
             viewBoard6.setVisibility(View.GONE);
             viewBoard7.setVisibility(View.GONE);
+            viewBoard8.setVisibility(View.GONE);
         } else if (type.contains("7")) {
             mEditLightPresenter.setIsSetOnColorSelectListener(true);
             setEtEnable(true);
@@ -573,6 +596,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
             rbBoard5.setVisibility(View.VISIBLE);
             rbBoard6.setVisibility(View.VISIBLE);
             rbBoard7.setVisibility(View.VISIBLE);
+            rbBoard8.setVisibility(View.GONE);
             viewBoard1.setVisibility(View.VISIBLE);
             viewBoard2.setVisibility(View.VISIBLE);
             viewBoard3.setVisibility(View.VISIBLE);
@@ -580,7 +604,28 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
             viewBoard5.setVisibility(View.VISIBLE);
             viewBoard6.setVisibility(View.VISIBLE);
             viewBoard7.setVisibility(View.VISIBLE);
-        } else if (mPosition == 10) {
+            viewBoard8.setVisibility(View.GONE);
+        }  else if (type.contains("8")) {
+            mEditLightPresenter.setIsSetOnColorSelectListener(true);
+            setEtEnable(true);
+            layoutSpeed.setVisibility(View.VISIBLE);
+            rbBoard1.setVisibility(View.VISIBLE);
+            rbBoard2.setVisibility(View.VISIBLE);
+            rbBoard3.setVisibility(View.VISIBLE);
+            rbBoard4.setVisibility(View.VISIBLE);
+            rbBoard5.setVisibility(View.VISIBLE);
+            rbBoard6.setVisibility(View.VISIBLE);
+            rbBoard7.setVisibility(View.VISIBLE);
+            rbBoard8.setVisibility(View.VISIBLE);
+            viewBoard1.setVisibility(View.VISIBLE);
+            viewBoard2.setVisibility(View.VISIBLE);
+            viewBoard3.setVisibility(View.VISIBLE);
+            viewBoard4.setVisibility(View.VISIBLE);
+            viewBoard5.setVisibility(View.VISIBLE);
+            viewBoard6.setVisibility(View.VISIBLE);
+            viewBoard7.setVisibility(View.VISIBLE);
+            viewBoard8.setVisibility(View.VISIBLE);
+        }else if (mPosition == 10) {
             layoutSpeed.setVisibility(View.GONE);
             mEditLightPresenter.setIsSetOnColorSelectListener(true);
             setEtEnable(true);
@@ -591,6 +636,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
             rbBoard5.setVisibility(View.GONE);
             rbBoard6.setVisibility(View.GONE);
             rbBoard7.setVisibility(View.GONE);
+            rbBoard8.setVisibility(View.GONE);
             viewBoard1.setVisibility(View.VISIBLE);
             viewBoard2.setVisibility(View.VISIBLE);
             viewBoard3.setVisibility(View.VISIBLE);
@@ -598,6 +644,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
             viewBoard5.setVisibility(View.GONE);
             viewBoard6.setVisibility(View.GONE);
             viewBoard7.setVisibility(View.GONE);
+            viewBoard8.setVisibility(View.GONE);
         }
     }
 

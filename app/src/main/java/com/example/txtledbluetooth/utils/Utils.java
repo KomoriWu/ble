@@ -3,15 +3,10 @@ package com.example.txtledbluetooth.utils;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.location.LocationManager;
 import android.media.AudioManager;
-import android.net.Uri;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import com.example.txtledbluetooth.R;
@@ -20,11 +15,8 @@ import com.inuker.bluetooth.library.connect.options.BleConnectOptions;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by KomoriWu
@@ -97,7 +89,7 @@ public class Utils {
         int[] lightIcons = {R.mipmap.icon_moon_light, R.mipmap.icon_fireworks,
                 R.mipmap.icon_hot_wheels, R.mipmap.icon_spectrum, R.mipmap.icon_full_spectrum,
                 R.mipmap.icon_pulsate, R.mipmap.icon_morph, R.mipmap.icon_beat_meter,
-                R.mipmap.icon_solo, R.mipmap.icon_wave, R.mipmap.icon_mood, R.mipmap.icon_aurora};
+                R.mipmap.icon_wave, R.mipmap.icon_wave, R.mipmap.icon_mood, R.mipmap.icon_aurora};
         ArrayList<Lighting> lightingList = new ArrayList<>();
         for (int i = 0; i < lightIcons.length; i++) {
             lightingList.add(i, new Lighting(lightNames[i], lightIcons[i], true));
@@ -141,17 +133,17 @@ public class Utils {
                 items = context.getResources().getStringArray(R.array.morph_color_type);
                 break;
             case 8:
-                items = context.getResources().getStringArray(R.array.solo_color_type);
+                items = context.getResources().getStringArray(R.array.wave_color_type);
                 break;
             case 9:
-                items = context.getResources().getStringArray(R.array.wave_color_type);
+                items = context.getResources().getStringArray(R.array.full_wave_color_type);
                 break;
             case 10:
                 items = context.getResources().getStringArray(R.array.mood_color_type);
                 break;
 
             default:
-                items = context.getResources().getStringArray(R.array.solo_color_type);
+                items = context.getResources().getStringArray(R.array.wave_color_type);
                 break;
 
 
@@ -261,22 +253,13 @@ public class Utils {
         return false;
     }
 
-    public static int getItemPosition(String[] commands, Context context) {
-        int position = Integer.parseInt(commands[3]) == 0 ? switchBlePosition(
-                Integer.parseInt(commands[2])) : switchBlePosition(Integer.parseInt(commands[3]));
-        String[] lightNames = context.getResources().getStringArray(R.array.lighting_name);
-        String[] lightNamesBle = context.getResources().getStringArray(R.array.lighting_name_ble);
-        return Arrays.asList(lightNames).indexOf(lightNamesBle[position]);
-    }
 
-    public static int getItemPosition(int position, Context context) {
-        String[] lightNames = context.getResources().getStringArray(R.array.lighting_name);
-        String[] lightNamesBle = context.getResources().getStringArray(R.array.lighting_name_ble);
-        return Arrays.asList(lightNames).indexOf(lightNamesBle[switchBlePosition(position)]);
+    public static int getItemPosition(int position) {
+        return switchBlePosition(position);
     }
 
     private static int switchBlePosition(int blePosition) {
-        int[] blePositions = {1, 3, 4, 5, 7, 6, 9, 12, 2, 13, 14, 16, 15};
+        int[] blePositions = {2, 3, 4, 5, 7, 6, 9, 12,  13, 14, 16, 15};
         for (int i = 0; i < blePositions.length; i++) {
             if (blePosition == blePositions[i]) {
                 return i;

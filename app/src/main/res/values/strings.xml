@@ -51,6 +51,7 @@
     <string name="color2">2-color</string>
     <string name="color3">3-color</string>
     <string name="color7">7-color</string>
+    <string name="color8">8-color</string>
     <string name="white">White</string>
     <string name="colored">Colored</string>
     <string name="default_">Default</string>
@@ -66,6 +67,7 @@
     <string name="cycle_all">Cycle All</string>
     <string name="cycle">Cycle</string>
     <string name="wave">Wave</string>
+    <string name="full_wave">Full Wave</string>
     <string name="solo">Solo</string>
     <string name="aurora">Aurora</string>
     <string name="well">#</string>

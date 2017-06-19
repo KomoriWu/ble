@@ -113,6 +113,10 @@
                 <View
                     android:id="@+id/view_board7"
                     style="@style/view_color_board" />
+
+                <View
+                    android:id="@+id/view_board8"
+                    style="@style/view_color_board" />
             </LinearLayout>
 
             <RadioGroup
@@ -147,6 +151,10 @@
 
                 <RadioButton
                     android:id="@+id/rb_board7"
+                    style="@style/rb_color_board" />
+
+                <RadioButton
+                    android:id="@+id/rb_board8"
                     style="@style/rb_color_board" />
             </RadioGroup>
 
