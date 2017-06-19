@@ -354,7 +354,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         LightType.deleteLightTypeByName(mLightName);
         radioGroup.check(R.id.rb_board1);
 
-        if (switchView.isChecked() != LightType.getPulseIsOpen(mLightName) && switchView.isClickable()) {
+        if (switchView.isClickable()) {
             mHandler.sendEmptyMessageDelayed(OPERATE_MUSIC_PULSE, WRITER_COMMAND_SLEEP);
         }
 
@@ -430,12 +430,10 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
 
     @SuppressLint("WrongConstant")
     private void operateSeekBar() {
-        if (layoutSpeed.getVisibility() == VIEW_VISIBLE && seekBarSpeed.getProgress() !=
-                mInitSBarSpeed) {
+        if (layoutSpeed.getVisibility() == VIEW_VISIBLE) {
             mHandler.sendEmptyMessageDelayed(OPERATE_SB_SPEED, WRITER_COMMAND_SLEEP * 2);
         }
-        if (layoutBrightness.getVisibility() == VIEW_VISIBLE && seekBarBright.getProgress() !=
-                mInitSBarBright) {
+        if (layoutBrightness.getVisibility() == VIEW_VISIBLE) {
             mHandler.sendEmptyMessageDelayed(OPERATE_SB_BRIGHT, WRITER_COMMAND_SLEEP * 3);
         }
         initSpecialView();
@@ -605,7 +603,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
             viewBoard6.setVisibility(View.VISIBLE);
             viewBoard7.setVisibility(View.VISIBLE);
             viewBoard8.setVisibility(View.GONE);
-        }  else if (type.contains("8")) {
+        } else if (type.contains("8")) {
             mEditLightPresenter.setIsSetOnColorSelectListener(true);
             setEtEnable(true);
             layoutSpeed.setVisibility(View.VISIBLE);
@@ -625,7 +623,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
             viewBoard6.setVisibility(View.VISIBLE);
             viewBoard7.setVisibility(View.VISIBLE);
             viewBoard8.setVisibility(View.VISIBLE);
-        }else if (mPosition == 10) {
+        } else if (mPosition == 10) {
             layoutSpeed.setVisibility(View.GONE);
             mEditLightPresenter.setIsSetOnColorSelectListener(true);
             setEtEnable(true);

@@ -167,7 +167,7 @@ public class RgbColor extends SugarRecord implements Serializable {
     }
 
     public static void deleteRgbColors(String name) {
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < 8; i++) {
             RgbColor.deleteAll(RgbColor.class, "name = ?", name + i);
         }
     }
