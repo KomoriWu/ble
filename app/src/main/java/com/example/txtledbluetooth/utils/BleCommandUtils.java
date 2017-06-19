@@ -22,7 +22,7 @@ import java.util.UUID;
 public class BleCommandUtils {
     public static final String DIVISION = "$";
     private static final String SINGLE_COMMAND = "1$";
-    private static final String HEAD = "GP" + DIVISION + SINGLE_COMMAND;
+    public static final String HEAD = "GP" + DIVISION + SINGLE_COMMAND;
     private static final String END_MARK = "$";
     private static final String COLON = ":";
 

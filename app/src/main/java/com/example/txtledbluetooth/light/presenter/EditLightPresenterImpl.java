@@ -34,6 +34,8 @@ public class EditLightPresenterImpl implements EditLightPresenter,
     private String mMacAddress;
     private UUID mServiceUUID;
     private UUID mCharacterUUID;
+    private StringBuffer mStringCommands;
+    private int mCommandCount;
 
     public EditLightPresenterImpl(Context mContext, EditLightView mEditLightView,
                                   ColorPickView mColorPicker) {
@@ -52,6 +54,7 @@ public class EditLightPresenterImpl implements EditLightPresenter,
             mCharacterUUID = UUID.fromString(characterUUID);
         }
         mMacAddress = SharedPreferenceUtils.getMacAddress(mContext);
+        mStringCommands = new StringBuffer(BleCommandUtils.HEAD);
     }
 
     @Override
@@ -77,28 +80,79 @@ public class EditLightPresenterImpl implements EditLightPresenter,
 
     @Override
     public void setLightSpeed(String lightNo, int speed) {
+        setLightSpeed(lightNo, speed, true);
+    }
+
+    @Override
+    public void setLightSpeed(String lightNo, int speed, boolean isWrite) {
         String command = BleCommandUtils.getLightSpeedCommand(lightNo, Integer.toHexString(speed));
-        writeCommand(command);
+        if (isWrite) {
+            writeCommand(command);
+        } else {
+            String[] commands = command.split("\\" + BleCommandUtils.
+                    DIVISION);
+            mStringCommands.append(commands[2]);
+            mStringCommands.append(";");
+            mCommandCount++;
+        }
+
     }
 
     @Override
     public void setLightBrightness(String lightNo, int brightness) {
+        setLightBrightness(lightNo, brightness, true);
+    }
+
+    @Override
+    public void setLightBrightness(String lightNo, int brightness, boolean isWrite) {
         String command = BleCommandUtils.getLightBrightCommand(lightNo, Integer.
                 toHexString(brightness));
-        writeCommand(command);
+        if (isWrite) {
+            writeCommand(command);
+        } else {
+            String[] commands = command.split("\\" + BleCommandUtils.
+                    DIVISION);
+            mStringCommands.append(commands[2]+";");
+            mCommandCount++;
+        }
     }
 
     @Override
     public void operateItemBluetooth(String lightName, int position, int popupPosition) {
+        operateItemBluetooth(lightName, position, popupPosition, true);
+    }
+
+    @Override
+    public void operateItemBluetooth(String lightName, int position, int popupPosition,
+                                     boolean isWrite) {
         String command = BleCommandUtils.getItemCommandByType(mContext, position, popupPosition,
                 lightName);
-        writeCommand(command);
+        if (isWrite) {
+            writeCommand(command);
+        } else {
+            String[] commands = command.split("\\" + BleCommandUtils.
+                    DIVISION);
+            mStringCommands.append(commands[2]+";");
+            mCommandCount++;
+        }
     }
 
     @Override
     public void operateSwitchBluetooth(String lightNo, boolean isChecked) {
+        operateSwitchBluetooth(lightNo, isChecked, true);
+    }
+
+    @Override
+    public void operateSwitchBluetooth(String lightNo, boolean isChecked, boolean isWrite) {
         String command = BleCommandUtils.musicPulseSwitch(lightNo, isChecked);
-        writeCommand(command);
+        if (isWrite) {
+            writeCommand(command);
+        } else {
+            String[] commands = command.split("\\" + BleCommandUtils.
+                    DIVISION);
+            mStringCommands.append(commands[2]+";");
+            mCommandCount++;
+        }
     }
 
     @Override
@@ -111,7 +165,6 @@ public class EditLightPresenterImpl implements EditLightPresenter,
     @Override
     public void saveLightType(Bundle bundle) {
         mLightModel.saveLightType(bundle);
-
     }
 
     @Override
@@ -124,13 +177,22 @@ public class EditLightPresenterImpl implements EditLightPresenter,
         return mLightModel.getLightColor(sqlName, position);
     }
 
-
     @Override
     public void onColorSelect(int color, int x, int y) {
         if (mIsSetOnColorSelectListener) {
             mBgView.setBackgroundColor(color);
             mEditLightView.setTvColor(color, x, y);
         }
+    }
+
+    @Override
+    public void writeCommand() {
+        mStringCommands.replace(3, 4, mCommandCount + "");
+        mStringCommands.replace(mStringCommands.toString().length()-1,
+                mStringCommands.toString().length(),"$");
+        writeCommand(mStringCommands.toString());
+        mCommandCount = 0;
+        mStringCommands = new StringBuffer(BleCommandUtils.HEAD);
     }
 
     private void writeCommand(String command) {
