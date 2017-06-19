@@ -1,6 +1,8 @@
 package com.example.txtledbluetooth.base;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,6 +13,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.txtledbluetooth.R;
+import com.example.txtledbluetooth.utils.LocaleUtils;
 
 /**
  * Created by KomoriWu
@@ -55,7 +58,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public void hideSnackBar() {
-        if (snackbar != null&&snackbar.isShown()) {
+        if (snackbar != null && snackbar.isShown()) {
             snackbar.dismiss();
         }
     }
@@ -75,6 +78,20 @@ public abstract class BaseActivity extends AppCompatActivity {
             });
             setTitle("");
         }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        LocaleUtils.setAutoLanguage(this);
+        Intent intent = getIntent();
+        finish();
+        startActivity(intent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @Override

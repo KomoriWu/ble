@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,7 +62,7 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
     private Handler mTimerHandler = new Handler() {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what){
+            switch (msg.what) {
                 case TIMER_MESSAGE:
                     mLightPresenter.openNotify();
                     stopTimer();
@@ -162,12 +163,15 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
             mTimerTask = new TimerTask() {
                 @Override
                 public void run() {
-                    int status = MyApplication.getBluetoothClient(getActivity()).getConnectStatus(
-                            SharedPreferenceUtils.getMacAddress(getActivity()));
-                    Message message = new Message();
-                    message.what = TIMER_MESSAGE;
-                    if (status == Constants.STATUS_DEVICE_CONNECTED) {
-                        mTimerHandler.sendMessage(message);
+                    String mac = SharedPreferenceUtils.getMacAddress(getActivity());
+                    if (!TextUtils.isEmpty(mac)) {
+                        int status = MyApplication.getBluetoothClient(getActivity()).
+                                getConnectStatus(mac);
+                        Message message = new Message();
+                        message.what = TIMER_MESSAGE;
+                        if (status == Constants.STATUS_DEVICE_CONNECTED) {
+                            mTimerHandler.sendMessage(message);
+                        }
                     }
                 }
             };
@@ -188,5 +192,9 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
         }
     }
 
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        stopTimer();
+    }
 }

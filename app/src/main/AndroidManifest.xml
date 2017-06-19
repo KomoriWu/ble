@@ -8,7 +8,6 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-
     <uses-feature
         android:name="android.hardware.bluetooth_le"
         android:required="true" />
@@ -35,6 +34,7 @@
 
         <activity
             android:name=".main.MainActivity"
+            android:configChanges="layoutDirection|locale"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -44,6 +44,7 @@
         </activity>
         <activity
             android:name=".setting.AudioPromptsActivity"
+            android:configChanges="layoutDirection|locale"
             android:screenOrientation="portrait" />
 
         <service
@@ -52,6 +53,7 @@
 
         <activity
             android:name=".light.EditLightActivity"
+            android:configChanges="layoutDirection|locale"
             android:screenOrientation="portrait" />
 
         <service
@@ -60,6 +62,7 @@
 
         <activity
             android:name=".music.playing.PlayingActivity"
+            android:configChanges="layoutDirection|locale"
             android:launchMode="singleInstance"
             android:screenOrientation="portrait" />
     </application>

@@ -33,7 +33,6 @@ import java.util.List;
 
 public class Utils {
     public static final String ITEM_RIGHT_TEXT = "item_right_text";
-    public static final String AUDIO_PROMPTS_DEFAULT_MODEL = "Voice and Tones";
     public static final String BLE_NAME = "Creative HALO";//HMSoft
     public static final String BLE_ADDRESS = "ble_address";
     public static final String RECEIVE_SERVICE = "6677";

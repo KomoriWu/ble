@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.example.txtledbluetooth.R;
+
 import java.util.Map;
 
 /**
@@ -107,7 +109,7 @@ public class SharedPreferenceUtils {
 
     public static String getAudioPromptsModel(Context context) {
         return SharedPreferenceUtils.getSharedPreferenceString(context, AUDIO_PROMPTS_MODEL_NAME,
-                AUDIO_PROMPTS_MODEL_KEY, Utils.AUDIO_PROMPTS_DEFAULT_MODEL);
+                AUDIO_PROMPTS_MODEL_KEY, context.getString(R.string.voice_and_tones));
     }
 
     public static boolean saveSharedPreference(Context context, String name, String key, String value) {

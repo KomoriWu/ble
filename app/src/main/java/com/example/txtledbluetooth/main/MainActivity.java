@@ -41,6 +41,7 @@ import com.example.txtledbluetooth.music.MusicFragment;
 import com.example.txtledbluetooth.setting.SettingFragment;
 import com.example.txtledbluetooth.sources.SourcesFragment;
 import com.example.txtledbluetooth.utils.AlertUtils;
+import com.example.txtledbluetooth.utils.LocaleUtils;
 import com.example.txtledbluetooth.utils.SharedPreferenceUtils;
 import com.example.txtledbluetooth.utils.SqlUtils;
 import com.example.txtledbluetooth.utils.Utils;
@@ -95,6 +96,7 @@ public class MainActivity extends BaseActivity implements MainView {
     public void init() {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        LocaleUtils.setAutoLanguage(this);
         mPresenter = new MainPresenterImpl(this);
         initToolbar();
         tvScan.setText(R.string.scan);
