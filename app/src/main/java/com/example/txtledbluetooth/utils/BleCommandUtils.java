@@ -121,11 +121,6 @@ public class BleCommandUtils {
         return lightNo;
     }
 
-    public static String getOpenLightCommand(Context context) {
-        int position = SharedPreferenceUtils.getClickPosition(context);
-        String lightName = context.getResources().getStringArray(R.array.lighting_name)[position];
-        return getItemCommandByType(context, position, -1, lightName);
-    }
 
     public static String getItemCommandByType(Context context, int position, String lightName) {
         return getItemCommandByType(context, position, -1, lightName);

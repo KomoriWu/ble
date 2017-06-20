@@ -39,12 +39,15 @@ public class LightPresenterImpl implements LightPresenter {
     private UUID mServiceUUID;
     private UUID mCharacterUUID;
     private BluetoothClient mClient;
+    private StringBuffer mStringCommands;
+    private int mCommandCount;
 
     public LightPresenterImpl(LightView mLightView, Context mContext) {
         this.mLightView = mLightView;
         this.mContext = mContext;
         mLightModel = new LightModelImpl();
         mClient = MyApplication.getBluetoothClient(mContext);
+        mStringCommands = new StringBuffer(BleCommandUtils.HEAD);
     }
 
     private void initConnData() {
@@ -63,25 +66,29 @@ public class LightPresenterImpl implements LightPresenter {
     @Override
     public void operateItemBluetooth(String lightName, int position) {
         String command = BleCommandUtils.getItemCommandByType(mContext, position, lightName);
-        writeCommand(command);
+        dealCommand(command);
         SharedPreferenceUtils.saveClickPosition(mContext, position);
     }
 
     @Override
     public void operateItemSeekBar(String lightName, int position) {
-        int popupPosition = mLightModel.getLightType(lightName);
-        String sqlName = position == 0 || position == 9 ? lightName +
-                Utils.getPopWindowItems(mContext, position)[popupPosition] : lightName;
-        HashMap<String, Integer> hashMap = LightType.getSbProgressMap(sqlName, position);
+        HashMap<String, Integer> hashMap = LightType.getSbProgressMap(lightName, position);
         int bright = hashMap.get(Utils.SEEK_BAR_PROGRESS_BRIGHT);
         int speed = hashMap.get(Utils.SEEK_BAR_PROGRESS_SPEED);
         String lightNo = BleCommandUtils.getLightNo(position);
-        if (Utils.isSBarSpeedVisible(position)) {
-            writeCommand(BleCommandUtils.getLightSpeedCommand(lightNo, Integer.toHexString(speed)));
-        }
         if (Utils.isSBarBrightVisible(position)) {
-            writeCommand(BleCommandUtils.getLightBrightCommand(lightNo, Integer.toHexString(bright)));
+            dealCommand(BleCommandUtils.getLightBrightCommand(lightNo, Integer.toHexString(bright)));
         }
+        if (Utils.isSBarSpeedVisible(position)) {
+            dealCommand(BleCommandUtils.getLightSpeedCommand(lightNo, Integer.toHexString(speed)));
+        }
+        operateSwitchBluetooth(lightNo,lightName);
+    }
+
+    private void operateSwitchBluetooth(String lightNo,String lightName) {
+        boolean isChecked = LightType.getPulseIsOpen(lightName);
+        String command = BleCommandUtils.musicPulseSwitch(lightNo, isChecked);
+        dealCommand(command);
     }
 
     @Override
@@ -152,6 +159,23 @@ public class LightPresenterImpl implements LightPresenter {
         protected void onPostExecute(ArrayList<Lighting> lightingArrayList) {
             mLightView.showLightData(lightingArrayList, list);
         }
+    }
+
+    private void dealCommand(String command) {
+        String[] commands = command.split("\\" + BleCommandUtils.
+                DIVISION);
+        mStringCommands.append(commands[2] + BleCommandUtils.SEMICOLON);
+        mCommandCount++;
+    }
+
+    @Override
+    public void writeCommand() {
+        mStringCommands.replace(3, 4, mCommandCount + "");
+        mStringCommands.replace(mStringCommands.toString().length() - 1,
+                mStringCommands.toString().length(), BleCommandUtils.DIVISION);
+        writeCommand(mStringCommands.toString());
+        mCommandCount = 0;
+        mStringCommands = new StringBuffer(BleCommandUtils.HEAD);
     }
 
     private void writeCommand(String command) {

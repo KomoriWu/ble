@@ -12,5 +12,5 @@ public interface LightPresenter {
     void operateSwitchBluetooth(boolean isChecked);
     void openNotify();
     void showLightData();
-
+    void writeCommand();
 }
