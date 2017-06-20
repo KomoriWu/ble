@@ -25,6 +25,7 @@ public class BleCommandUtils {
     public static final String HEAD = "GP" + DIVISION + SINGLE_COMMAND;
     private static final String END_MARK = "$";
     private static final String COLON = ":";
+    public static final String SEMICOLON = ";";
 
     //灯光模式指令
     private static final String LIGHT = "l";

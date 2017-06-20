@@ -34,6 +34,7 @@ import com.example.txtledbluetooth.light.view.EditLightView;
 import com.example.txtledbluetooth.utils.BleCommandUtils;
 import com.example.txtledbluetooth.utils.Utils;
 import com.example.txtledbluetooth.widget.ColorPickView;
+import com.example.txtledbluetooth.widget.ColorPicker;
 
 import java.util.HashMap;
 
@@ -71,7 +72,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     private PopupWindow mPopWindow;
     private String[] mPopupItems;
     @BindView(R.id.color_picker)
-    ColorPickView mColorPicker;
+    ColorPicker mColorPicker;
     @BindView(R.id.rg_color_board)
     RadioGroup radioGroup;
     @BindView(R.id.rb_board1)
@@ -152,7 +153,8 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void initView() {
-        mEditLightPresenter = new EditLightPresenterImpl(this, this, mColorPicker);
+        mEditLightPresenter = new EditLightPresenterImpl(this, this,
+                mColorPicker);
         mLightName = getIntent().getStringExtra(Utils.LIGHT_MODEL_NAME);
         tvTitle.setText(mLightName);
         tvRevert.setVisibility(View.VISIBLE);
@@ -265,7 +267,8 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     @Override
     public void setPaintPixel(RgbColor rgbColor) {
         if (rgbColor.getX() != 0 && rgbColor.getY() != 0) {
-            mColorPicker.setPaintPixel(rgbColor.getX(), rgbColor.getY());
+            float paramFloat[] = {rgbColor.getX(), rgbColor.getY(), 1.0F};
+            mColorPicker.setColor(rgbColor.getColorInt());
         }
         updateTvColor(rgbColor.getR(), rgbColor.getG(), rgbColor.getB(), rgbColor.getColorStr());
     }
@@ -300,7 +303,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     }
 
     @Override
-    public void setTvColor(int color, int x, int y) {
+    public void setTvColor(int color, float x, float y) {
         int r = Color.red(color);
         int g = Color.green(color);
         int b = Color.blue(color);
@@ -344,10 +347,6 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
             mEditLightPresenter.operateSwitchBluetooth(mLightNo, LightType.getPulseIsOpen(
                     mLightName), false);
         }
-
-
-
-
         mEditLightPresenter.writeCommand();
     }
 
@@ -633,15 +632,6 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
 
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (!mColorPicker.isRecycled()) {
-            mColorPicker.recycle();
-        }
-    }
-
-
-    @Override
     public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
         EditText editText = (EditText) findViewById(textView.getId());
         editText.setSelection(editText.getText().length());
@@ -689,7 +679,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         return false;
     }
 
-    private void postUpdateHandler(int r, int g, int b, int x, int y) {
+    private void postUpdateHandler(int r, int g, int b, float x, float y) {
         String name = mLightName + mModelTypeFlags + radioGroup.getTag();
         mFirstDrag = System.currentTimeMillis();
         Message message = mHandler.obtainMessage();
@@ -700,8 +690,8 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         bundle.putInt(Utils.COLOR_R, r);
         bundle.putInt(Utils.COLOR_G, g);
         bundle.putInt(Utils.COLOR_B, b);
-        bundle.putInt(Utils.PIXEL_X, x);
-        bundle.putInt(Utils.PIXEL_Y, y);
+        bundle.putFloat(Utils.PIXEL_X, x);
+        bundle.putFloat(Utils.PIXEL_Y, y);
         message.setData(bundle);
         mHandler.sendMessageDelayed(message, SORT_DELAY_MILLISECONDS);
     }

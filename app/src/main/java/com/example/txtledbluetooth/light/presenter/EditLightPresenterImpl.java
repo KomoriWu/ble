@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.txtledbluetooth.R;
 import com.example.txtledbluetooth.application.MyApplication;
@@ -15,6 +16,7 @@ import com.example.txtledbluetooth.light.view.EditLightView;
 import com.example.txtledbluetooth.utils.BleCommandUtils;
 import com.example.txtledbluetooth.utils.SharedPreferenceUtils;
 import com.example.txtledbluetooth.widget.ColorPickView;
+import com.example.txtledbluetooth.widget.ColorPicker;
 
 import java.util.UUID;
 
@@ -23,10 +25,9 @@ import java.util.UUID;
  * on 2017-04-25.
  */
 
-public class EditLightPresenterImpl implements EditLightPresenter,
-        ColorPickView.OnColorChangedListener {
+public class EditLightPresenterImpl implements EditLightPresenter, View.OnClickListener {
     private EditLightView mEditLightView;
-    private ColorPickView mColorPicker;
+    private ColorPicker mColorPicker;
     private Context mContext;
     private View mBgView;
     private boolean mIsSetOnColorSelectListener;
@@ -38,11 +39,11 @@ public class EditLightPresenterImpl implements EditLightPresenter,
     private int mCommandCount;
 
     public EditLightPresenterImpl(Context mContext, EditLightView mEditLightView,
-                                  ColorPickView mColorPicker) {
+                                  ColorPicker mColorPicker) {
         this.mContext = mContext;
         this.mEditLightView = mEditLightView;
         this.mColorPicker = mColorPicker;
-        mColorPicker.setOnColorSelectListener(this);
+        mColorPicker.setOnColorChangedListener(this);
 
         mLightModel = new LightModelImpl();
         String serviceUUID = SharedPreferenceUtils.getSendService(mContext);
@@ -86,16 +87,7 @@ public class EditLightPresenterImpl implements EditLightPresenter,
     @Override
     public void setLightSpeed(String lightNo, int speed, boolean isWrite) {
         String command = BleCommandUtils.getLightSpeedCommand(lightNo, Integer.toHexString(speed));
-        if (isWrite) {
-            writeCommand(command);
-        } else {
-            String[] commands = command.split("\\" + BleCommandUtils.
-                    DIVISION);
-            mStringCommands.append(commands[2]);
-            mStringCommands.append(";");
-            mCommandCount++;
-        }
-
+        dealCommand(isWrite, command);
     }
 
     @Override
@@ -107,14 +99,7 @@ public class EditLightPresenterImpl implements EditLightPresenter,
     public void setLightBrightness(String lightNo, int brightness, boolean isWrite) {
         String command = BleCommandUtils.getLightBrightCommand(lightNo, Integer.
                 toHexString(brightness));
-        if (isWrite) {
-            writeCommand(command);
-        } else {
-            String[] commands = command.split("\\" + BleCommandUtils.
-                    DIVISION);
-            mStringCommands.append(commands[2]+";");
-            mCommandCount++;
-        }
+        dealCommand(isWrite, command);
     }
 
     @Override
@@ -127,14 +112,7 @@ public class EditLightPresenterImpl implements EditLightPresenter,
                                      boolean isWrite) {
         String command = BleCommandUtils.getItemCommandByType(mContext, position, popupPosition,
                 lightName);
-        if (isWrite) {
-            writeCommand(command);
-        } else {
-            String[] commands = command.split("\\" + BleCommandUtils.
-                    DIVISION);
-            mStringCommands.append(commands[2]+";");
-            mCommandCount++;
-        }
+        dealCommand(isWrite, command);
     }
 
     @Override
@@ -145,12 +123,16 @@ public class EditLightPresenterImpl implements EditLightPresenter,
     @Override
     public void operateSwitchBluetooth(String lightNo, boolean isChecked, boolean isWrite) {
         String command = BleCommandUtils.musicPulseSwitch(lightNo, isChecked);
+        dealCommand(isWrite, command);
+    }
+
+    private void dealCommand(boolean isWrite, String command) {
         if (isWrite) {
             writeCommand(command);
         } else {
             String[] commands = command.split("\\" + BleCommandUtils.
                     DIVISION);
-            mStringCommands.append(commands[2]+";");
+            mStringCommands.append(commands[2] + BleCommandUtils.SEMICOLON);
             mCommandCount++;
         }
     }
@@ -178,18 +160,22 @@ public class EditLightPresenterImpl implements EditLightPresenter,
     }
 
     @Override
-    public void onColorSelect(int color, int x, int y) {
+    public void onClick(View view) {
         if (mIsSetOnColorSelectListener) {
+            int color = mColorPicker.getColor();
+            float paramFloat[] = mColorPicker.getColorHSV();
+            Log.d("paramFloat",paramFloat[0]+""+paramFloat[1]);
+            Log.d("paramFloat",paramFloat.length+"");
             mBgView.setBackgroundColor(color);
-            mEditLightView.setTvColor(color, x, y);
+            mEditLightView.setTvColor(color, paramFloat[0], paramFloat[1]);
         }
     }
 
     @Override
     public void writeCommand() {
         mStringCommands.replace(3, 4, mCommandCount + "");
-        mStringCommands.replace(mStringCommands.toString().length()-1,
-                mStringCommands.toString().length(),"$");
+        mStringCommands.replace(mStringCommands.toString().length() - 1,
+                mStringCommands.toString().length(), BleCommandUtils.DIVISION);
         writeCommand(mStringCommands.toString());
         mCommandCount = 0;
         mStringCommands = new StringBuffer(BleCommandUtils.HEAD);

@@ -153,8 +153,8 @@ public class LightModelImpl implements LightModel {
         int r = bundle.getInt(Utils.COLOR_R);
         int g = bundle.getInt(Utils.COLOR_G);
         int b = bundle.getInt(Utils.COLOR_B);
-        int x = bundle.getInt(Utils.PIXEL_X);
-        int y = bundle.getInt(Utils.PIXEL_Y);
+        float x = bundle.getFloat(Utils.PIXEL_X);
+        float y = bundle.getFloat(Utils.PIXEL_Y);
         RgbColor rgbColor = new RgbColor(name, r, g, b, x, y);
         rgbColor.deleteRgbColorByName();
         rgbColor.save();
