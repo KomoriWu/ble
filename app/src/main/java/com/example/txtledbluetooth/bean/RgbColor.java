@@ -25,10 +25,6 @@ public class RgbColor extends SugarRecord implements Serializable {
     private int g;
     @SerializedName("b")
     private int b;
-    @SerializedName("x")
-    private float x;
-    @SerializedName("y")
-    private float y;
     @SerializedName("colorInt")
     private int colorInt;
     @SerializedName("colorStr")
@@ -37,27 +33,15 @@ public class RgbColor extends SugarRecord implements Serializable {
     public RgbColor() {
     }
 
-    public RgbColor(String name, int r, int g, int b, float x, float y) {
-        this.name = name;
-        this.r = r;
-        this.g = g;
-        this.b = b;
-        this.x = x;
-        this.y = y;
-        this.colorInt = Color.rgb(r, g, b);
-        this.colorStr = getBothColor(r) + getBothColor(g) + getBothColor(b);
-    }
-
     public RgbColor(String name, int r, int g, int b) {
         this.name = name;
         this.r = r;
         this.g = g;
         this.b = b;
-        this.x = 0;
-        this.y = 0;
         this.colorInt = Color.rgb(r, g, b);
         this.colorStr = getBothColor(r) + getBothColor(g) + getBothColor(b);
     }
+
 
     public String getBothColor(int str) {
         if (Integer.toString(str).getBytes().length < 2) {
@@ -66,22 +50,6 @@ public class RgbColor extends SugarRecord implements Serializable {
             return Integer.toHexString(str);
         }
 
-    }
-
-    public float getX() {
-        return x;
-    }
-
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public float getY() {
-        return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
     }
 
     public int getColorInt() {

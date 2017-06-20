@@ -33,7 +33,6 @@ import com.example.txtledbluetooth.light.presenter.EditLightPresenterImpl;
 import com.example.txtledbluetooth.light.view.EditLightView;
 import com.example.txtledbluetooth.utils.BleCommandUtils;
 import com.example.txtledbluetooth.utils.Utils;
-import com.example.txtledbluetooth.widget.ColorPickView;
 import com.example.txtledbluetooth.widget.ColorPicker;
 
 import java.util.HashMap;
@@ -47,7 +46,6 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
                 OnCheckedChangeListener, TextView.OnEditorActionListener,
         SeekBar.OnSeekBarChangeListener {
     private static final int START_SORT = 1;
-    private static final int SORT_DELAY_MILLISECONDS = 300;
     public static final int VIEW_VISIBLE = 0;
     @BindView(R.id.tv_toolbar_right)
     TextView tvRevert;
@@ -116,7 +114,6 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     private View mBgView;
     private EditLightPresenter mEditLightPresenter;
     private int mPosition;
-    private long mFirstDrag;
     private String mLightName;
     private String mModelTypeFlags;
     private String mLightNo;
@@ -132,10 +129,8 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
             super.dispatchMessage(msg);
             switch (msg.what) {
                 case START_SORT:
-                    if ((System.currentTimeMillis() - mFirstDrag) >= SORT_DELAY_MILLISECONDS) {
-                        mEditLightPresenter.updateLightColor(mLightNo, (int) radioGroup.getTag()
-                                , msg.obj.toString(), msg.getData());
-                    }
+                    mEditLightPresenter.updateLightColor(mLightNo, (int) radioGroup.getTag()
+                            , msg.obj.toString(), msg.getData());
                     break;
 
             }
@@ -266,10 +261,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
 
     @Override
     public void setPaintPixel(RgbColor rgbColor) {
-        if (rgbColor.getX() != 0 && rgbColor.getY() != 0) {
-            float paramFloat[] = {rgbColor.getX(), rgbColor.getY(), 1.0F};
-            mColorPicker.setColor(rgbColor.getColorInt());
-        }
+        mColorPicker.setPaintPixel(rgbColor.getColorInt());
         updateTvColor(rgbColor.getR(), rgbColor.getG(), rgbColor.getB(), rgbColor.getColorStr());
     }
 
@@ -303,7 +295,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     }
 
     @Override
-    public void setTvColor(int color, float x, float y) {
+    public void setTvColor(int color) {
         int r = Color.red(color);
         int g = Color.green(color);
         int b = Color.blue(color);
@@ -312,7 +304,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         String b1 = getBothColor(b);
         String colorStr = r1 + g1 + b1;
         updateTvColor(r, g, b, colorStr);
-        postUpdateHandler(r, g, b, x, y);
+        postUpdateHandler(r, g, b);
 
     }
 
@@ -648,7 +640,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
                 etColorWell.setText(colorStr);
                 int colorInt = Color.rgb(r, g, b);
                 mBgView.setBackgroundColor(colorInt);
-                postUpdateHandler(r, g, b, 0, 0);
+                postUpdateHandler(r, g, b);
             } else {
                 Toast.makeText(this, R.string.color_value_hint, Toast.LENGTH_SHORT).show();
             }
@@ -666,7 +658,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
                 etColorG.setText(strG);
                 etColorB.setText(strB);
                 mBgView.setBackgroundColor(colorInt);
-                postUpdateHandler(r, g, b, 0, 0);
+                postUpdateHandler(r, g, b);
             } else {
                 Toast.makeText(this, R.string.color_value_hint, Toast.LENGTH_SHORT).show();
             }
@@ -679,9 +671,8 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         return false;
     }
 
-    private void postUpdateHandler(int r, int g, int b, float x, float y) {
+    private void postUpdateHandler(int r, int g, int b) {
         String name = mLightName + mModelTypeFlags + radioGroup.getTag();
-        mFirstDrag = System.currentTimeMillis();
         Message message = mHandler.obtainMessage();
         message.what = START_SORT;
         message.obj = etColorWell.getText().toString();
@@ -690,10 +681,8 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         bundle.putInt(Utils.COLOR_R, r);
         bundle.putInt(Utils.COLOR_G, g);
         bundle.putInt(Utils.COLOR_B, b);
-        bundle.putFloat(Utils.PIXEL_X, x);
-        bundle.putFloat(Utils.PIXEL_Y, y);
         message.setData(bundle);
-        mHandler.sendMessageDelayed(message, SORT_DELAY_MILLISECONDS);
+        mHandler.sendMessage(message);
     }
 
     public void setEtNoData() {

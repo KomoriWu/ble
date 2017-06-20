@@ -3,9 +3,7 @@ package com.example.txtledbluetooth.light.presenter;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.example.txtledbluetooth.R;
 import com.example.txtledbluetooth.application.MyApplication;
@@ -15,7 +13,6 @@ import com.example.txtledbluetooth.light.model.LightModelImpl;
 import com.example.txtledbluetooth.light.view.EditLightView;
 import com.example.txtledbluetooth.utils.BleCommandUtils;
 import com.example.txtledbluetooth.utils.SharedPreferenceUtils;
-import com.example.txtledbluetooth.widget.ColorPickView;
 import com.example.txtledbluetooth.widget.ColorPicker;
 
 import java.util.UUID;
@@ -25,7 +22,7 @@ import java.util.UUID;
  * on 2017-04-25.
  */
 
-public class EditLightPresenterImpl implements EditLightPresenter, View.OnClickListener {
+public class EditLightPresenterImpl implements EditLightPresenter, ColorPicker.OnColorChangedListener {
     private EditLightView mEditLightView;
     private ColorPicker mColorPicker;
     private Context mContext;
@@ -43,7 +40,7 @@ public class EditLightPresenterImpl implements EditLightPresenter, View.OnClickL
         this.mContext = mContext;
         this.mEditLightView = mEditLightView;
         this.mColorPicker = mColorPicker;
-        mColorPicker.setOnColorChangedListener(this);
+        mColorPicker.setOnColorSelectListener(this);
 
         mLightModel = new LightModelImpl();
         String serviceUUID = SharedPreferenceUtils.getSendService(mContext);
@@ -158,16 +155,11 @@ public class EditLightPresenterImpl implements EditLightPresenter, View.OnClickL
     public RgbColor getLightColor(String sqlName, int position) {
         return mLightModel.getLightColor(sqlName, position);
     }
-
     @Override
-    public void onClick(View view) {
+    public void onColorSelect(int color) {
         if (mIsSetOnColorSelectListener) {
-            int color = mColorPicker.getColor();
-            float paramFloat[] = mColorPicker.getColorHSV();
-            Log.d("paramFloat",paramFloat[0]+""+paramFloat[1]);
-            Log.d("paramFloat",paramFloat.length+"");
             mBgView.setBackgroundColor(color);
-            mEditLightView.setTvColor(color, paramFloat[0], paramFloat[1]);
+            mEditLightView.setTvColor(color);
         }
     }
 
@@ -193,5 +185,6 @@ public class EditLightPresenterImpl implements EditLightPresenter, View.OnClickL
                     });
         }
     }
+
 
 }
