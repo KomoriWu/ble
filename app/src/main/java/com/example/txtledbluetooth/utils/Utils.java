@@ -232,15 +232,6 @@ public class Utils {
         return isVisible;
     }
 
-    public static boolean isSBarBrightVisible(int position) {
-        boolean isVisible = true;
-        switch (position) {
-            case 10:
-                isVisible = false;
-                break;
-        }
-        return isVisible;
-    }
 
 
     public static boolean isLocationEnable(Context context) {

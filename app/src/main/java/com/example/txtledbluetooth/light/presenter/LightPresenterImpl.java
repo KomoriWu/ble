@@ -76,16 +76,14 @@ public class LightPresenterImpl implements LightPresenter {
         int bright = hashMap.get(Utils.SEEK_BAR_PROGRESS_BRIGHT);
         int speed = hashMap.get(Utils.SEEK_BAR_PROGRESS_SPEED);
         String lightNo = BleCommandUtils.getLightNo(position);
-        if (Utils.isSBarBrightVisible(position)) {
-            dealCommand(BleCommandUtils.getLightBrightCommand(lightNo, Integer.toHexString(bright)));
-        }
+        dealCommand(BleCommandUtils.getLightBrightCommand(lightNo, Integer.toHexString(bright)));
         if (Utils.isSBarSpeedVisible(position)) {
             dealCommand(BleCommandUtils.getLightSpeedCommand(lightNo, Integer.toHexString(speed)));
         }
-        operateSwitchBluetooth(lightNo,lightName);
+        operateSwitchBluetooth(lightNo, lightName);
     }
 
-    private void operateSwitchBluetooth(String lightNo,String lightName) {
+    private void operateSwitchBluetooth(String lightNo, String lightName) {
         boolean isChecked = LightType.getPulseIsOpen(lightName);
         String command = BleCommandUtils.musicPulseSwitch(lightNo, isChecked);
         dealCommand(command);
