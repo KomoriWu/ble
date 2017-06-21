@@ -171,10 +171,10 @@ public class ColorPicker extends View {
     protected void onSizeChanged(int paramInt1, int paramInt2, int paramInt3, int paramInt4) {
         int i = paramInt1 / 2;
         int j = paramInt2 / 2;
-        this.innerPadding = (paramInt1 * 0 / 100);
-        this.outerPadding = (paramInt1 * 0 / 100);
+        this.innerPadding = (0 / 100);
+        this.outerPadding = (0 / 100);
         this.arrowPointerSize = (paramInt1 * 8 / 100);
-        this.valueSliderWidth = (paramInt1 * 0 / 100);
+        this.valueSliderWidth = (0 / 100);
         this.outerWheelRadius = (paramInt1 / 2 - this.outerPadding - this.arrowPointerSize);
         this.innerWheelRadius = (this.outerWheelRadius - this.valueSliderWidth);
         this.colorWheelRadius = (this.innerWheelRadius - this.innerPadding);
@@ -240,6 +240,7 @@ public class ColorPicker extends View {
     public void setPaintPixel(int colorInt) {
         Color.colorToHSV(colorInt, this.colorHSV);
         invalidate();
+
     }
 
     public void setColorHSV(float[] paramArrayOfFloat) {

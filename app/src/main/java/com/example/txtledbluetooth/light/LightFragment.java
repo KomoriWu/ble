@@ -65,6 +65,7 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
             switch (msg.what) {
                 case TIMER_MESSAGE:
                     mLightPresenter.openNotify();
+                    onItemClick(null,SharedPreferenceUtils.getClickPosition(getActivity()));
                     stopTimer();
                     break;
             }

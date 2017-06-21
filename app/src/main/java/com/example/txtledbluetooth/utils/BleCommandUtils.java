@@ -23,7 +23,7 @@ public class BleCommandUtils {
     public static final String DIVISION = "$";
     private static final String SINGLE_COMMAND = "1$";
     public static final String HEAD = "GP" + DIVISION + SINGLE_COMMAND;
-    private static final String END_MARK = "$";
+    public static final String END_MARK = "$\r\n";
     private static final String COLON = ":";
     public static final String SEMICOLON = ";";
 
@@ -39,7 +39,6 @@ public class BleCommandUtils {
     private static final String BEAT_METER = "hst";
     private static final String WAVE = "ibw";
     private static final String FULL_WAVE = "crw";
-    private static final String SOLO = "sol";
     private static final String MOOD = "mod";
     private static final String AURORA = "aur";
 

@@ -170,7 +170,7 @@ public class LightPresenterImpl implements LightPresenter {
     public void writeCommand() {
         mStringCommands.replace(3, 4, mCommandCount + "");
         mStringCommands.replace(mStringCommands.toString().length() - 1,
-                mStringCommands.toString().length(), BleCommandUtils.DIVISION);
+                mStringCommands.toString().length(), BleCommandUtils.END_MARK);
         writeCommand(mStringCommands.toString());
         mCommandCount = 0;
         mStringCommands = new StringBuffer(BleCommandUtils.HEAD);
