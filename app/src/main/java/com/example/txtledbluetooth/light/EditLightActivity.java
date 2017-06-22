@@ -119,7 +119,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     private String mLightNo;
     private int mPopupPosition = 0;
     private boolean mIsReturn;
-    private boolean mIsFirst;
+    private boolean mIsNoFirst;
     private int mInitSBarSpeed;
     private int mInitSBarBright;
     @SuppressLint("HandlerLeak")
@@ -286,6 +286,8 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
 
         if (mPopupItems.length > 1) {
             popupRecyclerView.setAdapter(windowAdapter);
+        } else {
+            tvChoseType.setVisibility(View.GONE);
         }
     }
 
@@ -396,10 +398,10 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         radioGroup.check(R.id.rb_board1);
         initEditLightUi(type);
         setViewBoardDefaultColor();
-        if (mIsFirst) {
+        if (mIsNoFirst) {
             mEditLightPresenter.operateItemBluetooth(mLightName, mPosition, position);
         }
-        mIsFirst = true;
+        mIsNoFirst = true;
         mPopWindow.dismiss();
     }
 
@@ -422,8 +424,8 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         if (type.equals(getString(R.string.random)) || type.contains(getString(R.string.white)) || type.contains(getString(R.string.default_)) ||
                 type.contains(getString(R.string.
                         moon_light)) || type.contains(getString(R.string.full))) {
-            mEditLightPresenter.setIsSetOnColorSelectListener(false);
-            setEtEnable(false);
+            hideColorPicker();
+
             //fireworks
             if (mPosition == 1 || mPosition == 2 || mPosition == 3 || mPosition == 4 ||
                     mPosition == 5 || mPosition == 9 || mPosition == 11) {
@@ -432,8 +434,8 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
                 layoutSpeed.setVisibility(View.GONE);
             }
             if (mPosition == 7) {
-                mEditLightPresenter.setIsSetOnColorSelectListener(true);
-                setEtEnable(true);
+                showColorPicker();
+
                 rbBoard1.setVisibility(View.VISIBLE);
                 rbBoard2.setVisibility(View.VISIBLE);
                 rbBoard3.setVisibility(View.VISIBLE);
@@ -451,8 +453,8 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
                 viewBoard7.setVisibility(View.GONE);
                 viewBoard8.setVisibility(View.GONE);
             } else if (mPosition == 8) {
-                mEditLightPresenter.setIsSetOnColorSelectListener(true);
-                setEtEnable(true);
+                showColorPicker();
+
                 rbBoard1.setVisibility(View.VISIBLE);
                 rbBoard2.setVisibility(View.GONE);
                 rbBoard3.setVisibility(View.GONE);
@@ -470,8 +472,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
                 viewBoard7.setVisibility(View.GONE);
                 viewBoard8.setVisibility(View.GONE);
             } else {
-                mEditLightPresenter.setIsSetOnColorSelectListener(false);
-                setEtEnable(false);
+                hideColorPicker();
                 rbBoard1.setVisibility(View.GONE);
                 rbBoard2.setVisibility(View.GONE);
                 rbBoard3.setVisibility(View.GONE);
@@ -495,8 +496,8 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
                 setEtNoData();
             }
         } else if (type.contains("1") || type.contains(getString(R.string.colored))) {
-            mEditLightPresenter.setIsSetOnColorSelectListener(true);
-            setEtEnable(true);
+            showColorPicker();
+
             //moonlight
             if (mPosition == 0) {
                 layoutSpeed.setVisibility(View.GONE);
@@ -520,8 +521,8 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
             viewBoard7.setVisibility(View.GONE);
             viewBoard8.setVisibility(View.GONE);
         } else if (type.contains("2")) {
-            mEditLightPresenter.setIsSetOnColorSelectListener(true);
-            setEtEnable(true);
+            showColorPicker();
+
             layoutSpeed.setVisibility(View.VISIBLE);
             rbBoard1.setVisibility(View.VISIBLE);
             rbBoard2.setVisibility(View.VISIBLE);
@@ -540,8 +541,8 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
             viewBoard7.setVisibility(View.GONE);
             viewBoard8.setVisibility(View.GONE);
         } else if (type.contains("3")) {
-            mEditLightPresenter.setIsSetOnColorSelectListener(true);
-            setEtEnable(true);
+            showColorPicker();
+
             layoutSpeed.setVisibility(View.VISIBLE);
             rbBoard1.setVisibility(View.VISIBLE);
             rbBoard2.setVisibility(View.VISIBLE);
@@ -560,8 +561,8 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
             viewBoard7.setVisibility(View.GONE);
             viewBoard8.setVisibility(View.GONE);
         } else if (type.contains("7")) {
-            mEditLightPresenter.setIsSetOnColorSelectListener(true);
-            setEtEnable(true);
+            showColorPicker();
+
             layoutSpeed.setVisibility(View.VISIBLE);
             rbBoard1.setVisibility(View.VISIBLE);
             rbBoard2.setVisibility(View.VISIBLE);
@@ -580,8 +581,8 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
             viewBoard7.setVisibility(View.VISIBLE);
             viewBoard8.setVisibility(View.GONE);
         } else if (type.contains("8")) {
-            mEditLightPresenter.setIsSetOnColorSelectListener(true);
-            setEtEnable(true);
+            showColorPicker();
+
             layoutSpeed.setVisibility(View.VISIBLE);
             rbBoard1.setVisibility(View.VISIBLE);
             rbBoard2.setVisibility(View.VISIBLE);
@@ -601,8 +602,8 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
             viewBoard8.setVisibility(View.VISIBLE);
         } else if (mPosition == 10) {
             layoutSpeed.setVisibility(View.GONE);
-            mEditLightPresenter.setIsSetOnColorSelectListener(true);
-            setEtEnable(true);
+            showColorPicker();
+
             rbBoard1.setVisibility(View.VISIBLE);
             rbBoard2.setVisibility(View.VISIBLE);
             rbBoard3.setVisibility(View.VISIBLE);
@@ -731,5 +732,19 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         etColorG.setEnabled(isEnable);
         etColorB.setEnabled(isEnable);
         etColorWell.setEnabled(isEnable);
+    }
+
+    private void hideColorPicker() {
+        mEditLightPresenter.setIsSetOnColorSelectListener(false);
+        mColorPicker.setVisibility(View.GONE);
+        layoutColorRgb.setVisibility(View.GONE);
+        setEtEnable(false);
+    }
+
+    private void showColorPicker() {
+        mEditLightPresenter.setIsSetOnColorSelectListener(true);
+        mColorPicker.setVisibility(View.VISIBLE);
+        layoutColorRgb.setVisibility(View.VISIBLE);
+        setEtEnable(true);
     }
 }
