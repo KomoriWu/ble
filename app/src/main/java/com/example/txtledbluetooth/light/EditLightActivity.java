@@ -332,6 +332,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         LightType.deleteLightTypeByName(mLightName);
         radioGroup.check(R.id.rb_board1);
         setViewBoardDefaultColor();
+        setPaintPixel();
         mEditLightPresenter.operateItemBluetooth(mLightName, mPosition,
                 mPopupPosition, false);
         operateSeekBar();
@@ -417,8 +418,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
 
     private void initEditLightUi(String type) {
         mModelTypeFlags = type;
-        setPaintPixel(mEditLightPresenter.getLightColor(mLightName + mModelTypeFlags,
-                (Integer) radioGroup.getTag()));
+        setPaintPixel();
         if (type.equals(getString(R.string.random)) || type.contains(getString(R.string.white)) || type.contains(getString(R.string.default_)) ||
                 type.contains(getString(R.string.
                         moon_light)) || type.contains(getString(R.string.full))) {
@@ -731,5 +731,11 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         etColorG.setEnabled(isEnable);
         etColorB.setEnabled(isEnable);
         etColorWell.setEnabled(isEnable);
+    }
+
+    private void setPaintPixel() {
+        setPaintPixel(mEditLightPresenter.getLightColor(mLightName + mModelTypeFlags,
+                (Integer) radioGroup.getTag()));
+
     }
 }

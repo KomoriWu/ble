@@ -73,6 +73,15 @@ public class MainModelImpl implements MainModel {
                                     Log.d("bluename", "connected:" + device.getAddress());
                                     connBle(client, device.getAddress(), context, onInitBleListener,
                                             bleConnectOptions);
+
+//                                    client.stopSearch();
+//                                    //监听连接状态
+//                                    connStatus(client, device.getAddress(), onInitBleListener);
+//                                    StringBuffer stringBuffer = new StringBuffer(device.getAddress());
+//                                    stringBuffer.replace(0, 2, "FF");
+//                                    connBle(context, client, bleConnectOptions, stringBuffer.toString(),
+//                                            device.getName(), onInitBleListener);
+//                                    Log.d("bluename","conn ble mac:"+stringBuffer.toString());
                                     break;
                                 }
                             }
