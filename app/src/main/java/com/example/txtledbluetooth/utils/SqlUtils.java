@@ -117,7 +117,10 @@ public class SqlUtils {
         new RgbColor(DEFAULT_COLORS + itemNames[10] + Utils.getPopWindowItems(context, 10)[0] + 3,
                 245, 122, 20).save();
 
+        saveDefaultColors();
+    }
 
+    public static void saveDefaultColors() {
         new RgbColor(DEFAULT_COLORS + 0, 255, 255, 255).save(); //view 1
         new RgbColor(DEFAULT_COLORS + 1, 0, 255, 255).save();//view 2
         new RgbColor(DEFAULT_COLORS + 2, 0, 0, 255).save();//view 3

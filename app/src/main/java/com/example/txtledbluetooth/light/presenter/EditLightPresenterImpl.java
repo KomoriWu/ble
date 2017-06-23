@@ -155,6 +155,7 @@ public class EditLightPresenterImpl implements EditLightPresenter, ColorPicker.O
     public RgbColor getLightColor(String sqlName, int position) {
         return mLightModel.getLightColor(sqlName, position);
     }
+
     @Override
     public void onColorSelect(int color) {
         if (mIsSetOnColorSelectListener) {
@@ -171,6 +172,11 @@ public class EditLightPresenterImpl implements EditLightPresenter, ColorPicker.O
         writeCommand(mStringCommands.toString());
         mCommandCount = 0;
         mStringCommands = new StringBuffer(BleCommandUtils.HEAD);
+    }
+
+    @Override
+    public void saveDefaultColors(String sqlName) {
+        mLightModel.saveDefaultColors(sqlName);
     }
 
     private void writeCommand(String command) {

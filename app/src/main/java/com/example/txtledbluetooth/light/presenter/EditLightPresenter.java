@@ -16,17 +16,21 @@ public interface EditLightPresenter {
 
     void setIsSetOnColorSelectListener(boolean isSetOnColorSelectListener);
 
-    void setLightSpeed(String lightNo, int speed,boolean isWrite);
+    void setLightSpeed(String lightNo, int speed, boolean isWrite);
+
     void setLightSpeed(String lightNo, int speed);
 
-    void setLightBrightness(String lightNo, int brightness,boolean isWrite);
+    void setLightBrightness(String lightNo, int brightness, boolean isWrite);
+
     void setLightBrightness(String lightNo, int brightness);
 
-    void operateItemBluetooth(String lightName, int position, int popupPosition,boolean isWrite);
+    void operateItemBluetooth(String lightName, int position, int popupPosition, boolean isWrite);
+
     void operateItemBluetooth(String lightName, int position, int popupPosition);
 
-    void operateSwitchBluetooth(String lightNo,boolean isChecked,boolean isWrite);
-    void operateSwitchBluetooth(String lightNo,boolean isChecked);
+    void operateSwitchBluetooth(String lightNo, boolean isChecked, boolean isWrite);
+
+    void operateSwitchBluetooth(String lightNo, boolean isChecked);
 
     void updateLightColor(String lightNo, int viewPosition, String color, Bundle data);
 
@@ -37,4 +41,6 @@ public interface EditLightPresenter {
     RgbColor getLightColor(String sqlName, int position);
 
     void writeCommand();
+
+    void saveDefaultColors(String sqlName);
 }

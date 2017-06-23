@@ -48,7 +48,6 @@ public class LightModelImpl implements LightModel {
             public void onNotify(UUID service, UUID character, byte[] value) {
                 sbCommand.append(new String(value));
                 if (value.length > 1) {
-                    Log.d("notify", "----" + bytes2hex03(value));
                     if ((value[value.length - 1] == 10 && value[value.length - 2] == 13)) {
                         Log.d("notify", "command:" + sbCommand.toString());
                         String[] commands = sbCommand.toString().split("\\" + BleCommandUtils.
@@ -74,100 +73,37 @@ public class LightModelImpl implements LightModel {
         });
     }
 
-    private void saveNotify(Context context, int position, String[] commands, StringBuffer sbCommand) {
-        String[] itemNames = context.getResources().getStringArray(R.array.lighting_name);
-        int blePosition = Integer.parseInt(commands[3]);
-        int popupPosition = Integer.parseInt(commands[4]);
-        int bright = Integer.parseInt(commands[5], 16);
-        int speed = Integer.parseInt(commands[6], 16);
-        boolean pulseState = Integer.parseInt(commands[7]) == 1 ? true : false;
-        if (blePosition == 1 || blePosition == 13) {
-            popupPosition = 0;
-        } else if (blePosition == 2 || blePosition == 14) {
-            popupPosition = 1;
-        }
-        //所有的Item
-        String[] popupItems = Utils.getPopWindowItems(context, position);
-        if (popupPosition >= popupItems.length || position >= itemNames.length) {
-            sbCommand.setLength(0);
-            throw new ArrayIndexOutOfBoundsException("popupPosition :" + popupPosition +
-                    ",length :" + popupItems.length);
-        } else {
-            String lightName = itemNames[position];
-            String sqlName = lightName + popupItems[popupPosition];
-
-            Bundle bundle = new Bundle();
-            bundle.putString(Utils.SQL_NAME, lightName);
-            bundle.putInt(Utils.POPUP_POSITION, popupPosition);
-            bundle.putInt(Utils.SEEK_BAR_PROGRESS_BRIGHT, bright);
-            bundle.putInt(Utils.SEEK_BAR_PROGRESS_SPEED, speed);
-            bundle.putBoolean(Utils.PULSE_IS_OPEN, pulseState);
-            saveLightType(bundle);
-
-            if (position == 0 || position == 9) {
-                //item1 9特殊处理
-                Bundle bundle2 = new Bundle();
-                bundle2.putString(Utils.SQL_NAME, sqlName);
-                bundle2.putInt(Utils.SEEK_BAR_PROGRESS_SPEED, speed);
-                bundle2.putInt(Utils.SEEK_BAR_PROGRESS_BRIGHT, bright);
-                bundle2.putBoolean(Utils.PULSE_IS_OPEN, pulseState);
-                saveLightType(bundle2);
+    @Override
+    public void saveLightColor(final Bundle bundle) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String name = bundle.getString(Utils.SQL_NAME);
+                int r = bundle.getInt(Utils.COLOR_R);
+                int g = bundle.getInt(Utils.COLOR_G);
+                int b = bundle.getInt(Utils.COLOR_B);
+                RgbColor rgbColor = new RgbColor(name, r, g, b);
+                rgbColor.deleteRgbColorByName();
+                rgbColor.save();
             }
-            //颜色
-            for (int i = 0; i < 7; i++) {
-                if (commands.length > i + 9) {
-                    saveLightColor(sqlName + i, commands[i + 8]);
-                } else {
-                    break;
-                }
-            }
-        }
-    }
-
-    public void saveLightColor(String name, String rgb) {
-        int color = Color.parseColor("#" + rgb);
-        int r = Color.red(color);
-        int g = Color.green(color);
-        int b = Color.blue(color);
-        RgbColor rgbColor = new RgbColor(name, r, g, b);
-        rgbColor.deleteRgbColorByName();
-        rgbColor.save();
-    }
-
-    public static String bytes2hex03(byte[] bytes) {
-        final String HEX = "0123456789abcdef";
-        StringBuilder sb = new StringBuilder(bytes.length * 2);
-        for (byte b : bytes) {
-            // 取出这个字节的高4位，然后与0x0f与运算，得到一个0-15之间的数据，通过HEX.charAt(0-15)即为16进制数
-            sb.append(HEX.charAt((b >> 4) & 0x0f));
-            // 取出这个字节的低位，与0x0f与运算，得到一个0-15之间的数据，通过HEX.charAt(0-15)即为16进制数
-            sb.append(HEX.charAt(b & 0x0f));
-        }
-
-        return sb.toString();
+        }).start();
     }
 
     @Override
-    public void saveLightColor(Bundle bundle) {
-        String name = bundle.getString(Utils.SQL_NAME);
-        int r = bundle.getInt(Utils.COLOR_R);
-        int g = bundle.getInt(Utils.COLOR_G);
-        int b = bundle.getInt(Utils.COLOR_B);
-        RgbColor rgbColor = new RgbColor(name, r, g, b);
-        rgbColor.deleteRgbColorByName();
-        rgbColor.save();
-    }
-
-    @Override
-    public void saveLightType(Bundle bundle) {
-        String name = bundle.getString(Utils.SQL_NAME);
-        int popupPosition = bundle.getInt(Utils.POPUP_POSITION);
-        int bright = bundle.getInt(Utils.SEEK_BAR_PROGRESS_BRIGHT);
-        int speed = bundle.getInt(Utils.SEEK_BAR_PROGRESS_SPEED);
-        boolean isOpen = bundle.getBoolean(Utils.PULSE_IS_OPEN);
-        LightType lightType = new LightType(name, speed, bright, popupPosition, isOpen);
-        lightType.deleteLightTypeByName();
-        lightType.save();
+    public void saveLightType(final Bundle bundle) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String name = bundle.getString(Utils.SQL_NAME);
+                int popupPosition = bundle.getInt(Utils.POPUP_POSITION);
+                int bright = bundle.getInt(Utils.SEEK_BAR_PROGRESS_BRIGHT);
+                int speed = bundle.getInt(Utils.SEEK_BAR_PROGRESS_SPEED);
+                boolean isOpen = bundle.getBoolean(Utils.PULSE_IS_OPEN);
+                LightType lightType = new LightType(name, speed, bright, popupPosition, isOpen);
+                lightType.deleteLightTypeByName();
+                lightType.save();
+            }
+        }).start();
     }
 
     @Override
@@ -187,7 +123,25 @@ public class LightModelImpl implements LightModel {
         if (rgbColorList == null || rgbColorList.size() == 0) {
             rgbColorList = SqlUtils.getDefaultColors(sqlName, position);
         }
-        return rgbColorList.get(0);
+        return rgbColorList.size() > 0 ? rgbColorList.get(0) : null;
+    }
+
+    @Override
+    public void saveDefaultColors(final String sqlName) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i < 8; i++) {
+                    RgbColor rgbColor = getLightColor(sqlName, i);
+                    if (rgbColor != null) {
+                        rgbColor.setName(SqlUtils.DEFAULT_COLORS + sqlName + i);
+                        rgbColor.deleteRgbColorByName();
+                        rgbColor.save();
+                    }
+                }
+                SqlUtils.saveDefaultColors();
+            }
+        }).start();
     }
 
     public interface OnInterfaceWriteCommand {

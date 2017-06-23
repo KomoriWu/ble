@@ -32,6 +32,7 @@ import com.example.txtledbluetooth.light.presenter.EditLightPresenter;
 import com.example.txtledbluetooth.light.presenter.EditLightPresenterImpl;
 import com.example.txtledbluetooth.light.view.EditLightView;
 import com.example.txtledbluetooth.utils.BleCommandUtils;
+import com.example.txtledbluetooth.utils.SqlUtils;
 import com.example.txtledbluetooth.utils.Utils;
 import com.example.txtledbluetooth.widget.ColorPicker;
 
@@ -725,7 +726,7 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         bundle.putBoolean(Utils.PULSE_IS_OPEN, switchView.isChecked());
         mEditLightPresenter.saveLightType(bundle);
 
-
+        mEditLightPresenter.saveDefaultColors(mLightName + mModelTypeFlags );
     }
 
 

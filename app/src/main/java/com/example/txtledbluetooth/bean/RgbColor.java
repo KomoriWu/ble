@@ -109,9 +109,11 @@ public class RgbColor extends SugarRecord implements Serializable {
         for (int i = 0; i < 8; i++) {
             List<RgbColor> rgbColorList = getRgbColorList(name + i);
             if (rgbColorList == null || rgbColorList.size() == 0) {
-                rgbColorList = SqlUtils.getDefaultColors(name,i);
+                rgbColorList = SqlUtils.getDefaultColors(name, i);
             }
-            colors[i] = rgbColorList.get(0).getColorInt();
+            if (rgbColorList.size() > 0) {
+                colors[i] = rgbColorList.get(0).getColorInt();
+            }
         }
 
         return colors;
@@ -122,9 +124,11 @@ public class RgbColor extends SugarRecord implements Serializable {
         for (int i = 0; i < 8; i++) {
             List<RgbColor> rgbColorList = getRgbColorList(name + i);
             if (rgbColorList == null || rgbColorList.size() == 0) {
-                rgbColorList = SqlUtils.getDefaultColors(name,i);
+                rgbColorList = SqlUtils.getDefaultColors(name, i);
             }
-            colors[i] = rgbColorList.get(0).getColorStr();
+            if (rgbColorList.size() > 0) {
+                colors[i] = rgbColorList.get(0).getColorStr();
+            }
         }
 
         return colors;

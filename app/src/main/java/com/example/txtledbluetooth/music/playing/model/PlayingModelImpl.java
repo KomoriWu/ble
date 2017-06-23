@@ -1,5 +1,6 @@
 package com.example.txtledbluetooth.music.playing.model;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -14,6 +15,7 @@ import com.example.txtledbluetooth.utils.MusicUtils;
 
 public class PlayingModelImpl implements PlayingModel {
 
+    @SuppressLint("StaticFieldLeak")
     @Override
     public void loadGSAlbumCover(final String albumUri, final Context context,
                                  final OnLoadListener onLoadListener) {

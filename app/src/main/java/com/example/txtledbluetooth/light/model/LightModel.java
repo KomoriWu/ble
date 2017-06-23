@@ -29,4 +29,5 @@ public interface LightModel {
     int getLightType(String name);
 
     RgbColor getLightColor(String sqlName, int position);
+    void saveDefaultColors(String sqlName);
 }
