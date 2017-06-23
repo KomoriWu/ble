@@ -32,7 +32,7 @@
     <integer name="color_picker_paint">5</integer>
     <dimen name="speed_margin_left">0dp</dimen>
     <dimen name="speed_margin_top">30dp</dimen>
-
+    <dimen name="color_picker_size">320dp</dimen>
     <!--字体大小-->
     <dimen name="main_text_size">16sp</dimen>
     <dimen name="big_text_size">18sp</dimen>

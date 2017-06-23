@@ -50,11 +50,11 @@ public class BleCommandUtils {
     private static final String PULSE_MUSIC = "ebtm,";
 
     //其他设置
-
     public static final String RESET = HEAD + "erst" + END_MARK;
     public static final String CLOSE_SOUND = HEAD + "esvt:0" + END_MARK;
     public static final String OPEN_SOUND = HEAD + "esvt:1" + END_MARK;
-    public static final String BACK_NOTIFY = HEAD + "back" + DIVISION + END_MARK;
+    public static final String INPUT_BLUETOOTH="AT+AS=BT";
+    public static final String INPUT_AUX="AT+AS=AUX";
 
     //开关指令
     private static final String SWITCH = "etof,all:";

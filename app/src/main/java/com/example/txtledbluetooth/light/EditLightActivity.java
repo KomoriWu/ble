@@ -724,6 +724,8 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
         bundle.putInt(Utils.SEEK_BAR_PROGRESS_BRIGHT, seekBarBright.getProgress());
         bundle.putBoolean(Utils.PULSE_IS_OPEN, switchView.isChecked());
         mEditLightPresenter.saveLightType(bundle);
+
+
     }
 
 
