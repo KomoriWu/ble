@@ -4,8 +4,12 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.provider.Settings;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -13,6 +17,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,6 +46,7 @@ import com.example.txtledbluetooth.utils.SqlUtils;
 import com.example.txtledbluetooth.utils.Utils;
 import com.inuker.bluetooth.library.BluetoothClient;
 import com.inuker.bluetooth.library.Constants;
+import com.orhanobut.logger.Logger;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
 
@@ -111,7 +117,6 @@ public class MainActivity extends BaseActivity implements MainView {
         if (rgbColorList == null || rgbColorList.size() == 0) {
             SqlUtils.saveDefaultColors(this);
         }
-
     }
 
     private void initPermission() {
@@ -380,21 +385,33 @@ public class MainActivity extends BaseActivity implements MainView {
     };
 
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        String mac = SharedPreferenceUtils.getMacAddress(this);
-        int status = -1;
-        BluetoothClient client = MyApplication.getBluetoothClient(this);
-        if (!TextUtils.isEmpty(mac)) {
-            status = client.getConnectStatus(mac);
-        }
-        if (status != Constants.STATUS_DEVICE_CONNECTED && client.isBleSupported() &&
-                client.isBluetoothOpened()) {
-            if (isLocationEnable(this)) {
-                mPresenter.initBle(this);
+    public class BluetoothReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            switch (intent.getAction()) {
+                case BluetoothAdapter.ACTION_STATE_CHANGED:
+                    int blueState = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, 0);
+                    switch (blueState) {
+                        case BluetoothAdapter.STATE_TURNING_ON:
+                            Log.e("TAG", "TURNING_ON");
+                            break;
+                        case BluetoothAdapter.STATE_ON:
+                            Log.e("TAG", "STATE_ON");
+                            break;
+                        case BluetoothAdapter.STATE_TURNING_OFF:
+                            Log.e("TAG", "STATE_TURNING_OFF");
+                            break;
+                        case BluetoothAdapter.STATE_OFF:
+                            Log.e("TAG", "STATE_OFF");
+                            break;
+                    }
+                    break;
             }
         }
     }
 
+    private void startReceiver() {
+        BluetoothReceiver receiver=new BluetoothReceiver();
+        registerReceiver(receiver,new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
+    }
 }

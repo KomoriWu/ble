@@ -58,6 +58,7 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
     private boolean mIsReturn;
     private Timer mTimer;
     private TimerTask mTimerTask;
+    private int mLastPosition;
     @SuppressLint("HandlerLeak")
     private Handler mTimerHandler = new Handler() {
         public void handleMessage(Message msg) {
@@ -65,7 +66,7 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
             switch (msg.what) {
                 case TIMER_MESSAGE:
                     mLightPresenter.openNotify();
-                    onItemClick(null,SharedPreferenceUtils.getClickPosition(getActivity()));
+                    onItemClick(null, SharedPreferenceUtils.getClickPosition(getActivity()));
                     stopTimer();
                     break;
             }
@@ -137,11 +138,14 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
 
     @Override
     public void onItemClick(View view, int position) {
-        mLightName = mLightNames[position];
-        mLightPresenter.operateItemBluetooth(mLightName, position);
-        mLightPresenter.operateItemSeekBar(mLightName, position);
-        mLightPresenter.writeCommand();
-        setSwitchChecked();
+        if (position != mLastPosition) {
+            mLightName = mLightNames[position];
+            mLightPresenter.operateItemBluetooth(mLightName, position);
+            mLightPresenter.operateItemSeekBar(mLightName, position);
+            mLightPresenter.writeCommand();
+            setSwitchChecked();
+            mLastPosition=position;
+        }
     }
 
     private void setSwitchChecked() {

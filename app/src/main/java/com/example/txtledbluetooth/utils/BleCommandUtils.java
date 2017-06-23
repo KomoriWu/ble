@@ -53,8 +53,8 @@ public class BleCommandUtils {
     public static final String RESET = HEAD + "erst" + END_MARK;
     public static final String CLOSE_SOUND = HEAD + "esvt:0" + END_MARK;
     public static final String OPEN_SOUND = HEAD + "esvt:1" + END_MARK;
-    public static final String INPUT_BLUETOOTH="AT+AS=BT";
-    public static final String INPUT_AUX="AT+AS=AUX";
+    public static final String INPUT_BLUETOOTH="AT+AS=BT\r\n";
+    public static final String INPUT_AUX="AT+AS=AUX\r\n";
 
     //开关指令
     private static final String SWITCH = "etof,all:";

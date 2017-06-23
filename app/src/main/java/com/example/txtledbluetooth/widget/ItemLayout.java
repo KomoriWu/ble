@@ -100,7 +100,8 @@ public class ItemLayout extends RelativeLayout {
                     drawableRight = a.getDrawable(attr);
                     break;
                 case R.styleable.ItemLayout_item_bg:
-                    itemBgColor = a.getColor(attr, R.color.content_bg);
+                    itemBgColor = a.getColor(attr, context.getResources().getColor(R.color.
+                            content_bg));
                     break;
             }
 
