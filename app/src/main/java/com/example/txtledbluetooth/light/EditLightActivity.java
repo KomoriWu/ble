@@ -332,7 +332,6 @@ public class EditLightActivity extends BaseActivity implements View.OnClickListe
     @Override
     public void revert() {
         RgbColor.deleteRgbColors(mLightName + mModelTypeFlags);
-        LightType.deleteLightTypeByName(mLightName);
         radioGroup.check(R.id.rb_board1);
         setViewBoardDefaultColor();
         setPaintPixel();
