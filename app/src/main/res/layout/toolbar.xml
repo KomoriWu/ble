@@ -20,8 +20,12 @@
         <TextView
             android:id="@+id/tv_toolbar_right"
             style="@style/main_tv"
+            android:layout_height="match_parent"
             android:layout_gravity="right"
-            android:layout_marginRight="@dimen/item_padding_left"
+            android:gravity="center_vertical"
+            android:paddingRight="@dimen/item_padding_left"
+            android:paddingLeft="@dimen/item_padding_left"
+            android:background="@drawable/ripple_list_item_effect"
             android:textColor="@color/colorAccent"
             android:visibility="gone" />
 

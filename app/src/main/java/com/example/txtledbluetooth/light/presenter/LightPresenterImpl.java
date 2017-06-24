@@ -1,5 +1,6 @@
 package com.example.txtledbluetooth.light.presenter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -135,6 +136,7 @@ public class LightPresenterImpl implements LightPresenter {
         new initDataAsyncTask().execute();
     }
 
+    @SuppressLint("StaticFieldLeak")
     private class initDataAsyncTask extends AsyncTask<Void, Void, ArrayList<Lighting>> {
         ArrayList<Lighting> lightingList;
         List<Boolean> list;

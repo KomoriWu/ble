@@ -1,6 +1,7 @@
 package com.example.txtledbluetooth.light;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -144,7 +145,7 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
             mLightPresenter.operateItemSeekBar(mLightName, position);
             mLightPresenter.writeCommand();
             setSwitchChecked();
-            mLastPosition=position;
+            mLastPosition = position;
         }
     }
 
@@ -202,5 +203,17 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
     public void onDestroy() {
         super.onDestroy();
         stopTimer();
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            if (SharedPreferenceUtils.getIsResetDefault(getActivity())) {
+                mLayoutManager.scrollToPositionWithOffset(0, 0);
+                mLightAdapter.setSelectItem(0);
+                SharedPreferenceUtils.cleanIsResetDefault(getActivity());
+            }
+        }
     }
 }

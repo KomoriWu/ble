@@ -1,5 +1,6 @@
 package com.example.txtledbluetooth.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -14,24 +15,37 @@ import java.util.Map;
  */
 
 public class SharedPreferenceUtils {
-    public static final String AUDIO_PROMPTS_MODEL_NAME = "audio_prompts_model_name";
-    public static final String AUDIO_PROMPTS_MODEL_KEY = "audio_prompts_model_key";
-    public static final String MAC_ADDRESS_NAME = "mac_address_name";
-    public static final String MAC_ADDRESS_KEY = "mac_address_key";
-    public static final String RECEIVE_SERVICE_NAME = "receive_service_name";
-    public static final String RECEIVE_SERVICE_KEY = "receive_service_key";
-    public static final String RECEIVE_CHARACTER_NAME = "receive_character_name";
-    public static final String RECEIVE_CHARACTER_KEY = "receive_character_key";
-    public static final String SEND_SERVICE_NAME = "send_service_name";
-    public static final String SEND_SERVICE_KEY = "send_service_key";
-    public static final String SEND_CHARACTER_NAME = "send_character_name";
-    public static final String SEND_CHARACTER_KEY = "send_character_key";
-    public static final String CLICK_ITEM_POSITION_NAME = "click_item_position_name";
-    public static final String CLICK_ITEM_POSITION_KEY = "click_item_position_key";
-    public static final String LAST_PLAY_POSITION_NAME = "last_play_position_name";
-    public static final String LAST_PLAY_POSITION_KEY = "last_play_position_key";
+    private static final String AUDIO_PROMPTS_MODEL_NAME = "audio_prompts_model_name";
+    private static final String AUDIO_PROMPTS_MODEL_KEY = "audio_prompts_model_key";
+    private static final String MAC_ADDRESS_NAME = "mac_address_name";
+    private static final String MAC_ADDRESS_KEY = "mac_address_key";
+    private static final String RECEIVE_SERVICE_NAME = "receive_service_name";
+    private static final String RECEIVE_SERVICE_KEY = "receive_service_key";
+    private static final String RECEIVE_CHARACTER_NAME = "receive_character_name";
+    private static final String RECEIVE_CHARACTER_KEY = "receive_character_key";
+    private static final String SEND_SERVICE_NAME = "send_service_name";
+    private static final String SEND_SERVICE_KEY = "send_service_key";
+    private static final String SEND_CHARACTER_NAME = "send_character_name";
+    private static final String SEND_CHARACTER_KEY = "send_character_key";
+    private static final String CLICK_ITEM_POSITION_NAME = "click_item_position_name";
+    private static final String CLICK_ITEM_POSITION_KEY = "click_item_position_key";
+    private static final String LAST_PLAY_POSITION_NAME = "last_play_position_name";
+    private static final String LAST_PLAY_POSITION_KEY = "last_play_position_key";
+    private static final String IS_RESET_DEFAULT_NAME = "is_reset_default_name";
+    private static final String IS_RESET_DEFAULT_KEY = "is_reset_default_key";
 
+    public static void saveIsResetDefault(Context context, boolean isReset) {
+        SharedPreferenceUtils.saveSharedPreference(context, IS_RESET_DEFAULT_NAME,
+                IS_RESET_DEFAULT_KEY, isReset);
+    }
 
+    public static boolean getIsResetDefault(Context context) {
+        return SharedPreferenceUtils.getSharedPreferenceBoolean(context, IS_RESET_DEFAULT_NAME,
+                IS_RESET_DEFAULT_KEY);
+    }
+    public static void cleanIsResetDefault(Context context) {
+        removeSharedPreference(context,IS_RESET_DEFAULT_NAME,IS_RESET_DEFAULT_KEY);
+    }
     public static void saveReceiveService(Context context, String serviceUUID) {
         SharedPreferenceUtils.saveSharedPreference(context, RECEIVE_SERVICE_NAME,
                 RECEIVE_SERVICE_KEY, serviceUUID);
@@ -70,6 +84,10 @@ public class SharedPreferenceUtils {
     public static int getClickPosition(Context context) {
         return SharedPreferenceUtils.getSharedPreferenceInt(context, CLICK_ITEM_POSITION_NAME,
                 CLICK_ITEM_POSITION_KEY, 0);
+    }
+
+    public static void cleanClickPosition(Context context) {
+        removeSharedPreference(context,CLICK_ITEM_POSITION_NAME,CLICK_ITEM_POSITION_KEY);
     }
 
     public static void saveMacAddress(Context context, String macAddress) {

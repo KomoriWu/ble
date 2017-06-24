@@ -65,6 +65,8 @@ public class SettingPresenterImp implements SettingPresenter {
         String command = BleCommandUtils.RESET;
         writeCommand(command);
         mSettingModel.cleanSql(mContext);
+        SharedPreferenceUtils.cleanClickPosition(mContext);
+        SharedPreferenceUtils.saveIsResetDefault(mContext, true);
     }
 
     private void writeCommand(String command) {
