@@ -4,24 +4,23 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.content.BroadcastReceiver;
-import android.content.Context;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.ServiceConnection;
+import android.os.IBinder;
 import android.provider.Settings;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,22 +34,24 @@ import com.example.txtledbluetooth.dashboard.DashboardFragment;
 import com.example.txtledbluetooth.light.LightFragment;
 import com.example.txtledbluetooth.main.presenter.MainPresenter;
 import com.example.txtledbluetooth.main.presenter.MainPresenterImpl;
+import com.example.txtledbluetooth.main.service.ConnBleInterface;
+import com.example.txtledbluetooth.main.service.ConnBleService;
 import com.example.txtledbluetooth.main.view.MainView;
 import com.example.txtledbluetooth.music.MusicFragment;
 import com.example.txtledbluetooth.setting.SettingFragment;
 import com.example.txtledbluetooth.sources.SourcesFragment;
 import com.example.txtledbluetooth.utils.AlertUtils;
 import com.example.txtledbluetooth.utils.LocaleUtils;
-import com.example.txtledbluetooth.utils.SharedPreferenceUtils;
 import com.example.txtledbluetooth.utils.SqlUtils;
 import com.example.txtledbluetooth.utils.Utils;
-import com.inuker.bluetooth.library.BluetoothClient;
 import com.inuker.bluetooth.library.Constants;
 import com.orhanobut.logger.Logger;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
 
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -58,7 +59,7 @@ import butterknife.OnClick;
 
 import static com.example.txtledbluetooth.utils.Utils.isLocationEnable;
 
-public class MainActivity extends BaseActivity implements MainView {
+public class MainActivity extends BaseActivity implements MainView, Observer {
     private static final int PERMISSION_REQUEST_CODE = 100;
     private static final int REQUEST_CODE_SETTING = 1;
     private static final int REQUEST_CODE_ALLOW = 2;
@@ -74,6 +75,8 @@ public class MainActivity extends BaseActivity implements MainView {
     RelativeLayout mainContent;
     @BindView(R.id.tv_toolbar_right)
     TextView tvScan;
+    @BindView(R.id.progress_bar)
+    ProgressBar progressBar;
     private ActionBarDrawerToggle mDrawerToggle;
     private MainPresenter mPresenter;
     private DashboardFragment mDashboardFragment;
@@ -84,7 +87,9 @@ public class MainActivity extends BaseActivity implements MainView {
     private AboutFragment mAboutFragment;
     private long mExitTime;
     private Fragment mCurrentFragment;
-    private ProgressDialog mProgressDialog;
+    private Intent mIntent;
+    private ConnBleInterface mConnBleInterface;
+    private MyServiceConn mServiceConn;
 
     @SuppressLint("ResourceType")
     @Override
@@ -94,6 +99,7 @@ public class MainActivity extends BaseActivity implements MainView {
         LocaleUtils.setAutoLanguage(this);
         mPresenter = new MainPresenterImpl(this);
         initToolbar();
+        initService();
         tvScan.setText(R.string.scan);
         mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,
                 R.string.drawer_open, R.string.drawer_close);
@@ -110,13 +116,14 @@ public class MainActivity extends BaseActivity implements MainView {
         mCurrentFragment = new DashboardFragment();
 //        switchDashboard();
         switchLighting();
-        initPermission();
 
+        initPermission();
         //初始化默认颜色
         List<RgbColor> rgbColorList = RgbColor.getRgbColorList(SqlUtils.DEFAULT_COLORS + 0);
         if (rgbColorList == null || rgbColorList.size() == 0) {
             SqlUtils.saveDefaultColors(this);
         }
+        showSnackBar(mainContent, getString(R.string.dis_conn));
     }
 
     private void initPermission() {
@@ -124,7 +131,10 @@ public class MainActivity extends BaseActivity implements MainView {
         if (AndPermission.hasPermission(this, Utils.getPermission(0),
                 Utils.getPermission(1))) {
             if (isLocationEnable(this)) {
-                mPresenter.initBle(this);
+//                mPresenter.initBle(this);
+                if (mConnBleInterface != null) {
+                    mConnBleInterface.scanBle();
+                }
             } else {
                 AlertUtils.showAlertDialog(this, R.string.gps_open_hint, new
                         DialogInterface.OnClickListener() {
@@ -166,15 +176,12 @@ public class MainActivity extends BaseActivity implements MainView {
 
     @Override
     public void showProgress() {
-        showSnackBar(mainContent, getString(R.string.dis_conn));
-        mProgressDialog = ProgressDialog.show(this, "", getString(R.string.init_the_bluetooth),
-                true, true, new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-                        AlertUtils.showAlertDialog(MainActivity.this, R.string.search_cancelled);
-                        MyApplication.getBluetoothClient(MainActivity.this).stopSearch();
-                    }
-                });
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                progressBar.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
     @Override
@@ -246,14 +253,13 @@ public class MainActivity extends BaseActivity implements MainView {
 
     @Override
     public void hideProgress() {
-        mProgressDialog.dismiss();
+
     }
 
     @Override
     public void showLoadSuccessMsg(String name) {
-        AlertUtils.showAlertDialog(this, String.format(getString(R.string.conn_ble_success),
-                name));
         hideSnackBar();
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override
@@ -291,6 +297,7 @@ public class MainActivity extends BaseActivity implements MainView {
     public void onConnStatus(String mac, int status) {
         if (status == Constants.STATUS_DISCONNECTED) {
             showSnackBar(mainContent, getString(R.string.dis_conn));
+            mConnBleInterface.scanBle();
         }
     }
 
@@ -326,10 +333,10 @@ public class MainActivity extends BaseActivity implements MainView {
         if ((requestCode == REQUEST_CODE_ALLOW && resultCode == RESULT_OK) ||
                 requestCode == REQUEST_CODE_SETTING && AndPermission.hasPermission(this,
                         Utils.getPermission(0), Utils.getPermission(1))) {
-            mPresenter.initBle(this);
+//            mPresenter.initBle(this);
         } else if (requestCode == REQUEST_CODE_LOCATION_SETTINGS) {
             if (isLocationEnable(this)) {
-                mPresenter.initBle(this);
+//                mPresenter.initBle(this);
             } else {
                 AlertUtils.showAlertDialog(this, R.string.gps_not_open_hint);
             }
@@ -362,7 +369,7 @@ public class MainActivity extends BaseActivity implements MainView {
         public void onSucceed(int requestCode, List<String> grantPermissions) {
             switch (requestCode) {
                 case PERMISSION_REQUEST_CODE: {
-                    mPresenter.initBle(MainActivity.this);
+//                    mPresenter.initBle(MainActivity.this);
                     break;
                 }
             }
@@ -384,34 +391,30 @@ public class MainActivity extends BaseActivity implements MainView {
         }
     };
 
+    @Override
+    public void update(Observable o, Object arg) {
+        String macAddress = (String) arg;
+        mPresenter.connBle(this, macAddress);
+    }
 
-    public class BluetoothReceiver extends BroadcastReceiver {
+    private class MyServiceConn implements ServiceConnection {
         @Override
-        public void onReceive(Context context, Intent intent) {
-            switch (intent.getAction()) {
-                case BluetoothAdapter.ACTION_STATE_CHANGED:
-                    int blueState = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, 0);
-                    switch (blueState) {
-                        case BluetoothAdapter.STATE_TURNING_ON:
-                            Log.e("TAG", "TURNING_ON");
-                            break;
-                        case BluetoothAdapter.STATE_ON:
-                            Log.e("TAG", "STATE_ON");
-                            break;
-                        case BluetoothAdapter.STATE_TURNING_OFF:
-                            Log.e("TAG", "STATE_TURNING_OFF");
-                            break;
-                        case BluetoothAdapter.STATE_OFF:
-                            Log.e("TAG", "STATE_OFF");
-                            break;
-                    }
-                    break;
-            }
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            mConnBleInterface = (ConnBleInterface) iBinder;
+            mConnBleInterface.scanBle();
+            mConnBleInterface.addObserver(MainActivity.this);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+
         }
     }
 
-    private void startReceiver() {
-        BluetoothReceiver receiver=new BluetoothReceiver();
-        registerReceiver(receiver,new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
+    private void initService() {
+        mServiceConn = new MyServiceConn();
+        mIntent = new Intent(this, ConnBleService.class);
+        startService(mIntent);
+        bindService(mIntent, mServiceConn, BIND_AUTO_CREATE);
     }
 }

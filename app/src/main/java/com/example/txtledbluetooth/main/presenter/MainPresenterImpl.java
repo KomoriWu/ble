@@ -27,11 +27,12 @@ public class MainPresenterImpl implements MainPresenter, MainModelImpl.OnInitBle
         this.mMainView = mMainView;
     }
 
+
     @Override
-    public void initBle(Context context) {
+    public void connBle(Context context, String macAddress) {
         mMainView.showProgress();
         mMainModel.initBle(context, MyApplication.getBluetoothClient(context), Utils.
-                getBleConnectOptions(), this);
+                getBleConnectOptions(),macAddress, this);
     }
 
     @Override

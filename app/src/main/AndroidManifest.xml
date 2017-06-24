@@ -62,6 +62,10 @@
             android:name=".music.service.MusicService"
             android:screenOrientation="portrait" />
 
+        <service
+            android:name=".main.service.ConnBleService"
+            android:screenOrientation="portrait" />
+
         <activity
             android:name=".music.playing.PlayingActivity"
             android:configChanges="layoutDirection|locale"

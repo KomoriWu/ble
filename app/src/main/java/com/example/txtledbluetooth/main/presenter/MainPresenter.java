@@ -12,7 +12,7 @@ import com.inuker.bluetooth.library.connect.options.BleConnectOptions;
  */
 
 public interface MainPresenter {
-    void initBle(Context context);
+    void connBle(Context context,String macAddress);
 
     void switchNavigation(int id);
 }

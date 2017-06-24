@@ -44,53 +44,11 @@ public class MainModelImpl implements MainModel {
 
     @Override
     public void initBle(Context context, BluetoothClient client, BleConnectOptions
-            bleConnectOptions, OnInitBleListener onInitBleListener) {
+            bleConnectOptions, String macAddress, OnInitBleListener onInitBleListener) {
         if (client.isBleSupported()) {
             if (client.isBluetoothOpened()) {
-                try {
-                    BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
-                    Class<BluetoothAdapter> bluetoothAdapterClass = BluetoothAdapter.class;//得到BluetoothAdapter的Class对象
-                    Method method = null;
-                    method = bluetoothAdapterClass.getDeclaredMethod("getConnectionState",
-                            (Class[]) null);
-                    //打开权限
-                    method.setAccessible(true);
-                    int state = (int) method.invoke(adapter, (Object[]) null);
-                    if (state == BluetoothAdapter.STATE_CONNECTED) {
-                        Set<BluetoothDevice> devices = adapter.getBondedDevices();
-
-                        for (BluetoothDevice device : devices) {
-                            Log.d("bluename", "本机---" + device.getName());
-                            Log.d("bluename", "本机---" + device.getAddress());
-                            if (device.getName().contains(Utils.BLE_NAME)) {
-                                @SuppressLint("PrivateApi")
-                                Method isConnectedMethod = BluetoothDevice.class.getDeclaredMethod(
-                                        "isConnected", (Class[]) null);
-                                method.setAccessible(true);
-                                boolean isConnected = (boolean) isConnectedMethod.invoke(device, (
-                                        Object[]) null);
-                                if (isConnected) {
-                                    Log.d("bluename", "connected:" + device.getAddress());
-                                    connBle(client, device.getAddress(), context, onInitBleListener,
-                                            bleConnectOptions);
-
-//                                    client.stopSearch();
-//                                    //监听连接状态
-//                                    connStatus(client, device.getAddress(), onInitBleListener);
-//                                    StringBuffer stringBuffer = new StringBuffer(device.getAddress());
-//                                    stringBuffer.replace(0, 2, "FF");
-//                                    connBle(context, client, bleConnectOptions, stringBuffer.toString(),
-//                                            device.getName(), onInitBleListener);
-//                                    Log.d("bluename","conn ble mac:"+stringBuffer.toString());
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                } catch (NoSuchMethodException | IllegalAccessException |
-                        InvocationTargetException e) {
-                    e.printStackTrace();
-                }
+                connBle(client, macAddress, context, onInitBleListener,
+                        bleConnectOptions);
             } else {
                 onInitBleListener.onFailure(context.getString(R.string.open_ble));
             }
