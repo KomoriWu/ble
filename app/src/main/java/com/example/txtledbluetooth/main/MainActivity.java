@@ -260,7 +260,7 @@ public class MainActivity extends BaseActivity implements MainView, Observer {
     public void showLoadSuccessMsg(String name) {
         hideSnackBar();
         progressBar.setVisibility(View.GONE);
-        SharedPreferenceUtils.saveIsConnSuccess(this,true);
+        SharedPreferenceUtils.saveIsConnSuccess(this, true);
     }
 
     @Override
@@ -445,5 +445,7 @@ public class MainActivity extends BaseActivity implements MainView, Observer {
     public void onDestroy() {
         super.onDestroy();
         unbindService(mServiceConn);
+        SharedPreferenceUtils.cleanIsConnSuccess(this);
+        SharedPreferenceUtils.cleanMacAddress(this);
     }
 }

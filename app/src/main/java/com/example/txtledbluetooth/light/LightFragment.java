@@ -68,6 +68,8 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
                 case TIMER_MESSAGE:
                     mLightPresenter.openNotify();
                     onItemClick(null, SharedPreferenceUtils.getClickPosition(getActivity()));
+                    mLayoutManager.scrollToPositionWithOffset(SharedPreferenceUtils.
+                            getClickPosition(getActivity()), 0);
                     stopTimer();
                     SharedPreferenceUtils.cleanIsConnSuccess(getActivity());
                     break;
