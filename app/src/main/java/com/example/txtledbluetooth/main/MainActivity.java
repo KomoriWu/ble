@@ -42,6 +42,7 @@ import com.example.txtledbluetooth.setting.SettingFragment;
 import com.example.txtledbluetooth.sources.SourcesFragment;
 import com.example.txtledbluetooth.utils.AlertUtils;
 import com.example.txtledbluetooth.utils.LocaleUtils;
+import com.example.txtledbluetooth.utils.SharedPreferenceUtils;
 import com.example.txtledbluetooth.utils.SqlUtils;
 import com.example.txtledbluetooth.utils.Utils;
 import com.inuker.bluetooth.library.BluetoothClient;
@@ -259,6 +260,7 @@ public class MainActivity extends BaseActivity implements MainView, Observer {
     public void showLoadSuccessMsg(String name) {
         hideSnackBar();
         progressBar.setVisibility(View.GONE);
+        SharedPreferenceUtils.saveIsConnSuccess(this,true);
     }
 
     @Override
@@ -289,7 +291,17 @@ public class MainActivity extends BaseActivity implements MainView, Observer {
 
     @Override
     public void showLoadExceptionMsg(String exception) {
-        AlertUtils.showAlertDialog(this, exception);
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setMessage(exception)
+                .setPositiveButton(R.string.retry, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int i) {
+                        mConnBleInterface.scanBle();
+                    }
+                })
+                .create();
+        dialog.setCancelable(true);
+        dialog.show();
     }
 
     @Override
@@ -352,7 +364,7 @@ public class MainActivity extends BaseActivity implements MainView, Observer {
                 showLoadFailMsg(getString(R.string.open_ble));
             }
         } else {
-            showLoadExceptionMsg(getString(R.string.no_support_ble));
+            AlertUtils.showAlertDialog(this, getString(R.string.no_support_ble));
         }
     }
 
@@ -427,5 +439,11 @@ public class MainActivity extends BaseActivity implements MainView, Observer {
         mIntent = new Intent(this, ConnBleService.class);
         startService(mIntent);
         bindService(mIntent, mServiceConn, BIND_AUTO_CREATE);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unbindService(mServiceConn);
     }
 }

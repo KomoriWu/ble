@@ -33,6 +33,23 @@ public class SharedPreferenceUtils {
     private static final String LAST_PLAY_POSITION_KEY = "last_play_position_key";
     private static final String IS_RESET_DEFAULT_NAME = "is_reset_default_name";
     private static final String IS_RESET_DEFAULT_KEY = "is_reset_default_key";
+    private static final String IS_CONN_BLE_SUCCESS_NAME = "is_conn_ble_success_name";
+    private static final String IS_CONN_BLE_SUCCESS_KEY= "is_conn_ble_success_key";
+
+
+    public static void saveIsConnSuccess(Context context, boolean isReset) {
+        SharedPreferenceUtils.saveSharedPreference(context, IS_CONN_BLE_SUCCESS_NAME,
+                IS_CONN_BLE_SUCCESS_KEY, isReset);
+    }
+
+    public static boolean getIsConnSuccess(Context context) {
+        return SharedPreferenceUtils.getSharedPreferenceBoolean(context, IS_CONN_BLE_SUCCESS_NAME,
+                IS_CONN_BLE_SUCCESS_KEY);
+    }
+    public static void cleanIsConnSuccess(Context context) {
+        removeSharedPreference(context,IS_CONN_BLE_SUCCESS_NAME,IS_CONN_BLE_SUCCESS_KEY);
+    }
+
 
     public static void saveIsResetDefault(Context context, boolean isReset) {
         SharedPreferenceUtils.saveSharedPreference(context, IS_RESET_DEFAULT_NAME,
@@ -98,6 +115,9 @@ public class SharedPreferenceUtils {
     public static String getMacAddress(Context context) {
         return SharedPreferenceUtils.getSharedPreferenceString(context, MAC_ADDRESS_NAME,
                 MAC_ADDRESS_KEY);
+    }
+    public static void cleanMacAddress(Context context) {
+        removeSharedPreference(context,MAC_ADDRESS_NAME,MAC_ADDRESS_KEY);
     }
 
     public static void saveSendService(Context context, String serviceUUID) {

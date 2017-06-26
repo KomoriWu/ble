@@ -59,7 +59,7 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
     private boolean mIsReturn;
     private Timer mTimer;
     private TimerTask mTimerTask;
-    private int mLastPosition=-1;
+    private int mLastPosition = -1;
     @SuppressLint("HandlerLeak")
     private Handler mTimerHandler = new Handler() {
         public void handleMessage(Message msg) {
@@ -69,6 +69,7 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
                     mLightPresenter.openNotify();
                     onItemClick(null, SharedPreferenceUtils.getClickPosition(getActivity()));
                     stopTimer();
+                    SharedPreferenceUtils.cleanIsConnSuccess(getActivity());
                     break;
             }
 
@@ -170,15 +171,10 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
             mTimerTask = new TimerTask() {
                 @Override
                 public void run() {
-                    String mac = SharedPreferenceUtils.getMacAddress(getActivity());
-                    if (!TextUtils.isEmpty(mac)) {
-                        int status = MyApplication.getBluetoothClient(getActivity()).
-                                getConnectStatus(mac);
+                    if (SharedPreferenceUtils.getIsConnSuccess(getActivity())) {
                         Message message = new Message();
                         message.what = TIMER_MESSAGE;
-                        if (status == Constants.STATUS_DEVICE_CONNECTED) {
-                            mTimerHandler.sendMessage(message);
-                        }
+                        mTimerHandler.sendMessage(message);
                     }
                 }
             };
