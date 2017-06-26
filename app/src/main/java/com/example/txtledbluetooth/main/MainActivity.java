@@ -2,7 +2,6 @@ package com.example.txtledbluetooth.main;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.ComponentName;
 import android.content.DialogInterface;
@@ -15,7 +14,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -47,7 +45,6 @@ import com.example.txtledbluetooth.utils.SqlUtils;
 import com.example.txtledbluetooth.utils.Utils;
 import com.inuker.bluetooth.library.BluetoothClient;
 import com.inuker.bluetooth.library.Constants;
-import com.orhanobut.logger.Logger;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
 
@@ -67,6 +64,7 @@ public class MainActivity extends BaseActivity implements MainView, Observer {
     private static final int REQUEST_CODE_ALLOW = 2;
     private static final int REQUEST_CODE_LOCATION_SETTINGS = 3;
     public static final int REQUEST_CODE_SETTING_MUSIC = 4;
+    public static final String NOTIFY_RECEIVER_ACTION = "com.example.notify";
     @BindView(R.id.frame_content)
     FrameLayout frameContent;
     @BindView(R.id.navigation_view)
@@ -309,6 +307,7 @@ public class MainActivity extends BaseActivity implements MainView, Observer {
         if (status == Constants.STATUS_DISCONNECTED) {
             showSnackBar(mainContent, getString(R.string.dis_conn));
             mConnBleInterface.scanBle();
+            sendBroadcast(new Intent(NOTIFY_RECEIVER_ACTION));
         }
     }
 

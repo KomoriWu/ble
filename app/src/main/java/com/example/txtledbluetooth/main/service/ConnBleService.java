@@ -48,8 +48,6 @@ import static com.inuker.bluetooth.library.Constants.REQUEST_SUCCESS;
 
 @SuppressLint("Registered")
 public class ConnBleService extends Service {
-    private static final int SEARCH_TIMEOUT = 5000;
-    private static final int SEARCH_TIMEOUT_NUMBER = 2;
     private static final int TIMER_DELAY = 1000;
     private static final int TIMER_PERIOD = 100;
     private Timer mTimer;

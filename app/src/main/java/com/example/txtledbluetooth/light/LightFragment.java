@@ -1,31 +1,32 @@
 package com.example.txtledbluetooth.light;
 
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.txtledbluetooth.R;
-import com.example.txtledbluetooth.application.MyApplication;
 import com.example.txtledbluetooth.base.BaseFragment;
 import com.example.txtledbluetooth.bean.Lighting;
 import com.example.txtledbluetooth.light.presenter.LightPresenter;
 import com.example.txtledbluetooth.light.presenter.LightPresenterImpl;
 import com.example.txtledbluetooth.light.view.LightView;
+import com.example.txtledbluetooth.main.MainActivity;
 import com.example.txtledbluetooth.utils.SharedPreferenceUtils;
 import com.example.txtledbluetooth.utils.Utils;
-import com.inuker.bluetooth.library.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,9 @@ import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.inuker.bluetooth.library.utils.BluetoothUtils.registerReceiver;
+import static com.inuker.bluetooth.library.utils.BluetoothUtils.unregisterReceiver;
 
 /**
  * Created by KomoriWu
@@ -58,8 +62,8 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
     private String[] mLightNames;
     private boolean mIsReturn;
     private Timer mTimer;
-    private TimerTask mTimerTask;
     private int mLastPosition = -1;
+
     @SuppressLint("HandlerLeak")
     private Handler mTimerHandler = new Handler() {
         public void handleMessage(Message msg) {
@@ -67,6 +71,7 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
             switch (msg.what) {
                 case TIMER_MESSAGE:
                     mLightPresenter.openNotify();
+                    mLastPosition = -1;
                     onItemClick(null, SharedPreferenceUtils.getClickPosition(getActivity()));
                     mLayoutManager.scrollToPositionWithOffset(SharedPreferenceUtils.
                             getClickPosition(getActivity()), 0);
@@ -96,7 +101,9 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
                 mLightPresenter.operateSwitchBluetooth(isChecked);
             }
         });
+
         startTimer();
+        register();
         return view;
     }
 
@@ -169,20 +176,16 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
         if (mTimer == null) {
             mTimer = new Timer();
         }
-        if (mTimerTask == null) {
-            mTimerTask = new TimerTask() {
-                @Override
-                public void run() {
-                    if (SharedPreferenceUtils.getIsConnSuccess(getActivity())) {
-                        Message message = new Message();
-                        message.what = TIMER_MESSAGE;
-                        mTimerHandler.sendMessage(message);
-                    }
-                }
-            };
-        }
-        if (mTimer != null && mTimerTask != null) {
-            mTimer.schedule(mTimerTask, TIMER_DELAY, TIMER_PERIOD);
+        mTimer.schedule(new ConnTimerTask(), TIMER_DELAY, TIMER_PERIOD);
+    }
+
+    class ConnTimerTask extends TimerTask {
+        public void run() {
+            if (SharedPreferenceUtils.getIsConnSuccess(getActivity())) {
+                Message message = new Message();
+                message.what = TIMER_MESSAGE;
+                mTimerHandler.sendMessage(message);
+            }
         }
     }
 
@@ -191,17 +194,28 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
             mTimer.cancel();
             mTimer = null;
         }
-        if (mTimerTask != null) {
-            mTimerTask.cancel();
-            mTimerTask = null;
-        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         stopTimer();
+        unregisterReceiver(mNotifyReceiver);
     }
+
+    private void register() {
+        IntentFilter filter = new IntentFilter(MainActivity.NOTIFY_RECEIVER_ACTION);
+        registerReceiver(mNotifyReceiver, filter);
+    }
+
+    private BroadcastReceiver mNotifyReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(MainActivity.NOTIFY_RECEIVER_ACTION)) {
+                startTimer();
+            }
+        }
+    };
 
     @Override
     public void onHiddenChanged(boolean hidden) {
@@ -214,4 +228,5 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
             }
         }
     }
+
 }

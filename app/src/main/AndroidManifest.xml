@@ -71,6 +71,7 @@
             android:configChanges="layoutDirection|locale"
             android:launchMode="singleInstance"
             android:screenOrientation="portrait" />
+
     </application>
 
 </manifest>
