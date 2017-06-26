@@ -53,7 +53,6 @@ public class ConnBleService extends Service {
     private static final int TIMER_DELAY = 1000;
     private static final int TIMER_PERIOD = 100;
     private Timer mTimer;
-    private TimerTask mTimerTask;
     private ConnBleObservable mConnBleObservable;
 
     @Override
@@ -85,16 +84,14 @@ public class ConnBleService extends Service {
         if (mTimer == null) {
             mTimer = new Timer();
         }
-        if (mTimerTask == null) {
-            mTimerTask = new TimerTask() {
-                @Override
-                public void run() {
-                    checkBluetooth();
-                }
-            };
-        }
         if (mTimer != null) {
-            mTimer.schedule(mTimerTask, TIMER_DELAY, TIMER_PERIOD);
+            mTimer.schedule(new ConnTimerTask(), TIMER_DELAY, TIMER_PERIOD);
+        }
+    }
+
+    class ConnTimerTask extends TimerTask {
+        public void run() {
+            checkBluetooth();
         }
     }
 
@@ -147,22 +144,13 @@ public class ConnBleService extends Service {
     private void stopTimer() {
         if (mTimer != null) {
             mTimer.cancel();
-            mTimer.purge();
             mTimer = null;
-        }
-        if (mTimerTask != null) {
-            mTimerTask.cancel();
-            mTimerTask = null;
         }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mTimer != null) {
-            mTimer.cancel();
-            mTimer.purge();
-            mTimer = null;
-        }
+        stopTimer();
     }
 }
