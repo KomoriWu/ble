@@ -59,7 +59,7 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
     private boolean mIsReturn;
     private Timer mTimer;
     private TimerTask mTimerTask;
-    private int mLastPosition;
+    private int mLastPosition=-1;
     @SuppressLint("HandlerLeak")
     private Handler mTimerHandler = new Handler() {
         public void handleMessage(Message msg) {
