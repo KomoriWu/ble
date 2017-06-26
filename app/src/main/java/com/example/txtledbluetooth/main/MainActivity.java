@@ -44,6 +44,7 @@ import com.example.txtledbluetooth.utils.AlertUtils;
 import com.example.txtledbluetooth.utils.LocaleUtils;
 import com.example.txtledbluetooth.utils.SqlUtils;
 import com.example.txtledbluetooth.utils.Utils;
+import com.inuker.bluetooth.library.BluetoothClient;
 import com.inuker.bluetooth.library.Constants;
 import com.orhanobut.logger.Logger;
 import com.yanzhenjie.permission.AndPermission;
@@ -90,6 +91,7 @@ public class MainActivity extends BaseActivity implements MainView, Observer {
     private Intent mIntent;
     private ConnBleInterface mConnBleInterface;
     private MyServiceConn mServiceConn;
+    private BluetoothClient mClient;
 
     @SuppressLint("ResourceType")
     @Override
@@ -98,6 +100,7 @@ public class MainActivity extends BaseActivity implements MainView, Observer {
         ButterKnife.bind(this);
         LocaleUtils.setAutoLanguage(this);
         mPresenter = new MainPresenterImpl(this);
+        mClient = MyApplication.getBluetoothClient(this);
         initToolbar();
         initService();
         tvScan.setText(R.string.scan);
@@ -128,31 +131,27 @@ public class MainActivity extends BaseActivity implements MainView, Observer {
 
     private void initPermission() {
         // 先判断是否有权限。
-        if (AndPermission.hasPermission(this, Utils.getPermission(0),
-                Utils.getPermission(1))) {
-            if (isLocationEnable(this)) {
-//                mPresenter.initBle(this);
-                if (mConnBleInterface != null) {
-                    mConnBleInterface.scanBle();
-                }
+        if (isLocationEnable(this)) {
+            if (AndPermission.hasPermission(this, Utils.getPermission(0),
+                    Utils.getPermission(1))) {
+                requestBluetooth();
             } else {
-                AlertUtils.showAlertDialog(this, R.string.gps_open_hint, new
-                        DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                Intent locationIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                                startActivityForResult(locationIntent, REQUEST_CODE_LOCATION_SETTINGS);
-                            }
-                        });
-
+                AndPermission.with(this)
+                        .requestCode(PERMISSION_REQUEST_CODE)
+                        .permission(Utils.getPermission(0), Utils.getPermission(1))
+                        .callback(permissionListener)
+                        .start();
             }
-
         } else {
-            AndPermission.with(this)
-                    .requestCode(PERMISSION_REQUEST_CODE)
-                    .permission(Utils.getPermission(0), Utils.getPermission(1))
-                    .callback(permissionListener)
-                    .start();
+            AlertUtils.showAlertDialog(this, R.string.gps_open_hint, new
+                    DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Intent locationIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivityForResult(locationIntent, REQUEST_CODE_LOCATION_SETTINGS);
+                        }
+                    });
+
         }
     }
 
@@ -253,7 +252,7 @@ public class MainActivity extends BaseActivity implements MainView, Observer {
 
     @Override
     public void hideProgress() {
-
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override
@@ -333,10 +332,10 @@ public class MainActivity extends BaseActivity implements MainView, Observer {
         if ((requestCode == REQUEST_CODE_ALLOW && resultCode == RESULT_OK) ||
                 requestCode == REQUEST_CODE_SETTING && AndPermission.hasPermission(this,
                         Utils.getPermission(0), Utils.getPermission(1))) {
-//            mPresenter.initBle(this);
+            requestBluetooth();
         } else if (requestCode == REQUEST_CODE_LOCATION_SETTINGS) {
             if (isLocationEnable(this)) {
-//                mPresenter.initBle(this);
+                requestBluetooth();
             } else {
                 AlertUtils.showAlertDialog(this, R.string.gps_not_open_hint);
             }
@@ -347,11 +346,23 @@ public class MainActivity extends BaseActivity implements MainView, Observer {
         }
     }
 
+    private void requestBluetooth() {
+        if (mClient.isBleSupported()) {
+            if (!mClient.isBluetoothOpened()) {
+                showLoadFailMsg(getString(R.string.open_ble));
+            }
+        } else {
+            showLoadExceptionMsg(getString(R.string.no_support_ble));
+        }
+    }
+
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
             if ((System.currentTimeMillis() - mExitTime) > 2000) {
-                Toast.makeText(this, R.string.exit_program_hint, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.exit_program_hint,
+                        Toast.LENGTH_SHORT).show();
                 mExitTime = System.currentTimeMillis();
             } else {
                 finish();
@@ -369,7 +380,7 @@ public class MainActivity extends BaseActivity implements MainView, Observer {
         public void onSucceed(int requestCode, List<String> grantPermissions) {
             switch (requestCode) {
                 case PERMISSION_REQUEST_CODE: {
-//                    mPresenter.initBle(MainActivity.this);
+                    requestBluetooth();
                     break;
                 }
             }
