@@ -7,6 +7,7 @@ import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.net.Uri;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.support.design.widget.NavigationView;
@@ -45,6 +46,7 @@ import com.example.txtledbluetooth.utils.SqlUtils;
 import com.example.txtledbluetooth.utils.Utils;
 import com.inuker.bluetooth.library.BluetoothClient;
 import com.inuker.bluetooth.library.Constants;
+import com.marcoscg.shortcuthelper.ShortcutHelper;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
 
@@ -447,4 +449,5 @@ public class MainActivity extends BaseActivity implements MainView, Observer {
         SharedPreferenceUtils.cleanIsConnSuccess(this);
         SharedPreferenceUtils.cleanMacAddress(this);
     }
+
 }

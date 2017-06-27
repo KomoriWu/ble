@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -27,6 +28,7 @@ import com.example.txtledbluetooth.light.view.LightView;
 import com.example.txtledbluetooth.main.MainActivity;
 import com.example.txtledbluetooth.utils.SharedPreferenceUtils;
 import com.example.txtledbluetooth.utils.Utils;
+import com.marcoscg.shortcuthelper.ShortcutHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -229,4 +231,23 @@ public class LightFragment extends BaseFragment implements LightView, LightAdapt
         }
     }
 
+    //7.0添加桌面快捷键
+    private void initShortcut() {
+        Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(
+                "https://github.com/marcoscgdev/shortcut-helper"));
+        Intent activityIntent = new Intent(Intent.ACTION_MAIN, Uri.EMPTY, getActivity(),
+                MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        ShortcutHelper.with(this)
+                .createShortcut(
+                        "Short Label",
+                        "Long Label",
+                        R.mipmap.ic_launcher,
+                        webIntent)
+                .createShortcut(
+                        "Short Label 2",
+                        "Long Label 2",
+                        R.mipmap.ic_launcher,
+                        activityIntent)
+                .go();
+    }
 }

@@ -87,11 +87,13 @@ public class MainModelImpl implements MainModel {
 
             @Override
             public void onSearchStopped() {
+                onInitBleListener.OnException(context.getString(R.string.search_stop));
             }
 
             @Override
             public void onSearchCanceled() {
             }
+
         });
     }
 
