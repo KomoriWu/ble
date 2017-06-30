@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Xpectra</string>
-    <string name="ok">ok</string>
-    <string name="cancel">cancel</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
     <string name="confirm">confirm</string>
     <string name="music">Music</string>
     <string name="settings">Settings</string>
@@ -17,7 +17,7 @@
     <string name="aux_in">Aux-In</string>
     <string name="creative_halo">Creative Halo</string>
     <string name="ver_info">Version 1.1.48</string>
-    <string name="copyright_info">Copyright © Creative Technology Ltd., 2016-2017.\nAll rights reserved.</string>
+    <string name="copyright_info">Copyright © Creative Technology Ltd., 2016–2017.\nAll rights reserved.</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="firmware_ver">Firmware Version 2.0.3</string>
     <string name="audio_prompts">Audio Prompts</string>
@@ -64,7 +64,7 @@
     <string name="b">B:</string>
     <string name="et_digits">0123456789abcdefghigklmnopqrstuvwxyzABCDEFGHIGKLMNOPQRSTUVWXYZ</string>
     <string name="et_digits_rgb">0123456789</string>
-    <string name="color_value_hint">Color value of 0-255!</string>
+    <string name="color_value_hint">Color value of 0–255!</string>
     <string name="restart_hint">Reset to factory default?</string>
     <string name="scan_music_hint">Scan the local music&#8230;</string>
     <string name="song_name">Song name</string>

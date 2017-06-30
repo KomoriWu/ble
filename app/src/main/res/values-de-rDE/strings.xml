@@ -17,7 +17,7 @@
     <string name="aux_in">Aux-In</string>
     <string name="creative_halo">Creative Halo</string>
     <string name="ver_info">Version 1.1.48</string>
-    <string name="copyright_info">Copyright © Creative Technology Ltd., 2016-2017. Alle Rechte vorbehalten.</string>
+    <string name="copyright_info">Copyright © Creative Technology Ltd., 2016–2017. Alle Rechte vorbehalten.</string>
     <string name="privacy_policy">Datenschutz-Bestimmungen</string>
     <string name="firmware_ver">Firmwareversion 2.0.3</string>
     <string name="audio_prompts">Audio-Ansagen</string>
@@ -40,7 +40,7 @@
     <string name="revert">Wiederherstellen</string>
     <string name="exit_program_hint">Wieder nach dem Ausstieg aus dem Programm</string>
     <string name="random">zufällig</string>
-    <string name="color1">1-Farben</string>
+    <string name="color1">1-Farbe</string>
     <string name="color2">2-Farben</string>
     <string name="color3">3-Farben</string>
     <string name="color7">7-Farben</string>
@@ -64,7 +64,7 @@
     <string name="b">B:</string>
     <string name="et_digits">0123456789abcdefghigklmnopqrstuvwxyzABCDEFGHIGKLMNOPQRSTUVWXYZ</string>
     <string name="et_digits_rgb">0123456789</string>
-    <string name="color_value_hint">Farbwert von 0-255!</string>
+    <string name="color_value_hint">Farbwert von 0–255!</string>
     <string name="restart_hint">Zurücksetzen auf Werkseinstellung?</string>
     <string name="scan_music_hint">Scannen Sie die lokale Musik&#8230;</string>
     <string name="song_name">Liedtitel</string>
