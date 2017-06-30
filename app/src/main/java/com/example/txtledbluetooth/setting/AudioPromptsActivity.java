@@ -21,15 +21,17 @@ public class AudioPromptsActivity extends BaseActivity implements AudioPromptsVi
     @BindView(R.id.item_voice_and_tones)
     ItemLayout itemVoiceAndTones;
     private AudioPromptsPresenter mPromptsPresenter;
+    private String[] mModels;
 
     @Override
     public void init() {
         setContentView(R.layout.activity_audio_prompts);
         ButterKnife.bind(this);
+        mModels = getResources().getStringArray(R.array.audio_prompts_model);
         initToolbar();
         tvTitle.setText(getString(R.string.audio_prompts));
         initItemBgColor();
-        mPromptsPresenter = new AudioPromptsPresenterImp(this,this);
+        mPromptsPresenter = new AudioPromptsPresenterImp(this, this);
         itemOff.setOnItemListener(new ItemLayout.OnItemListener() {
             @Override
             public void onClickItemListener(View v) {
@@ -47,10 +49,10 @@ public class AudioPromptsActivity extends BaseActivity implements AudioPromptsVi
     }
 
     private void initItemBgColor() {
-        String itemText = SharedPreferenceUtils.getAudioPromptsModel(this);
+        String itemText = mModels[SharedPreferenceUtils.getAudioPromptsModel(this)];
         if (itemText.equals(itemOff.getTvLeftStr())) {
             selectOffEffect();
-        }  else if (itemText.equals(itemVoiceAndTones.getTvLeftStr())) {
+        } else if (itemText.equals(itemVoiceAndTones.getTvLeftStr())) {
             selectVoiceAndTonesEffect();
         }
     }

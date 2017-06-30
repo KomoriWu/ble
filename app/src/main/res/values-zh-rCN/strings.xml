@@ -25,8 +25,8 @@
     <string name="reset_to_default">重置为出厂默认</string>
     <string name="reset_to_default_hint">恢复所有的配置到初始状态</string>
     <string name="off">关</string>
-    <string name="on_capital">开</string>
-    <string name="off_capital">关</string>
+    <string name="on_capital">ON</string>
+    <string name="off_capital">OFF</string>
     <string name="moon_light">月光</string>
     <string name="fireworks">烟花</string>
     <string name="glow">辉光</string>

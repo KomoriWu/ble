@@ -55,4 +55,9 @@
     <string-array name="mood_color_type">
         <item>@string/mood</item>
     </string-array>
+    <string-array name="audio_prompts_model">
+        <item>@string/off</item>
+        <item>@string/voice_and_tones</item>
+    </string-array>
+
 </resources>

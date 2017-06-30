@@ -140,14 +140,14 @@ public class SharedPreferenceUtils {
                 SEND_CHARACTER_KEY);
     }
 
-    public static void saveAudioPromptsModel(Context context, String model) {
+    public static void saveAudioPromptsModel(Context context, int model) {
         SharedPreferenceUtils.saveSharedPreference(context, AUDIO_PROMPTS_MODEL_NAME,
                 AUDIO_PROMPTS_MODEL_KEY, model);
     }
 
-    public static String getAudioPromptsModel(Context context) {
-        return SharedPreferenceUtils.getSharedPreferenceString(context, AUDIO_PROMPTS_MODEL_NAME,
-                AUDIO_PROMPTS_MODEL_KEY, context.getString(R.string.voice_and_tones));
+    public static int getAudioPromptsModel(Context context) {
+        return SharedPreferenceUtils.getSharedPreferenceInt(context, AUDIO_PROMPTS_MODEL_NAME,
+                AUDIO_PROMPTS_MODEL_KEY,1);
     }
 
     public static boolean saveSharedPreference(Context context, String name, String key, String value) {

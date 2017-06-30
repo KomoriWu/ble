@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Xpectra</string>
-    <string name="ok">bueno</string>
-    <string name="cancel">cancelado</string>
+    <string name="ok">ok</string>
+    <string name="cancel">cancel</string>
     <string name="confirm">determinar</string>
     <string name="music">Música</string>
     <string name="settings">establecer</string>
@@ -25,8 +25,8 @@
     <string name="reset_to_default">Resetear a niveles de fábrica</string>
     <string name="reset_to_default_hint">Restaurar todas sus configuraciones al estado original.</string>
     <string name="off">cerrar</string>
-    <string name="on_capital">Abierto</string>
-    <string name="off_capital">Cerrar</string>
+    <string name="on_capital">ON</string>
+    <string name="off_capital">OFF</string>
     <string name="moon_light">Luz de luna</string>
     <string name="fireworks">Fuegos artificiales</string>
     <string name="glow">Brillo</string>

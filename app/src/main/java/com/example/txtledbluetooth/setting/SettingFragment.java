@@ -19,6 +19,9 @@ import com.example.txtledbluetooth.utils.SharedPreferenceUtils;
 import com.example.txtledbluetooth.utils.Utils;
 import com.example.txtledbluetooth.widget.ItemLayout;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -36,18 +39,21 @@ public class SettingFragment extends BaseFragment implements SettingView {
     @BindView(R.id.item_reset)
     ItemLayout itemReset;
     private SettingPresenter mSettingPresenter;
+    private String[] mModels;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mSettingPresenter = new SettingPresenterImp(this,getActivity());
+        mSettingPresenter = new SettingPresenterImp(this, getActivity());
     }
 
     @Override
     public View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_setting, null);
         ButterKnife.bind(this, view);
-        itemAudioPrompts.setTvRightStr(SharedPreferenceUtils.getAudioPromptsModel(getActivity()));
+        mModels = getResources().getStringArray(R.array.audio_prompts_model);
+        itemAudioPrompts.setTvRightStr(mModels[SharedPreferenceUtils.getAudioPromptsModel(
+                getActivity())]);
         itemAudioPrompts.setOnItemListener(new ItemLayout.OnItemListener() {
             @Override
             public void onClickItemListener(View v) {
@@ -89,7 +95,7 @@ public class SettingFragment extends BaseFragment implements SettingView {
         if (requestCode == REQUEST_SETTING && resultCode == RESULT_OK) {
             itemAudioPrompts.setTvRightStr(data.getStringExtra(Utils.ITEM_RIGHT_TEXT));
             SharedPreferenceUtils.saveAudioPromptsModel(getActivity(),
-                    itemAudioPrompts.getTvRightStr());
+                    Arrays.asList(mModels).indexOf(itemAudioPrompts.getTvRightStr()));
         }
     }
 }
