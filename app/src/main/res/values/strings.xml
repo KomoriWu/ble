@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">GP229 CES</string>
+    <string name="app_name">Xpectra</string>
     <string name="ok">ok</string>
     <string name="cancel">cancel</string>
     <string name="confirm">confirm</string>
@@ -22,21 +22,14 @@
     <string name="firmware_ver">Firmware Version 2.0.3</string>
     <string name="audio_prompts">Audio Prompts</string>
     <string name="voice_and_tones">Voice and Tones</string>
-    <string name="auto_standby">Auto Standby</string>
-    <string name="auto_standby_hint">Switch to standby mode after one day being idle</string>
     <string name="reset_to_default">Reset to factory default</string>
     <string name="reset_to_default_hint">Restore all your configuration to original conditioin</string>
     <string name="off">off</string>
     <string name="on_capital">ON</string>
     <string name="off_capital">OFF</string>
-    <string name="tones_only">Tones Only</string>
     <string name="moon_light">Moonlight</string>
     <string name="fireworks">Fireworks</string>
-    <string name="blue_skies">Blue Skies</string>
-    <string name="rainbow">Rainbow</string>
-    <string name="pulsate">Pulsate</string>
     <string name="glow">Glow</string>
-    <string name="monochrome">Monochrome</string>
     <string name="no_support_ble">Phone does not support BLE !</string>
     <string name="open_ble">Whether to open the Bluetooth?</string>
     <string name="conn_timeout">Connection timeout!</string>
@@ -56,19 +49,14 @@
     <string name="colored">Colored</string>
     <string name="default_">Default</string>
     <string name="full">Full</string>
-    <string name="single_color">Single Color</string>
-    <string name="orange">Orange</string>
     <string name="mood">Mood</string>
     <string name="hot_wheels">Hot Wheels</string>
     <string name="spectrum">Spectrum</string>
     <string name="full_spectrum">Full Spectrum</string>
     <string name="morph">Morph</string>
     <string name="beat_meter">Beat Meter</string>
-    <string name="cycle_all">Cycle All</string>
-    <string name="cycle">Cycle</string>
     <string name="wave">Wave</string>
     <string name="full_wave">Full Wave</string>
-    <string name="solo">Solo</string>
     <string name="aurora">Aurora</string>
     <string name="well">#</string>
     <string name="g">G:</string>
@@ -77,21 +65,16 @@
     <string name="et_digits">0123456789abcdefghigklmnopqrstuvwxyzABCDEFGHIGKLMNOPQRSTUVWXYZ</string>
     <string name="et_digits_rgb">0123456789</string>
     <string name="color_value_hint">Color value of 0-255!</string>
-    <string name="red_color">ff0000</string>
     <string name="restart_hint">Reset to factory default?</string>
     <string name="scan_music_hint">Scan the local music&#8230;</string>
     <string name="song_name">Song name</string>
     <string name="singer">Singer</string>
     <string name="now_playing">Now Playing</string>
     <string name="search_stop">The search timeout !</string>
-    <string name="search_cancelled">The search was cancelled !</string>
     <string name="scan">Scan</string>
-    <string name="open_switch_hint">Please turn on the light !</string>
-    <string name="ble_write_failure_hint">Failure, please check the bluetooth connection
-        for success !</string>
     <string name="pulse_to_music">Pulse to Music</string>
     <string name="gps_not_open_hint">The GPS is not open and may not operate properly !</string>
     <string name="gps_open_hint">For normal use of apps , Please open the GPS !</string>
-    <string name="dis_conn">Your speaker cannot be found.</string>
+    <string name="dis_conn">Your speaker cannot be found.Please power it on or check your connection</string>
     <string name="retry">Retry</string>
 </resources>
