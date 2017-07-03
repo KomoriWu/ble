@@ -48,6 +48,7 @@ dependencies {
     compile 'com.qiushui:blurredview:0.8.1'
     compile 'com.orhanobut:logger:2.1.1'
     compile 'com.github.marcoscgdev:shortcut-helper:1.0.2'
+    compile 'org.greenrobot:eventbus:3.0.0'
 //    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3'
 //    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3'
 }

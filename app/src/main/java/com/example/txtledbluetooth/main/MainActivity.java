@@ -99,7 +99,6 @@ public class MainActivity extends BaseActivity implements MainView, Observer {
     public void init() {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        LocaleUtils.setAutoLanguage(this);
         mPresenter = new MainPresenterImpl(this);
         mClient = MyApplication.getBluetoothClient(this);
         initToolbar();

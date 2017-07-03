@@ -26,7 +26,6 @@ import java.util.HashMap;
 public class Utils {
     public static final String ITEM_RIGHT_TEXT = "item_right_text";
     public static final String BLE_NAME = "Creative HALO";//HMSoft
-    public static final String BLE_ADDRESS = "ble_address";
     public static final String RECEIVE_SERVICE = "6677";
     public static final String SEND_SERVICE = "7777";  //调试 ffe0
     public static final String LIGHT_MODEL_NAME = "light_model_name";
@@ -34,23 +33,20 @@ public class Utils {
     public static final String DURATION = "duration";
     public static final String CURRENT_PROGRESS = "current_progress";
     public static final String CURRENT_PLAY_POSITION = "current_play_position";
-    public static final String SONG_URL = "song_url";
-    public static final String ALBUM_URI = "album_uri";
     public static final String POPUP_POSITION = "popup_position";
     public static final String POSITION = "position";
     public static final String SQL_NAME = "sql_name";
     public static final String COLOR_R = "color_r";
     public static final String COLOR_G = "color_g";
     public static final String COLOR_B = "color_b";
-    public static final String PIXEL_X = "pixel_x";
-    public static final String PIXEL_Y = "pixel_y";
     public static final int STREAM_TYPE = AudioManager.STREAM_MUSIC;
     public static final String SEEK_BAR_PROGRESS_BRIGHT = "bright_progress";
     public static final String SEEK_BAR_PROGRESS_SPEED = "speed_progress";
     public static final String PULSE_IS_OPEN = "pulse_is_open";
     public static final String SWITCH_STATE = "switch_state";
-    public static final int SEEK_BAR_BRIGHT_MAX = 255;
-    public static final int SEEK_BAR_SPEED_MAX = 10;
+    private static final int SEEK_BAR_BRIGHT_MAX = 255;
+    private static final int SEEK_BAR_SPEED_MAX = 10;
+    public static final String EVENT_REFRESH_LANGUAGE="event_refresh_language";
 
 
     public static DisplayImageOptions getImageOptions(int defaultIconId) {

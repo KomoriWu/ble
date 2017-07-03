@@ -1,9 +1,7 @@
 package com.example.txtledbluetooth.base;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -14,6 +12,10 @@ import android.widget.TextView;
 
 import com.example.txtledbluetooth.R;
 import com.example.txtledbluetooth.utils.LocaleUtils;
+import com.example.txtledbluetooth.utils.Utils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 /**
  * Created by KomoriWu
@@ -32,6 +34,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         init();
+        EventBus.getDefault().register(this);
+        LocaleUtils.setAutoLanguage(this);
     }
 
     public void showProgressDialog(int id) {
@@ -83,10 +87,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        LocaleUtils.setAutoLanguage(this);
-        Intent intent = getIntent();
-        finish();
-        startActivity(intent);
+        EventBus.getDefault().post(Utils.EVENT_REFRESH_LANGUAGE);
     }
 
     @Override
@@ -94,10 +95,21 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onResume();
     }
 
+
+    @Subscribe
+    public void onEventMainThread(String str) {
+        if (str.equals(Utils.EVENT_REFRESH_LANGUAGE)) {
+            LocaleUtils.setAutoLanguage(this);
+            recreate();
+        }
+    }
+
+
     @Override
     public void onDestroy() {
         super.onDestroy();
 //        RefWatcher refWatcher = MyApplication.getRefWatcher(this);
 //        refWatcher.watch(this);
+        EventBus.getDefault().unregister(this);
     }
 }
