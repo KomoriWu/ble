@@ -36,7 +36,7 @@
     <string name="init_the_bluetooth">初始化蓝牙&#8230;</string>
     <string name="conn_ble_success">连接 %s 成功！</string>
     <string name="allow">允许</string>
-    <string name="setting">设置 </string>
+    <string name="setting">设置</string>
     <string name="revert">还原</string>
     <string name="exit_program_hint">再按一次返回键退出该程序！</string>
     <string name="random">彩虹</string>
