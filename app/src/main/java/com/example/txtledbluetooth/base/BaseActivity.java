@@ -1,6 +1,7 @@
 package com.example.txtledbluetooth.base;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -84,11 +85,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        EventBus.getDefault().post(Utils.EVENT_REFRESH_LANGUAGE);
-    }
 
     @Override
     protected void onResume() {
@@ -100,7 +96,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     public void onEventMainThread(String str) {
         if (str.equals(Utils.EVENT_REFRESH_LANGUAGE)) {
             LocaleUtils.setAutoLanguage(this);
-            recreate();
+            finish();
+            startActivity(new Intent(BaseActivity.this, BaseActivity.class));
         }
     }
 
