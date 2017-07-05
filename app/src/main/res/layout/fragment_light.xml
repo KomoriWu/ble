@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/content_bg">
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:id="@+id/layout_top"
         android:layout_width="match_parent"
         android:layout_height="@dimen/item_height"
-        android:layout_marginRight="@dimen/item_padding_left">
+        android:background="@color/content_bg">
 
         <TextView
             android:id="@+id/tv_switch"
@@ -24,6 +23,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_gravity="center"
+            android:layout_marginRight="@dimen/item_padding_left"
             android:visibility="visible" />
 
         <View

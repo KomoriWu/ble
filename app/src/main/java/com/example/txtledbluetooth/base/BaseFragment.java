@@ -22,8 +22,7 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = initView(inflater, container, savedInstanceState);
-        return view;
+        return initView(inflater, container, savedInstanceState);
     }
     public void showProgressDialog(int id) {
         if (progressDialog == null) {
